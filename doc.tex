@@ -552,14 +552,44 @@ example
 
 \subsection{Assembly of the reduced system}
 
-The importance of \eqref{eqn:split-1}--\eqref{eqn:split-5} then becomes clear.
-Although the solution of the reduced problem involves nonlinear systems of size
-$M$, which are quick to solve when $M$ is small (even if they are dense, as they
-will be), the assembly of these systems remains nontrivial. However, given a
-``tall'' matrix matrix $\bm V \in \mathbb R^{N \times M}$ representing the
-reduced basis in terms of the original, each matrix and vector corresponding to
-a bilinear or linear form in \eqref{eqn:split-1}--\eqref{eqn:split-5} may be
-reduced to the new basis independently without regard to parametric dependence.
+Let $\bm V \in \mathbb{R}^{N \times M}$ be a $\bm \mu$-independent
+tall \emph{transformation matrix}, mapping coefficient vectors in the
+reduced basis to coefficient vectors in the original high-fidelity
+basis, i.e.~the columns of $\bm V$ are the high-fidelity coefficient
+vectors of the reduced basis functions.
+
+We aim then to express the solution to a generic finite element system
+$\bm A(\bm \mu) \bm u(\bm \mu) = \bm f(\bm \mu)$ by the reduced
+coefficient vector $\bm u(\bm \mu) = \bm V \bm u^\text{R}(\bm \mu)$, i.e.
+\begin{equation}
+  \label{eqn:redsys}
+  \bm A(\bm \mu) \bm V \bm u^\text{R}(\bm \mu) = \bm f(\bm \mu).
+\end{equation}
+Since \eqref{eqn:redsys} is overdetermined, we choose the Galerkin
+approach of enforcing that the residual must be orthogonal to the
+reduced space, i.e.
+\begin{equation}
+  \label{eqn:redorth}
+  \bm V^\intercal \left(
+  \bm A(\bm \mu) \bm V \bm u^\text{R}(\bm \mu) - \bm f(\bm \mu)
+  \right) = \bm 0,
+\end{equation}
+or, more traditionally,
+\begin{equation}
+  \label{eqn:redorth-final}
+  \bm V^\intercal \bm A(\bm \mu) \bm V \bm u^\text{R}(\bm \mu) =
+  \bm V^\intercal \bm f(\bm \mu).
+\end{equation}
+
+The importance of \eqref{eqn:split-1}--\eqref{eqn:split-5} then
+becomes clear.  Although the solution of the reduced problem involves
+nonlinear systems of size $M$, which are quick to solve when $M$ is
+small (even if they are dense, as they will be), the assembly of these
+systems remains nontrivial. However, given \eqref{eqn:redorth-final},
+each matrix and vector corresponding to a bilinear or linear form in
+\eqref{eqn:split-1}--\eqref{eqn:split-5} may be reduced to the new
+basis independently without regard to parametric dependence. It is
+then vital that $\bm V$ is indeed parameter-independnet.
 
 For example, let us consider \eqref{eqn:split-1}. Let the matrix
 $\bm D^\text{H}_i$ be the high-fidelity matrix corresponding to the bilinear
