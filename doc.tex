@@ -1306,11 +1306,22 @@ NACA0015 profile with a chord length of $1$, thus giving an approximate maximal
 Reynold's number of $120$.
 
 The reference domain $\hat{\Omega}$ was chosen as a cylinder of radius $10$,
-centered at the center of the airfoil. The boundary conditions were enforced
-strongly at the inflow boundary, with no-slip conditions on the airfoil and a
-do-nothing zero Neumann boundary condition on the outflow. The lift function was
-chosen as the solution to the Stokes problem with $\varphi=0$, which is
-solenoidal.
+centered at the center of the airfoil. The mesh had $80$ elements in
+the angular direction and $30$ elements in the radial direction. Given
+discretization nodes $\{c_i\}_{i=1}^{80}$ for the airfoil, and
+uniformly spaced nodes $\{b_i\}_{i=1}^{80}$ for the surrounding
+circle, the interior nodes of the mesh were chosen as
+\begin{equation}
+  \label{eq:meshgen}
+  d_{ij} = \left( \frac{j}{30} \right)^3 b_i +
+  \left( 1 - \left( \frac{j}{30} \right)^3 \right) c_i
+\end{equation}
+providing an algebraically graded mesh with finer resolution near the airfoil.
+
+The boundary conditions were enforced strongly at the inflow boundary,
+with no-slip conditions on the airfoil and a do-nothing zero Neumann
+boundary condition on the outflow. The lift function was chosen as the
+solution to the Stokes problem with $\varphi=0$, which is solenoidal.
 
 For parametrizing the geometry, the radius-dependent rotation angle function
 $\theta$ was chosen as
