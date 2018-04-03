@@ -1347,15 +1347,17 @@ see Figures~\ref{fig:thetatilde} and \ref{fig:domain}.
   \label{fig:domain}
 \end{figure}
 
-For the regular high-fidelity mododel, we chose a Lagrangian quadratic basis for
-velocity, and Lagrangian linear basis for the pressure. This fulfils the
-Taylor-Hood property, leading to a stable method.
+For the regular high-fidelity mododel, we chose a Lagrangian
+biquadratic basis for velocity, and Lagrangian bilinear basis for the
+pressure. This fulfils the Taylor-Hood property, leading to a stable
+method.
 
-For the conforming high-fidelity model, we chose a quadratic B-spline basis for
-the pressure, and a mixed cubic and quadratic B-spline basis for the velocity,
-giving a fully divergence-conforming method for the reference geometry at
-$\varphi=0$. Note that by design, the divergence-conforming method will retain
-this property for other angles.
+For the conforming high-fidelity model, we chose a bilinear lagrangian
+basis for the pressure, and a mixed quadratic and linear B-spline
+basis for the velocity, giving a fully divergence-conforming method
+for the reference geometry at $\varphi=0$. Note that by design, the
+divergence-conforming method will retain this property for other
+angles.
 
 For solving the nonlinear equation we used Newton iteration, stopping when the
 velocity update reached $10^{-10}$ or less, as measured in the $H^1$ seminorm.
@@ -1693,14 +1695,9 @@ freedom.
   \item \emph{Expected error} is, given $M$, the smallest $\epsilon$ satisfying
     \eqref{eqn:error}. We used prescribed values of $M=10,20,30,40,50$,
     computing $\epsilon$ as a function of $M$ rather than the other way around.
-  \item \emph{Speedup} is the ratio between the mean solution time with the
-    high-fidelity model and that of the reduced model. For this metric, all
-    relevant matrices and tensors for the high-fidelity modely were
-    pre-computed. That is, \emph{no} integration took place within the loop of
-    the nonlinear solver. Depending on circumstances, this may be considered
-    unusual for high-fidelity solvers, but at any rate can only serve to speed
-    them up. In other words, the actual speed gains may realistically be higher
-    than reported.
+  \item \emph{Time usage} is the mean time spent solving one instance of the problem. This includes
+    time spent in both the assembly and the linear solver phase, and notably will also be affected
+    by the number of \emph{iterations} the nonlinear solver needs to converge.
   \item \emph{Degrees of freedom} is the number $M$ of basis functions in a
     \emph{single} reduced space. For the regular method, this implies a total of
     $2M$ degrees of freedom in velocity (although only $M$ of these can be
@@ -1728,8 +1725,8 @@ method, although the pressure convergence pattern is noticeably more erratic.
 The error as a function of degrees of freedom (Figure~\ref{fig:perf2}) tells the
 same story.
 
-Figure~\ref{fig:perf3} shows the measured errors as a function of speedup. This
-clearly shows the ability of the conforming method to achieve the same results
+Figure~\ref{fig:perf3} shows the measured errors as a function of mean time usage, measured in
+seconds. This clearly shows the ability of the conforming method to achieve the same results
 significantly faster if the block solver algorithm is employed.
 
 \begin{figure}
@@ -1754,11 +1751,11 @@ significantly faster if the block solver algorithm is employed.
       \addplot[blue, thick, mark=*, mark options={solid}]
       table[x index={1}, y index={4}]{data/airfoil-results-no-piola-sups-no-block.csv};
       \addplot[blue, thick, densely dashed, mark=o, mark options={solid}]
-      table[x index={1}, y index={6}]{data/airfoil-results-no-piola-sups-no-block.csv};
+      table[x index={2}, y index={8}]{data/airfoil-results-no-piola-sups-no-block.csv};
       \addplot[magenta, thick, mark=*, mark options={solid}]
       table[x index={1}, y index={4}]{data/airfoil-results-no-piola-no-sups-no-block.csv};
       \addplot[magenta, thick, densely dashed, mark=o, mark options={solid}]
-      table[x index={1}, y index={6}]{data/airfoil-results-no-piola-no-sups-no-block.csv};
+      table[x index={2}, y index={6}]{data/airfoil-results-no-piola-no-sups-no-block.csv};
       \legend{
         Regular stabilized ($v$),
         Regular stabilized ($p$),
@@ -1798,11 +1795,11 @@ significantly faster if the block solver algorithm is employed.
       \addplot[blue, thick, mark=*, mark options={solid}]
       table[x index={1}, y index={4}]{data/airfoil-results-no-piola-sups-no-block.csv};
       \addplot[blue, thick, densely dashed, mark=o, mark options={solid}]
-      table[x index={1}, y index={6}]{data/airfoil-results-no-piola-sups-no-block.csv};
+      table[x index={2}, y index={8}]{data/airfoil-results-no-piola-sups-no-block.csv};
       \addplot[red, thick, mark=*, mark options={solid}]
       table[x index={1}, y index={4}]{data/airfoil-results-piola-sups-no-block.csv};
       \addplot[red, thick, densely dashed, mark=o, mark options={solid}]
-      table[x index={1}, y index={6}]{data/airfoil-results-piola-sups-no-block.csv};
+      table[x index={2}, y index={8}]{data/airfoil-results-piola-sups-no-block.csv};
       \legend{
         Regular stabilized ($v$),
         Regular stabilized ($p$),
@@ -1841,11 +1838,11 @@ significantly faster if the block solver algorithm is employed.
       \addplot[blue, thick, mark=*, mark options={solid}]
       table[x index={0}, y index={4}]{data/airfoil-results-no-piola-sups-no-block.csv};
       \addplot[blue, thick, densely dashed, mark=o, mark options={solid}]
-      table[x index={0}, y index={6}]{data/airfoil-results-no-piola-sups-no-block.csv};
+      table[x index={0}, y index={8}]{data/airfoil-results-no-piola-sups-no-block.csv};
       \addplot[red, thick, mark=*, mark options={solid}]
       table[x index={0}, y index={4}]{data/airfoil-results-piola-sups-no-block.csv};
       \addplot[red, thick, densely dashed, mark=o, mark options={solid}]
-      table[x index={0}, y index={6}]{data/airfoil-results-piola-sups-no-block.csv};
+      table[x index={0}, y index={8}]{data/airfoil-results-piola-sups-no-block.csv};
       \legend{
         Regular stabilized ($v$),
         Regular stabilized ($p$),
@@ -1866,7 +1863,7 @@ significantly faster if the block solver algorithm is employed.
 \begin{figure}
   \begin{tikzpicture}
     \begin{axis}[
-      xlabel={Speedup},
+      xlabel={Time (seconds)},
       ylabel={Mean relative error},
       ymode=log,
       xmode=log,
@@ -1883,17 +1880,17 @@ significantly faster if the block solver algorithm is employed.
       legend columns=2,
       ]
       \addplot[blue, thick, mark=*, mark options={solid}]
-      table[x index={11}, y index={4}]{data/airfoil-results-no-piola-sups-no-block.csv};
+      table[x index={19}, y index={4}]{data/airfoil-results-no-piola-sups-no-block.csv};
       \addplot[blue, thick, densely dashed, mark=o, mark options={solid}]
-      table[x index={11}, y index={6}]{data/airfoil-results-no-piola-sups-no-block.csv};
+      table[x index={19}, y index={8}]{data/airfoil-results-no-piola-sups-no-block.csv};
       \addplot[red, thick, mark=*, mark options={solid}]
-      table[x index={11}, y index={4}]{data/airfoil-results-piola-sups-no-block.csv};
+      table[x index={19}, y index={4}]{data/airfoil-results-piola-sups-no-block.csv};
       \addplot[red, thick, densely dashed, mark=o, mark options={solid}]
-      table[x index={11}, y index={6}]{data/airfoil-results-piola-sups-no-block.csv};
+      table[x index={19}, y index={8}]{data/airfoil-results-piola-sups-no-block.csv};
       \addplot[green, thick, mark=*, mark options={solid}]
-      table[x index={11}, y index={4}]{data/airfoil-results-piola-sups-block.csv};
+      table[x index={19}, y index={4}]{data/airfoil-results-piola-sups-block.csv};
       \addplot[green, thick, densely dashed, mark=o, mark options={solid}]
-      table[x index={11}, y index={6}]{data/airfoil-results-piola-sups-block.csv};
+      table[x index={19}, y index={8}]{data/airfoil-results-piola-sups-block.csv};
       \legend{
         Regular stabilized ($v$),
         Regular stabilized ($p$),
@@ -1905,10 +1902,9 @@ significantly faster if the block solver algorithm is employed.
     \end{axis}
   \end{tikzpicture}
   \caption{
-    Measured mean relative error as a function of speedup, for velocity
-    ($H^1$-seminorm) and pressure ($L^2$-norm). Both regular and conforming are
-    shown, the latter with two different solvers (the naive solver and the block
-    solver). Bottom right is better.
+    Measured mean relative error as a function of mean time usage (in seconds), for velocity
+    ($H^1$-seminorm) and pressure ($L^2$-norm). Both regular and conforming are shown, the latter
+    with two different solvers (the naive solver and the block solver). Bottom left is better.
   }
   \label{fig:perf3}
 \end{figure}
