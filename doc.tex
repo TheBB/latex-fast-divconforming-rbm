@@ -37,6 +37,7 @@
 % Other
 \usepackage{nicefrac}
 \usepackage{authblk}
+\usepackage{showlabels}
 
 % Custom
 \newcommand{\dd}{{\;\mathrm{d}}}
@@ -46,7 +47,7 @@
 
 \title{Fast divergence-conforming reduced basis methods for steady Navier-Stokes flow}
 \author[1]{E.~Fonn}
-\author[2]{H.~v.~Brummelen}
+\author[2]{E.H.~van~Brummelen}
 \author[1,3]{T.~Kvamsdal}
 \author[1]{Adil Rasheed}
 \affil[1]{SINTEF Digital, Trondheim, Norway}
@@ -56,88 +57,135 @@
 \maketitle
 
 \begin{abstract}
-  Reduced basis methods (RBMs) form one of the most promising attempts to
-  deliver numerical solutions of parametrized PDEs in near real-time performance
-  with reasonable accuracy. Naively constructed RBMs generally do not satisfy
-  pressure stability constraints like the LBB condition. One way of alleviating
-  this is to inflate the velocity space with supremizer modes
-  \cite{Ballarin2015ssp}. Unfortunately this has the effect of worsening
-  performance in the performance-critical online stage. We show that fast online
-  solves can still be achieved if the reduced basis is divergence-free by using
-  a velocity-only formulation, discarding the pressure modes, and that recovery
-  of the pressure solution can be done with little extra cost. With a
-  divergence-conforming formulation, reduced bases will be divergence-free by
-  construction. We illustrate this approach by modeling steady two-dimensional
-  Navier-Stokes flow around a NACA0015 airfoil.
+  Reduced-basis methods (RBMs) form one of the most promising techniques to
+  deliver numerical solutions of parametrized PDEs in real-time performance
+  with reasonable accuracy. For incompressible flow problems, RBMs based on LBB
+  stable velocity-pressure spaces do not generally inherit the stability
+  of the underlying high-fidelity model and, instead, additional stabilization techniques
+  must be introduced. One way of bypassing the loss of LBB stability in the RBM is to
+  inflate the velocity space with supremizer modes~\cite{Ballarin2015ssp}. This however
+  deteriorates the performance of the RBM in the performance-critical online stage, as
+  additional DOFs must be introduced to retain stability, while these DOFs do not effectively
+  contribute to accuracy of the RB approximation. In this work we consider a velocity-only
+  RB approximation, exploiting a solenoidal velocity basis. The solenoidal reduced basis
+  emerges directly from the high-fidelity velocity solutions in the offline stage. By means
+  of Piola transforms, the solenoidality of the velocity space is retained under geometric
+  transformations, making the proposed RB method suitable also for the investigation of
+  geometric parameters. To ensure exact solenoidality of the high-fidelity velocity solutions
+  that constitute the RB, we consider approximations based on divergence-conforming compatible
+  B-splines. We show that the velocity-only RB method leads to a significant improvement in
+  computational efficiency in the online stage, and that the pressure solution can be recovered
+  a posteriori at negligible extra cost. We illustrate the solenoidal RB approach by modeling
+  steady two-dimensional Navier-Stokes flow around a NACA0015 airfoil at various angles of attack.
 \end{abstract}
 
 \section{Introduction}
 
 Conventional methods for simulating partial differential equations include
-well-researched models such as Finite Elements (FEM), Finite Volumes (FVM) and
-Finite Differences (FDM). Common for all of these methods is the large number of
-degrees of freedom required to accurately model the physical system, often
+well-established techniques such as Finite Volumes (FVM),
+Finite Differences (FDM) and Finite Elements (FEM).
+Common to all of these methods is the large number of
+degrees of freedom that is typically required to accurately model a physical system, often
 numbering in the millions or billions. Given the good and well-established
 approximation properties of FVM, FDM and in particular FEM, such models are
 usually classified as \emph{high-fidelity} models. Problems of this size are
 generally not possible to solve in realistic timeframes except on specialized
-high-computing facilities, which is often very expensive, and even then may
-require several days of computing time. For on-site analysis and communication,
-special infrastucture will be required, which is unsuitable for time-critical
-applications, e.g.~biomedical applications, control strategies and hybrid
-analytics.
+high-performance computing facilities, which renders such computations very expensive,
+and even then they may require several days of computing time. In addition, the
+need for dedicated high-end computing resources prohibits the use of high-fidelity
+models in time-critical on-site analyses such as biomedical applications, control strategies
+and hybrid analytics, in view of the need for additional special infrastructure and
+the incurrence of further communication overheads.
 
-This problem is further exacerbated by the increasing demand for real-time
-low-cost models for the repetitive solution of PDEs. This is particularly
-relevant in optimization applications such as control systems. Common for many
-of these applications is that the PDE in question is \emph{parametrized} by a
-suitably small number of input parameters. It is often necessary to demand solve
-times in the sub-second region, which is entirely infeasible with conventional
+The excessive computational complexity of high-fidelity models is also at odds
+with the increasing demand for real-time low-cost models for the repetitive solution of PDEs
+in many-query scenarios. This is particularly relevant in optimization, control systems,
+inverse and inference problems, and uncertainty quantification. Common for many of these
+applications is that the PDE in question is
+\emph{parametrized} by a suitably small number of input parameters. It is often necessary
+to demand solve times in the sub-second regime, which is entirely infeasible with conventional
 methods.
 
-To answer these challenges, the field of model order reduction is rapidly
-developing \cite{Bazaz2012rpm}. The general aim is to replace the original model
-with a \emph{reduced model} of very modest computational complexity. Within this
+Reduced-order modeling (ROM) provides a paradigm to address the aforementioned challenges.
+ROM is rapidly developing field~\cite{Bazaz2012rpm}. The general aim of ROM is to replace
+the original model with a \emph{reduced model} of very modest computational complexity. Within this
 general framework of ideas, one of the most promising is that of \emph{reduced
 basis methods} (RBM). This methods dates back to the 1980s with work from
 \cite{Almroth1978acg,Almroth1981gfi,Nagy1979mrg,Noor1980rbt,Noor1981bpb,Noor1981rar,Noor1982mln}
-and the first theoretical foundations of the method was given by Fink and
-Rheinboldt in \cite{Fink1983ebr,Fink1984sms}.
+and the first theoretical foundations of the method were given by Fink and
+Rheinboldt in~\cite{Fink1983ebr,Fink1984sms}.
 It was used first used for flow problems in work by Peterson and Gunzburger
 \cite{Gunzburger2012fem,Peterson1989rbm}, and much of the more recent work can
 be attributed to the theoretical foundations in
 \cite{Prudhomme2002mcf,Veroy2003peb}.
 An excellent modern introduction can be found in \cite{Quarteroni2016rbm}.
 
-The fundamental concept of a reduced basis method is to formulate the problem on
-a function space with very low dimension. The basis functions for this reduced
-space are chosen in order to be able to approximate the high-fidelity solutions
-according so some measure. To do this, some high-fidelity solutions must be
-computed \emph{a priori}, called an \emph{ensemble} of \emph{snapshots}.
+The fundamental concept of reduced basis methods is to formulate the problem on
+a function space with very low dimension that is tailored to the solution of the
+PDE in the parameter regime of interest. In comparison, while finite-element spaces
+generally have well-established asymptotic approximation properties, e.g. density and
+quasi-optimality for smooth functions, and the computational cost of constructing a FEM basis
+function is generally negligible, the approximation properties of a FEM basis per-degree-of-freedom
+(i.e. for each of the basis function separately) is clearly limited. RB methods seek
+to construct an approximation space that has optimal approximation properties with respect
+to dimension for a restricted class of functions, viz. the solutions of the PDE in the parameter space
+under consideration, under the premise that the cost of constructing the basis is inconsequential. The
+latter premise arises because the construction of the basis is carried out a priori in the so-called
+offline stage. To do this, some high-fidelity solutions must be computed in advance, called
+an \emph{ensemble} of \emph{snapshots}.
 
-The method is strictly divided in two stages, called the \emph{offline} and
+RB methods are strictly divided in two stages, viz. the \emph{offline} and
 \emph{online} stages. The offline stage is run only once, and the online stage
 is run once for each problem instance to solve (that is to say, for each
-parameter value). The goal is then to off-load as much work as possible from the
+parameter query). The goal is then to off-load as much work as possible from the
 online to the offline stage, so that the total cost per online execution is very
 small in an amortized sense. In other words, work in the offline stage is
-``free'' and all efforts will be focused on creating a cheap online stage.
+considered ``free'' and all efforts will be focused on creating a cheap online stage.
 
-The principal novelty of this paper is the use of a divergence-conforming
-high-fidelity method to back the reduced methods. These methods have recently
-been introduced through work by Evans and Hughes
-\cite{Evans2013idc1,Evans2013idc2}, and rely on formulating a pressure space that
-is exactly equal to the divergence of the velocity space. This is possible using
+RB methods have been applied in various application areas, e.g. XXX. Development and
+application of RB methods to flow problems have been considered in for instance~\cite{}.
+The principal novelty of the present paper is the development of a solenoidal (divergence-free)
+velocity-only RB method for incompressible-fluid flow problems with geometric parametrizations, based on
+divergence-conforming high-fidelity approximations. The advantage of the solenoidal-velocity RBM is that
+the pressure variable
+is redundant and can be ignored in the online stage. The absence of the pressure
+variable in the RBM in fact carries a two-fold benefit. First, velocity-pressure RBs do not generally inherit
+the inf-sup stability of the underlying high-fidelity models. Instability of the RB
+velocity-pressure pair can be resolved by extending the velocity space with additional
+supremizer modes~\cite{Ballarin2015ssp}. This however introduces additional DOFs in the
+performance-critical online stage, while these DOFs do not effectively contribute to
+accuracy of the RB approximation. By incorporating the solenoidality constraint in the RB,
+the approximate formulation is released of its mixed-character, and inf-sup stability
+considerations for the RBM are voided. Second, the removal of the pressure variable in the RB reduces
+the DOF count in the online stage, accelerating the solution process in the time-critical
+phase.
+
+The use of solenoidal ROM for incompressible-flow problems has been propounded before;
+see, e.g.~\cite{Ballarin2015,Lovgren:2006sb}. However, it appears that the concept was not followed
+through for the important scenario of geometric parametrizations, in view of the complexity pertaining
+to the required Piola transforms in the ROM. For physical parameters, solenoidal RB is in fact
+straightforward. For parameters
+related to essential boundary conditions, solenoidal RB is more complicated by the fact that solenoidal
+lifts of the boundary data are required. Geometry parametrizations in addition require that the
+solenoidality property of the RB is retained under the considered geometric transformations. A
+central component in a solenoidal RB method is therefore the Piola transform, which provides
+solenoidality-preserving transformations. The Piola transform however leads to complicated
+non-polynomial expressions in the ROM, for which it is not generally possible to construct
+the affine representations that are required for an efficient online stage. In this work we consider
+truncated series expansions of these expressions that do admit an affine representation, and
+we assess the computational efficiency of such an approach.
+
+An important additional aspect of the present work is the use of divergence-conforming B-spline
+approximations for the high-fidelity simulations. These methods have recently been introduced
+by Evans and Hughes~\cite{Evans2013idc1,Evans2013idc2}, and rely on formulating a pressure space that
+is exactly equal to the divergence of the velocity space. This is enabled by the use of
 B-spline basis functions, recently popularized in the field of isogeometric
-analysis \cite{Cottrell2009iat}. Some work will be needed to make formulate a
-problem that is divergence-conforming in a parameter-independent manner, but
-once done we will see that this makes it simple to produce pointwise
-divergence-free reduced bases, and that this has some potential advantages
-compared to conventional reduced bases. It allows a velocity-only formulation,
-which produces faster online stages than a coupled formulation, while still
-allowing for quick pressure recovery.
+analysis~\cite{Cottrell2009iat}. The divergence-conforming approximations provide pointwise
+solenoidal snapshots, as opposed to the weakly solenoidal high-fidelity solutions provided by, for
+instance, conventional Taylor--Hood elements. The Piola transform in turn ensures that this property
+is retained in the solenoidal RB method.
 
-The paper is organized as follows.
+The paper is organized as follows:
 \begin{itemize}
 \item Section~\ref{sec:setting} formulates the classical stationary
   Navier-Stokes problem in a Finite Element setting, introduces the notation
@@ -162,12 +210,11 @@ The paper is organized as follows.
 \item Finally, Section~\ref{sec:conc} summarizes the findings.
 \end{itemize}
 
-\section{Stationary Navier-Stokes}
+\section{Stationary Navier-Stokes problem}
 
 \subsection{Weak formulation}
 \label{sec:setting}
-
-The problem to solve is the stationary Navier-Stokes equations,
+We consider the stationary Navier-Stokes equations,
 \begin{alignat}{2}
   \label{eqn:ns-1}
   -\nu \Delta \bm u + (\bm u \cdot \nabla) \bm u + \nabla p &= \bm f && \qquad \text{in } \Omega, \\
@@ -251,30 +298,35 @@ continuity equation \eqref{eqn:ns-2} and its variational counterpart
   \overline{d}(\bm u_0, \bm w) + c(\bm u_0, \bm u_0, \bm w) = \overline{f}_1(\bm w).
   \label{eqn:velonly}
 \end{equation}
+%
 In other words, we have a \emph{velocity-only} formulation.
 
-This has some practical benefits: it voids all concerns about pressure stability
-(since there is no pressure), and it reduces the size of the discretization
-somewhat. On the other hand, at least two problems arise.
+Considering numerical approximations of~\eqref{ns-1}--\eqref{ns-4},
+formulation~\eqref{eqn:velonlyform} has some practical benefits: in view of the
+absence of the pressure variable, it voids all concerns about
+pressure stability, and it reduces the size of the discretization.
+On the other hand, two problems arise. The first problem is that it is
+practically infeasible to create divergence-free function spaces, which is
+why this formulation does not see much use in conventional approximation methods.
+The second problem is that the pressure
+is often of interest, e.g. in a post-processing step to determine flow-induced loads by means
+of extraction functions~\cite{MelboKvamsdal2003,Brummelen:2012fk}, impairing a solver
+that does not provide pressure solutions in many applications.
 
-The first problem is that it is usually quite challenging to create
-divergence-free function spaces, which is why this formulation does not see much
-use in conventional methods. However, the construction of reduced bases makes it
-comparatively simple to create divergence-free \emph{reduced bases}, as we will
-see.
-
-The second problem is that the pressure is often of interest, making solvers
-that do not compute pressure solutions useless in many applications. For this we
-propose instead to recover the pressure solution \emph{a posteriori}. This can
-be done by solving \eqref{eqn:vvar-1} with a different test space, to find
-$p\in P$ such that for all $\bm s \in S$ it holds that
+The proposed solenoidal RB method forms an instance of the velocity-only formulation~\eqref{eqn:velonly}.
+However, the problems mentioned above for conventional approximation methods are minor in the context of
+RBM. First, the inherent solenoidality of the snapshots facilitates the construction of a divergence-free~\emph{reduced bases}. Each snapshot corresponds to the solution of a high-fidelity problem and, hence, the computational cost
+of constructing the solenoidal basis is indeed significant. However, the computational cost of constructing
+snapshots is inherent to RBM, and it is ignored because this expense is incurred in the offline stage.
+Second, the pressure solution can be recovered \emph{a posteriori}, by solving \eqref{eqn:vvar-1} with a
+different test space, to find $p\in P$ such that for all $\bm s \in S$ it holds that
 \begin{equation}
   b(p, \bm s) = \overline{f}_1(\bm s) - \overline{d}(\bm u_0, \bm s) - c(\bm u_0, \bm u_0, \bm s),
   \label{eqn:sup-vvar}
 \end{equation}
-where $\bm u_0$ is the given velocity solution. Here, the test space $S$ should
-be chosen so that the left-hand-side becomes suitably non-singular. We will see
-in Section~\ref{sec:stab} how this can be done.
+where $\bm u_0$ is the RB velocity solution. Here, the test space $S$ should
+be chosen so that the left-hand-side becomes suitably non-singular.
+Section~\ref{sec:stab} elaborates on a procedure to this purpose.
 
 \subsection{Parametric dependency}
 \label{sec:pardep}
@@ -309,38 +361,72 @@ the forms, viz.
 \end{align}
 We may also note that while the lifted variational form
 \eqref{eqn:var-1}--\eqref{eqn:var-2} is formulated on a function space that is
-possibly parameter-dependent, the corresponding unlifted variational form
-\eqref{eqn:vvar-1}--\eqref{eqn:vvar-2} does not have this problem.
+possibly parameter-dependent, the corresponding homogeneous variational form
+\eqref{eqn:vvar-1}--\eqref{eqn:vvar-2} is in canonical form in the sense that the
+ambient spaces are parameter independent, and the parameter dependence occurs only in
+the functionals.
 
-Let us then consider geometric parameters, by which we mean the possibility that
-the computational domain $\Omega = \Omega(\bm \mu)$ varies. This requires some
-treatment. Let $\hat{\Omega}$ be any \emph{reference domain} (usually
+Let us next consider geometric parameters, by which we mean the possibility that
+the computational domain $\Omega = \Omega(\bm \mu)$ varies in relation to the parameters.
+To cast this problem in canonical form, i.e. to transfer the parameter dependence
+from the ambient spaces to the functionals in the weak formulation, we pull back
+the corresponding multi-linear forms to (function spaces on) a fixed \emph{reference domain}.
+Let $\hat{\Omega}$ denote a suitable reference domain, (usually
 $\hat{\Omega} = \Omega({\bm \mu})$ for some $\bm \mu$, but this is not
-necessarily the case), and let $\pi_{\bm \mu} : \Omega(\bm \mu) \to
-\hat{\Omega}$ be a suitably smooth (and suitably smoothly invertible) map,
-taking any of the parametrized domains into the reference domain. For the sake
+necessarily the case), such that there exists a suitably
+smooth (and smoothly invertible) homeomorphism  $\chi_{\bm \mu} : \Omega(\bm \mu) \to\hat{\Omega}$,
+which maps any of the parametrized domains to the reference domain. For the sake
 of simplicity we will additionally require that the images of $\Gamma_\text{D}$
 and $\Gamma_\text{N}$ are fixed in $\hat{\Omega}$. In other words, it holds that
 \begin{equation}
-  \pi_{\bm \mu}( \Gamma_\text{D}(\bm \mu) ) =
+  \chi_{\bm \mu}( \Gamma_\text{D}(\bm \mu) ) =
   \hat{\Gamma}_\text{D} \subset \partial \hat{\Omega}
 \end{equation}
+%
 and that $\hat{\Gamma}_\text{D}$ as defined is \emph{not} dependent on $\bm
-\mu$. Then the pullback $\pi_{\bm \mu}^*$ is an isomorphism between function
+\mu$. We introduce function spaces on the reference domain according to
+%
+\begin{align*}
+  \hat{U}_0 &= \left\{ \bm u \in H^1(\hat{\Omega})^d \;|\;
+                \bm u = \bm 0 \text{ on } \hat{\Gamma}_\text{D} \right\}, \\
+  \hat{P} &= L^2(\hat{\Omega}).
+\end{align*}
+%
+and two smooth maps ${\pi}_{\bm\mu}^0:\hat{U}_0\to{}U_0$ and ${\pi}_{\bm\mu}^1:\hat{P}_0\to{}P_0$,
+noting that the $\bm\mu$\nobreakdash-dependence of $U_0$ and $P$ is accounted for in the maps $\pi^{0,1}_{\bm\mu}$.
+For instance, $\bm{\pi}_{\bm\mu}:=({\pi}_{\bm\mu}^0,{\pi}_{\bm\mu}^1)$ can be defined as the canonical
+transformation:
+%
+\begin{equation}
+\bm{\pi}_{\bm\mu}:(\hat{\bm{u}},\hat{p})\mapsto\big(\hat{\bm{u}}\circ\chi_{\bm\mu},\hat{p}\circ\chi_{\bm\mu}\big)
+\end{equation}
+%
+However, alternate maps can be constructed. The pullback of the multi-linear forms $b,c,d$ (to the reference
+configuration, under the map~$\bm{\pi}_{\bm\mu}$) is then defined by:
+%
+\begin{equation}
+\begin{aligned}
+({\bm\pi}^*_{\bm\mu}d)\big(\hat{\bm{u}}_0,\hat{\bm{w}};\bm{\mu}\big)
+&=
+d\big({\pi}_{\bm\mu}^0\hat{\bm{u}}_0,{\pi}_{\bm\mu}^0\hat{\bm{w}};\bm{\mu}\big)
+\\
+({\bm\pi}^*_{\bm\mu}b)\big(\hat{p}_0,\hat{\bm{w}};\bm{\mu}\big)
+&=
+b\big({\pi}_{\bm\mu}^1\hat{p}_0,{\pi}_{\bm\mu}^0\hat{\bm{w}};\bm{\mu}\big)
+\end{aligned}
+\end{equation}
+
+Then the pullback $\pi_{\bm \mu}^*$ is an isomorphism between function
 spaces on $\hat{\Omega}$ and function spaces on $\Omega(\bm \mu)$ (be that $U$,
 $U_0$ or $P$), defined such that for any suitable function $\hat{f}$ with domain
 $\hat{\Omega}$ it hold that
 \begin{equation}
   (\pi_{\bm \mu}^* \hat{f})(x) = \hat{f}(\pi_{\bm \mu}^*(x)) = \hat{f}(\hat{x})
 \end{equation}
-As such, the parametric version of \eqref{eqn:vvar-1}--\eqref{eqn:vvar-2} reads
-as follows. Denote the reference function spaces
-\begin{align*}
-  \hat{U}_0 &= \left\{ \bm u \in H^1(\hat{\Omega})^d \;|\;
-                \bm u = \bm 0 \text{ on } \hat{\Gamma}_\text{D} \right\}, \\
-  \hat{P} &= L^2(\hat{\Omega}).
-\end{align*}
-Find $(\hat{\bm u}_0, \hat{p}) \in (\hat{U}_0, \hat{P})$ such
+The parametric version of \eqref{eqn:vvar-1}--\eqref{eqn:vvar-2} can then be cast in
+canonical form by transporting it to the reference configuration via $\pi_{\bm\mu}$.
+Introducing the reference function spaces
+the objective is to find $(\hat{\bm u}_0, \hat{p}) \in (\hat{U}_0, \hat{P})$ such
 that, for all $(\hat{\bm w}, \hat{q}) \in (\hat{U}_0, \hat{P})$ it holds
 that
 \begin{align}
