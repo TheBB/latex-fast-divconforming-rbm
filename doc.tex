@@ -161,7 +161,7 @@ the DOF count in the online stage, accelerating the solution process in the time
 phase.
 
 The use of solenoidal ROM for incompressible-flow problems has been propounded before;
-see, e.g.~\cite{Ballarin2015,Lovgren:2006sb}. However, it appears that the concept was not followed
+see, e.g.~\cite{Ballarin2015ssp,Lovgren2006rbe}. However, it appears that the concept was not followed
 through for the important scenario of geometric parametrizations, in view of the complexity pertaining
 to the required Piola transforms in the ROM. For physical parameters, solenoidal RB is in fact
 straightforward. For parameters
@@ -301,8 +301,8 @@ continuity equation \eqref{eqn:ns-2} and its variational counterpart
 %
 In other words, we have a \emph{velocity-only} formulation.
 
-Considering numerical approximations of~\eqref{ns-1}--\eqref{ns-4},
-formulation~\eqref{eqn:velonlyform} has some practical benefits: in view of the
+Considering numerical approximations of~\eqref{eqn:ns-1}--\eqref{eqn:ns-4},
+formulation~\eqref{eqn:velonly} has some practical benefits: in view of the
 absence of the pressure variable, it voids all concerns about
 pressure stability, and it reduces the size of the discretization.
 On the other hand, two problems arise. The first problem is that it is
@@ -310,7 +310,7 @@ practically infeasible to create divergence-free function spaces, which is
 why this formulation does not see much use in conventional approximation methods.
 The second problem is that the pressure
 is often of interest, e.g. in a post-processing step to determine flow-induced loads by means
-of extraction functions~\cite{MelboKvamsdal2003,Brummelen:2012fk}, impairing a solver
+of extraction functions~\cite{Melbo2003goe,Brummelen2012fep}, impairing a solver
 that does not provide pressure solutions in many applications.
 
 The proposed solenoidal RB method forms an instance of the velocity-only formulation~\eqref{eqn:velonly}.
