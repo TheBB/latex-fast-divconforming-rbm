@@ -226,77 +226,103 @@ We consider the stationary Navier-Stokes equations,
   -p \bm n + \nu (\nabla \bm u) \bm n &= \bm h && \qquad \text{on } \Gamma_\text{N}.
 \end{alignat}
 where $\nu$ is the viscosity, $\bm u, p$ are the unknown velocity and pressure,
-$\Omega \subset \mathbb R^d$ is the domain of interest and
-\[
-  \partial \Omega = \Gamma_\text{D} \cup \Gamma_\text{N}, \qquad
-  \Gamma_\text{D} \cap \Gamma_\text{N} = \emptyset.
-\]
+$\bm{f},\bm{g},\bm{h}$ correspond to exogenous data,
+$\Omega \subset \mathbb R^d$ is the domain of interest with boundary
+$\partial \Omega = \Gamma_\text{D} \cup \Gamma_\text{N}$, $\Gamma_\text{D} \cap \Gamma_\text{N} = \emptyset$
+and~$\bm{n}$ denotes the external unit normal vector.
 
 We define the function spaces
 \begin{align}
-  U &= \left\{ \bm u \in H^1(\Omega)^d \;|\; \bm u = \bm g \text{ on } \Gamma_\text{D} \right\}, \\
-  U_0 &= \left\{ \bm u \in H^1(\Omega)^d \;|\; \bm u = \bm 0 \text{ on } \Gamma_\text{D} \right\}, \\
+  U_{\bm{\zeta}} &= \left\{ \bm u \in [H^1(\Omega)]^d \;|\; \bm u = \bm \zeta \text{ on } \Gamma_\text{D} \right\}, \\
   P &= L^2(\Omega).
 \end{align}
+%
 and note that the weak Galerkin formulation of the problem is to find
-$(\bm u, p) \in (U, P)$ such that, for all $(\bm w, q) \in (U_0, P)$ it holds
+%
+$(\bm u, p) \in (U_{\bm g}, P)$ such that, for all $(\bm w, q) \in (U_0, P)$ it holds
 that
 \begin{align}
-  d(\bm u, \bm w) + c(\bm u, \bm u, \bm w) + b(p, \bm w) &= f_1(\bm w), \label{eqn:var-1} \\
+  a(\bm u, \bm w) + c(\bm u, \bm u, \bm w) + b(p, \bm w) &= d(\bm w), \label{eqn:var-1} \\
   b(q, \bm u) &= 0, \label{eqn:var-2}
 \end{align}
-where the linear, bilinear and trilinear forms $f_1,b,d,c$ are defined as
+%
+where the linear, bilinear and trilinear forms $a,b,c,d$ are defined as
+%
+\begin{subequations}
 \begin{align}
-  f_1(\bm w) &= \int_{\Gamma_\text{N}} \bm h \cdot \bm w + \int_{\Omega} \bm f \cdot \bm w, \label{eqn:form-1} \\
+  a(\bm u, \bm w) &= \nu \int_\Omega \nabla \bm u : \nabla \bm w, \label{eqn:form-3} \\
   b(p, \bm w) &= -\int_\Omega p \nabla \cdot \bm w, \label{eqn:form-2} \\
-  d(\bm u, \bm w) &= \nu \int_\Omega \nabla \bm u : \nabla \bm w, \label{eqn:form-3} \\
-  c(\bm u, \bm v, \bm w) &= \int_\Omega (\bm u \cdot \nabla) \bm v \cdot \bm w. \label{eqn:form-4}
+  c(\bm u, \bm v, \bm w) &= \int_\Omega (\bm u \cdot \nabla) \bm v \cdot \bm w. \label{eqn:form-4}\\
+  d(\bm w) &= \int_{\Gamma_\text{N}} \bm h \cdot \bm w + \int_{\Omega} \bm f \cdot \bm w, \label{eqn:form-1}
 \end{align}
+\end{subequations}
 
 For the purposes of solving \eqref{eqn:var-1}--\eqref{eqn:var-2}, it is
-desirable to introduce a \emph{lift function} $\bm \ell \in U$ satisfying $\bm
-\ell = \bm g$ on $\Gamma_\text{D}$ and to solve for the difference $\bm u - \bm
+customary to introduce a \emph{lift function} $\bm \ell \in U$ satisfying
+$\bm{\ell} = \bm{g}$ on $\Gamma_\text{D}$ and to solve for the difference $\bm u - \bm
 \ell$, which satifisies homogeneous boundary conditions and thus lives in a
 linear space, as opposed to $\bm u$, which resides in an affine space. To this
 end, write $\bm u = \bm u_0 + \bm \ell$. The modified problem then reads: find
 $(\bm u_0, p) \in (U_0, P)$ such that, for all $(\bm w, q) \in (U_0, P)$ it
 holds that
+%
 \begin{align}
-  \overline{d}(\bm u_0, \bm w) + c(\bm u_0, \bm u_0, \bm w) + b(p, \bm w) &= \overline{f}_1(\bm w)
-  \label{eqn:vvar-1}, \\
-  b(q, \bm u_0) &= \overline{f}_2(q). \label{eqn:vvar-2}
+a(\bm u_0, \bm w) + c(\bm u_0, \bm u_0, \bm w) + c_0(\bm u_0, \bm w) +
+%c(\bm u_0, \bm{\ell}, \bm w)
+%\qquad&\notag\\
+%+ c(\bm{\ell},\bm u_0,  \bm w) +
+b(p, \bm w) &= d_0(\bm w)
+\label{eqn:vvar-1}\\
+  b(q, \bm u_0) &= d_1(q).
+\label{eqn:vvar-2}
 \end{align}
-Here, the new forms read
+%
+where the new forms read
+%
 \begin{align}
-  \overline{d}(\bm u, \bm w) &= d(\bm u, \bm w) + c(\bm u, \bm \ell, \bm w) + c(\bm \ell, \bm u, \bm w),
-  \label{eqn:newform-1} \\
-  \overline{f}_1(\bm w) &= f_1(\bm w) - d(\bm \ell, \bm w) - c(\bm \ell, \bm \ell, \bm w),
-  \label{eqn:newform-2} \\
-  \overline{f}_2(\bm w) &= - b(q, \bm \ell). \label{eqn:newform-3}
+c_0(\bm u, \bm w)&=
+c(\bm u, \bm{\ell}, \bm w)+c(\bm{\ell}, \bm u, \bm w)
+\\
+d_0(\bm w) &=d(\bm w)-c(\bm{\ell},\bm{\ell},  \bm w)-a(\bm{\ell}, \bm w),
+\\
+d_1(q)&=-b(q,\bm{\ell})
 \end{align}
-One may then recover the original through $\bm u = \bm u_0 + \bm \ell$.
-
-This procedure is well-known, and most FEM packages will handle Dirichlet
+%Here, the new forms read
+%\begin{align}
+%  \overline{d}(\bm u, \bm w) &= d(\bm u, \bm w) + c(\bm u, \bm \ell, \bm w) + c(\bm \ell, \bm u, \bm w),
+%  \label{eqn:newform-1} \\
+%  \overline{f}_1(\bm w) &= f_1(\bm w) - d(\bm \ell, \bm w) - c(\bm \ell, \bm \ell, \bm w),
+%  \label{eqn:newform-2} \\
+%  \overline{f}_2(\bm w) &= - b(q, \bm \ell). \label{eqn:newform-3}
+%\end{align}
+One may then recover the original through $\bm u = \bm u_0 + \bm \ell$. The lift-based procedure for
+treating Dirichlet boundary conditions is well-known, and most FEM implementations handle
 boundary conditions automatically by categorizing degrees of freedom as internal
-(free) and boundary (not free), requiring no cognitive overhead for the user.
-However it is worth belaboring this point here since the reduced basis method
-presupposes strictly homogeneous Dirichlet boundary conditions. Indeed, the
-reduced model will be a reflection of \eqref{eqn:vvar-1}--\eqref{eqn:vvar-2}, and
+(free) and boundary (constrained), requiring no cognitive overhead for the user.
+However, it is worth alluding to this point here since the reduced-basis method
+presupposes homogeneous Dirichlet boundary conditions, in order to form a linear space.
+[XXX: I do not understand the next sentence]
+Indeed, the reduced model will be a reflection of \eqref{eqn:vvar-1}--\eqref{eqn:vvar-2}, and
 the lift function is only applied \emph{after} lifting the reduced solution into
 the high-fidelity space.
 
 \subsection{Velocity-only formulation}
 
-For what follows it is worth dwelling on the effects of choosing divergence-free
+For what follows it is worth considering the effects of choosing divergence-free
 velocity function spaces. In particular, we will assume in this subsection that
-$\nabla \cdot \bm v = 0$ for all $\bm v \in U_0$, and also that
+$\nabla \cdot \bm{u}_0 = 0$ for all $\bm{u}_0 \in U_0$, and also that
 $\nabla \cdot \bm \ell = 0$. This ensures that $\nabla \cdot \bm u = 0$, so the
-continuity equation \eqref{eqn:ns-2} and its variational counterpart
+continuity equation~\eqref{eqn:ns-2} and its variational counterpart
 \eqref{eqn:vvar-2} are both satisfied by construction. The momentum equation
 \eqref{eqn:vvar-1} then reduces to
+%
 \begin{equation}
-  \overline{d}(\bm u_0, \bm w) + c(\bm u_0, \bm u_0, \bm w) = \overline{f}_1(\bm w).
-  \label{eqn:velonly}
+a(\bm u_0, \bm w) + c(\bm u_0, \bm u_0, \bm w) + c_0(\bm u_0, \bm w)
+%+ c(\bm u_0, \bm{\ell}, \bm w)
+%+ c(\bm{\ell},\bm u_0,  \bm w)
+= d_0(\bm w)
+%-c(\bm{\ell},\bm{\ell},  \bm w)-a(\bm{\ell}, \bm w)
+\label{eqn:velonly}
 \end{equation}
 %
 In other words, we have a \emph{velocity-only} formulation.
@@ -309,120 +335,130 @@ On the other hand, two problems arise. The first problem is that it is
 practically infeasible to create divergence-free function spaces, which is
 why this formulation does not see much use in conventional approximation methods.
 The second problem is that the pressure
-is often of interest, e.g. in a post-processing step to determine flow-induced loads by means
-of extraction functions~\cite{Melbo2003goe,Brummelen2012fep}, impairing a solver
-that does not provide pressure solutions in many applications.
+is often of interest, e.g. in post-processing operations to determine flow-induced loads by means
+of extraction functions~\cite{Melbo2003goe,Brummelen2012fep}, depreciating a solver
+based on~\eqref{eqn:velonly} in many applications.
 
 The proposed solenoidal RB method forms an instance of the velocity-only formulation~\eqref{eqn:velonly}.
-However, the problems mentioned above for conventional approximation methods are minor in the context of
-RBM. First, the inherent solenoidality of the snapshots facilitates the construction of a divergence-free~\emph{reduced bases}. Each snapshot corresponds to the solution of a high-fidelity problem and, hence, the computational cost
-of constructing the solenoidal basis is indeed significant. However, the computational cost of constructing
-snapshots is inherent to RBM, and it is ignored because this expense is incurred in the offline stage.
-Second, the pressure solution can be recovered \emph{a posteriori}, by solving \eqref{eqn:vvar-1} with a
+However, the problems mentioned above for conventional approximation methods are mitigated in the
+RBM setting. First, the inherent solenoidality of the snapshots facilitates the construction of a
+divergence-free~\emph{reduced bases}. Each snapshot corresponds to a high-fidelity solution
+of~\eqref{eqn:vvar-1}--\eqref{eqn:vvar-2} and, hence, the computational cost of constructing the
+solenoidal basis is indeed significant. However, the computational cost of constructing snapshots is
+inherent to RBM, and it is ignored because this expense is incurred in the offline stage.  Second,
+the pressure solution can be recovered \emph{a posteriori}, by solving \eqref{eqn:vvar-1} with a
 different test space, to find $p\in P$ such that for all $\bm s \in S$ it holds that
+[XXX: Why $\ell$ here?]
+%
 \begin{equation}
-  b(p, \bm s) = \overline{f}_1(\bm s) - \overline{d}(\bm u_0, \bm s) - c(\bm u_0, \bm u_0, \bm s),
+  b(p, \bm s) = d_0(\bm s) - a(\bm u_0, \bm s) - c(\bm u_0 + \bm \ell, \bm u_0 + \bm\ell, \bm s),
   \label{eqn:sup-vvar}
 \end{equation}
 where $\bm u_0$ is the RB velocity solution. Here, the test space $S$ should
 be chosen so that the left-hand-side becomes suitably non-singular.
 Section~\ref{sec:stab} elaborates on a procedure to this purpose.
 
-\subsection{Parametric dependency}
+\subsection{Parametric dependence}
 \label{sec:pardep}
 
 We consider the case where the problem \eqref{eqn:var-1}--\eqref{eqn:var-2}
 depends on a number of \emph{parameters}. Denote by $\mathcal{P}$ the parameter
 space (which will for the moment remain abstract) and by $\bm \mu$ any given
 element of $\mathcal{P}$. The typical parameters of interest are generally
-grouped into classes: \emph{physical parameters}, \emph{boundary condition
-  parameters} and \emph{geometric parameters}. The purpose of the following
-discussion is to explicitly resolve the parametric dependence of the linear and
-bilinear forms. We shall denote this with notation such as $d(\bm u, \bm w; \bm
-\mu)$, and similarly for other forms.
+grouped into classes: \emph{physical parameters}, \emph{data parameters}
+and \emph{geometric parameters}. The purpose of the following
+discussion is to explicitly resolve the parametric dependence of the multi-linear forms.
+We shall denote this with notation such as $a(\bm u, \bm w; \bm\mu)$, and similarly for other forms.
 
 Loosely stated, physical parameters are those parameters impacting the physical
 quantities involved in the model, e.g.~the viscosity $\nu$ in
-\eqref{eqn:ns-1}. Boundary condition parameters impact Dirichlet or Neumann
+\eqref{eqn:ns-1}. Data parameters impact the source term~$\bm{f}$, and Dirichlet or Neumann
 boundary data, i.e.~the functions $\bm g$ and $\bm h$ in
 \eqref{eqn:ns-3}--\eqref{eqn:ns-4}, and through $\bm g$ also the lifting
-function $\bm \ell$. Both these kinds of parameters are directly ``visible'' in
-the forms, viz.
+function $\bm \ell$. The aforementioned types of parameters appear directly in
+the multi-linear forms, viz.
+%
 \begin{align}
-  d(\bm u, \bm w; \bm \mu) &= \nu(\bm \mu) \int_\Omega \nabla \bm u : \nabla \bm w, \\
-  f_1(\bm w; \bm \mu) &= \int_{\Gamma_\text{N}} \bm h(\bm \mu) \cdot \bm w
-                        + \int_{\Omega} \bm f \cdot \bm w, \\
-  \overline{d}(\bm u, \bm w; \bm \mu) &= d(\bm u, \bm w; \bm \mu)
-                                        + c(\bm u, \bm \ell(\bm \mu), \bm w)
-                                        + c(\bm \ell(\bm \mu), \bm u, \bm w), \\
-  \overline{f}_1(\bm w; \bm \mu) &= f_1(\bm w; \bm \mu) - d(\bm \ell(\bm \mu), \bm w; \bm \mu)
-                                   - c(\bm \ell(\bm \mu), \bm \ell(\bm \mu), \bm w), \\
-  \overline{f}_2(\bm w; \bm \mu) &= - b(q, \bm \ell(\bm \mu)).
+  a(\bm u, \bm w; \bm \mu) &= \nu(\bm \mu) \int_\Omega \nabla \bm u : \nabla \bm w, \\
+  d_0(\bm w; \bm \mu) &= \int_{\Gamma_\text{N}} \bm h(\bm \mu) \cdot \bm w
+                        + \int_{\Omega} \bm{f}(\bm{\mu}) \cdot \bm w, \\
+  c_0(\bm u, \bm w; \bm \mu) &= c(\bm u, \bm \ell(\bm \mu), \bm w) + c(\bm \ell(\bm \mu), \bm u, \bm w), \\
+  d_1(q; \bm \mu) &= - b(q, \bm \ell(\bm \mu)).
 \end{align}
-We may also note that while the lifted variational form
-\eqref{eqn:var-1}--\eqref{eqn:var-2} is formulated on a function space that is
-possibly parameter-dependent, the corresponding homogeneous variational form
+%
+One may note that while the original variational form
+\eqref{eqn:var-1}--\eqref{eqn:var-2} is set in a function space that is
+possibly parameter-dependent via the Dirichlet data, the corresponding homogeneous variational form
 \eqref{eqn:vvar-1}--\eqref{eqn:vvar-2} is in canonical form in the sense that the
 ambient spaces are parameter independent, and the parameter dependence occurs only in
 the functionals.
 
-Let us next consider geometric parameters, by which we mean the possibility that
+Let us next consider geometric parameters, by which we mean that
 the computational domain $\Omega = \Omega(\bm \mu)$ varies in relation to the parameters.
 To cast this problem in canonical form, i.e. to transfer the parameter dependence
 from the ambient spaces to the functionals in the weak formulation, we pull back
 the corresponding multi-linear forms to (function spaces on) a fixed \emph{reference domain}.
 Let $\hat{\Omega}$ denote a suitable reference domain, (usually
 $\hat{\Omega} = \Omega({\bm \mu})$ for some $\bm \mu$, but this is not
-necessarily the case), such that there exists a suitably
-smooth (and smoothly invertible) homeomorphism  $\chi_{\bm \mu} : \Omega(\bm \mu) \to\hat{\Omega}$,
-which maps any of the parametrized domains to the reference domain. For the sake
-of simplicity we will additionally require that the images of $\Gamma_\text{D}$
-and $\Gamma_\text{N}$ are fixed in $\hat{\Omega}$. In other words, it holds that
+necessarily the case), such that there exists a bi-Lipschitz bijection
+$\chi_{\bm \mu} : \Omega(\bm \mu) \to\hat{\Omega}$,
+which maps any of the parametrized domains to the reference domain. We insist that
+the images of $\Gamma_\text{D}$ and $\Gamma_\text{N}$ are fixed in $\hat{\Omega}$.
+In other words, it holds that
+%
 \begin{equation}
   \chi_{\bm \mu}( \Gamma_\text{D}(\bm \mu) ) =
   \hat{\Gamma}_\text{D} \subset \partial \hat{\Omega}
 \end{equation}
 %
-and that $\hat{\Gamma}_\text{D}$ as defined is \emph{not} dependent on $\bm
-\mu$. We introduce function spaces on the reference domain according to
-%
-\begin{align*}
-  \hat{U}_0 &= \left\{ \bm u \in H^1(\hat{\Omega})^d \;|\;
-                \bm u = \bm 0 \text{ on } \hat{\Gamma}_\text{D} \right\}, \\
-  \hat{P} &= L^2(\hat{\Omega}).
-\end{align*}
-%
-and two smooth maps ${\pi}_{\bm\mu}^0:\hat{U}_0\to{}U_0$ and ${\pi}_{\bm\mu}^1:\hat{P}_0\to{}P_0$,
-noting that the $\bm\mu$\nobreakdash-dependence of $U_0$ and $P$ is accounted for in the maps $\pi^{0,1}_{\bm\mu}$.
-For instance, $\bm{\pi}_{\bm\mu}:=({\pi}_{\bm\mu}^0,{\pi}_{\bm\mu}^1)$ can be defined as the canonical
+and that $\hat{\Gamma}_\text{D}$ as defined is independent of $\bm
+\mu$. Based on the domain map $\chi_{\bm \mu}$, we introduce
+two homeomorphisms ${\pi}_{\bm\mu}^0:[H^1(\hat{\Omega})]^d\to{}[H^1(\Omega(\bm \mu))]^d$
+and ${\pi}_{\bm\mu}^1:L^2(\hat{\Omega})\to{}L^2(\Omega(\bm{\mu}))$. For instance,
+$\bm{\pi}_{\bm\mu}:=({\pi}_{\bm\mu}^0,{\pi}_{\bm\mu}^1)$ can be defined as the canonical
 transformation:
 %
 \begin{equation}
 \bm{\pi}_{\bm\mu}:(\hat{\bm{u}},\hat{p})\mapsto\big(\hat{\bm{u}}\circ\chi_{\bm\mu},\hat{p}\circ\chi_{\bm\mu}\big)
 \end{equation}
 %
-However, alternate maps can be constructed. The pullback of the multi-linear forms $b,c,d$ (to the reference
-configuration, under the map~$\bm{\pi}_{\bm\mu}$) is then defined by:
+However, alternate maps can be constructed. The pullback of the multi-linear forms
+$a,b,c,c_0$ (to the reference domain, by the map~$\bm{\pi}_{\bm\mu}$) is then defined by:
+[XXX: Do $c_0$ the easy way?]
 %
 \begin{equation}
 \begin{aligned}
-({\bm\pi}^*_{\bm\mu}d)\big(\hat{\bm{u}}_0,\hat{\bm{w}};\bm{\mu}\big)
+({\bm\pi}^*_{\bm\mu}a)\big(\hat{\bm{u}},\hat{\bm{w}};\bm{\mu}\big)
 &=
-d\big({\pi}_{\bm\mu}^0\hat{\bm{u}}_0,{\pi}_{\bm\mu}^0\hat{\bm{w}};\bm{\mu}\big)
+a\big({\pi}_{\bm\mu}^0\hat{\bm{u}},{\pi}_{\bm\mu}^0\hat{\bm{w}};\bm{\mu}\big)
 \\
 ({\bm\pi}^*_{\bm\mu}b)\big(\hat{p}_0,\hat{\bm{w}};\bm{\mu}\big)
 &=
 b\big({\pi}_{\bm\mu}^1\hat{p}_0,{\pi}_{\bm\mu}^0\hat{\bm{w}};\bm{\mu}\big)
+\\
+({\bm\pi}^*_{\bm\mu}c)\big(\hat{\bm{u}},\hat{\bm{v}},\hat{\bm{w}};\bm{\mu}\big)
+&=
+c\big({\pi}_{\bm\mu}^0\hat{\bm{u}},{\pi}_{\bm\mu}^0\hat{\bm{v}},{\pi}_{\bm\mu}^0\hat{\bm{w}};\bm{\mu}\big)
+\\
+({\bm\pi}^*_{\bm\mu}c_0)\big(\hat{\bm{u}},\hat{\bm{w}};\bm{\mu}\big)
+&=
+c\big({\pi}_{\bm\mu}^0\hat{\bm{u}},{\pi}_{\bm\mu}^0\hat{\bm{\ell}}(\bm{\mu}),{\pi}_{\bm\mu}^0\hat{\bm{w}};\bm{\mu}\big)
++
+c\big({\pi}_{\bm\mu}^0\hat{\bm{\ell}}(\bm{\mu}),{\pi}_{\bm\mu}^0\hat{\bm{u}},{\pi}_{\bm\mu}^0\hat{\bm{w}};\bm{\mu}\big)
 \end{aligned}
 \end{equation}
+%
+and the pullback of the linear forms $d_0$ and $d_1$ is defined analogously. Let us allude to the
+choice of the pullback of the bilinear form~$c_0$ and the linear form $d_0$, where we opt to construct
+the lift on the reference domain, and then transport it to the parametrized domain.
 
-Then the pullback $\pi_{\bm \mu}^*$ is an isomorphism between function
-spaces on $\hat{\Omega}$ and function spaces on $\Omega(\bm \mu)$ (be that $U$,
-$U_0$ or $P$), defined such that for any suitable function $\hat{f}$ with domain
-$\hat{\Omega}$ it hold that
-\begin{equation}
-  (\pi_{\bm \mu}^* \hat{f})(x) = \hat{f}(\pi_{\bm \mu}^*(x)) = \hat{f}(\hat{x})
-\end{equation}
+%Then the pullback $\pi_{\bm \mu}^*$ is an isomorphism between function
+%spaces on $\hat{\Omega}$ and function spaces on $\Omega(\bm \mu)$ (be that $U$,
+%$U_0$ or $P$), defined such that for any suitable function $\hat{f}$ with domain
+%$\hat{\Omega}$ it hold that
+%\begin{equation}
+%  (\pi_{\bm \mu}^* \hat{f})(x) = \hat{f}(\pi_{\bm \mu}^*(x)) = \hat{f}(\hat{x})
+%\end{equation}
 The parametric version of \eqref{eqn:vvar-1}--\eqref{eqn:vvar-2} can then be cast in
 canonical form by transporting it to the reference configuration via $\pi_{\bm\mu}$.
 Introducing the reference function spaces
