@@ -415,6 +415,7 @@ $\bm{\pi}_{\bm\mu}:=({\pi}_{\bm\mu}^0,{\pi}_{\bm\mu}^1)$ can be defined as the c
 transformation:
 %
 \begin{equation}
+  \label{eqn:cantrf}
 \bm{\pi}_{\bm\mu}:(\hat{\bm{u}},\hat{p})\mapsto\big(\hat{\bm{u}}\circ\chi_{\bm\mu},\hat{p}\circ\chi_{\bm\mu}\big)
 \end{equation}
 %
@@ -422,6 +423,7 @@ However, alternate maps can be constructed. The pullback of the multi-linear for
 $a,b,c,c_0$ (to the reference domain, by the map~$\bm{\pi}_{\bm\mu}$) is then defined by:
 %
 \begin{equation}
+  \label{eqn:newform}
 \begin{aligned}
 ({\bm\pi}^*_{\bm\mu}a)\big(\hat{\bm{u}},\hat{\bm{w}};\bm{\mu}\big)
 &=
@@ -467,40 +469,41 @@ the objective is to find $(\hat{\bm u}_0, \hat{p}) \in (\hat{U}_0, \hat{P})$ suc
 that, for all $(\hat{\bm w}, \hat{q}) \in (\hat{U}_0, \hat{P})$ it holds
 that
 \begin{align}
-  \nonumber \overline{d}(
-    \pi_{\bm \mu}^* \hat{\bm u}_0,
-    \pi_{\bm \mu}^* \hat{\bm w};
+  \nonumber (\bm\pi_{\bm\mu}^* a)(
+    \hat{\bm u}_0,
+    \hat{\bm w};
     \bm \mu
-  ) + c(
-    \pi_{\bm \mu}^* \hat{\bm u}_0,
-    \pi_{\bm \mu}^* \hat{\bm u}_0,
-    \pi_{\bm \mu}^* \hat{\bm w};
+  ) + (\bm\pi_{\bm\mu}^* c)(
+    \hat{\bm u}_0,
+    \hat{\bm u}_0,
+    \hat{\bm w};
     \bm \mu
-  ) \\
-  + \; b(
-    \pi_{\bm \mu}^* \hat{p},
-    \pi_{\bm \mu}^* \hat{\bm w};
+  ) + (\bm\pi_{\bm\mu}^* c_0)(
+    \hat{\bm u}_0,
+    \hat{\bm w};
     \bm \mu
-  ) &= \overline{f}_1(
+  )
+  \\
+  + \; (\bm\pi_{\bm\mu}^* b)(
+    \hat{p},
+    \hat{\bm w};
+    \bm \mu
+  ) &= (\bm\pi_{\bm\mu}^* d_0)(
     \pi_{\bm \mu}^* \hat{\bm w};
     \bm \mu
   )
   \label{eqn:war-1}, \\
-  b(
-    \pi_{\bm \mu}^* \hat{q},
-    \pi_{\bm \mu}^* \hat{\bm u}_0;
+  (\bm\pi_{\bm\mu}^* b)(
+    \hat{q},
+    \hat{\bm u}_0;
     \bm \mu
-  ) &= \overline{f}_2(
-    \pi_{\bm \mu}^* \hat{q};
+  ) &= (\bm\pi_{\bm\mu}^* d_1)(
+    \hat{q};
     \bm \mu
   ). \label{eqn:war-2}
 \end{align}
 This expression is precisely \eqref{eqn:vvar-1}--\eqref{eqn:vvar-2} expressed
-with pullbacks through $\pi_{\bm \mu}$ and parameter-dependent forms. It should
-be noted that the choice of mapping between function spaces is essentially
-arbitrary, and the pullback $\pi_{\bm \mu}^*$, while perhaps the canonical
-choice, is at any rate only a choice. In fact, the essence of this paper lies in
-the exploration of alternatives.
+with pullbacks through $\bm \pi_{\bm \mu}^*$ and parameter-dependent forms.
 
 \subsection{Affine representation}
 \label{sec:affrep}
@@ -509,38 +512,38 @@ We shall assume, and this is critical to the success of what follows, that the
 forms in \eqref{eqn:war-1}--\eqref{eqn:war-2} may be expressed as linear
 combinations of forms that are parameter-\emph{in}dependent.
 \begin{align}
-  \overline{d}(
-    \pi_{\bm \mu}^* \hat{\bm u},
-    \pi_{\bm \mu}^* \hat{\bm w};
+  (\bm\pi_{\bm\mu}^* a)(
+    \hat{\bm u},
+    \hat{\bm w};
     \bm \mu
-  ) &= \sum_{i=1}^{N_d} \theta^d_i(\bm \mu) \hat{d}_i(\hat{\bm u}, \hat{\bm w}), \label{eqn:split-1} \\
-  c(
-    \pi_{\bm \mu}^* \hat{\bm u},
-    \pi_{\bm \mu}^* \hat{\bm v},
-    \pi_{\bm \mu}^* \hat{\bm w};
+  ) &= \sum_{i=1}^{N_a} \theta^a_i(\bm \mu) \hat{a}_i(\hat{\bm u}, \hat{\bm w}), \label{eqn:split-1} \\
+  (\bm\pi_{\bm\mu}^* c)(
+    \hat{\bm u},
+    \hat{\bm v},
+    \hat{\bm w};
     \bm \mu
   ) &= \sum_{i=1}^{N_c} \theta^c_i(\bm \mu)
       \hat{c}_i(\hat{\bm u}, \hat{\bm v}, \hat{\bm w}), \label{eqn:split-2} \\
-  b(
-    \pi_{\bm \mu}^* \hat{p},
-    \pi_{\bm \mu}^* \hat{\bm w};
+  (\bm\pi_{\bm\mu}^* b)(
+    \hat{p},
+     \hat{\bm w};
     \bm \mu
   ) &= \sum_{i=1}^{N_b} \theta^b_i(\bm \mu) \hat{b}_i(\hat{p}, \hat{\bm w}), \label{eqn:split-3} \\
-  \overline{f}_1(
-    \pi_{\bm \mu}^* \hat{\bm w};
+  (\bm\pi_{\bm\mu}^* d_0)(
+    \hat{\bm w};
     \bm \mu
-  ) &= \sum_{i=1}^{N_1} \theta^1_i(\bm \mu) \hat{f}^1_i(\hat{\bm w}), \label{eqn:split-4} \\
-  \overline{f}_2(
-    \pi_{\bm \mu}^* \hat{q};
+  ) &= \sum_{i=1}^{N_1} \theta^0_i(\bm \mu) \hat{d}^0_i(\hat{\bm w}), \label{eqn:split-4} \\
+  (\bm\pi_{\bm\mu}^* d_1)(
+    \hat{q};
     \bm \mu
-  ) &= \sum_{i=1}^{N_2} \theta^2_i(\bm \mu) \hat{f}^2_i(\hat{q}) \label{eqn:split-5}
+  ) &= \sum_{i=1}^{N_2} \theta^1_i(\bm \mu) \hat{d}^1_i(\hat{q}) \label{eqn:split-5}
 \end{align}
 Most boundary condition parameters naturally produce such representations so
-long as the conditions themselves adhere to the same form, i.e.~ if
+long as the conditions themselves adhere to the same form, i.e.~if
 $\bm g = \sum_i \xi_i(\bm \mu) \bm g_i$ then we can also write
-$\bm \ell = \sum_i \xi_i(\bm \mu) \bm \ell_i$ where $\bm \ell_i = \bm g$ on
+$\hat{\bm \ell} = \sum_i \xi_i(\bm \mu) \hat{\bm \ell_i}$ where $\pi_{\bm\mu}^1 \bm \ell_i = \bm g_i$ on
 $\Gamma_\text{D}$. This expression is substituted into
-\eqref{eqn:newform-1}--\eqref{eqn:newform-3}, and the resulting affine
+\eqref{eqn:newform}, and the resulting affine
 representation follows directly. The same derivation can be done for Neumann
 data $\bm h$ and physical parameters such as $\nu$.
 
@@ -583,10 +586,10 @@ an \emph{ensemble} of solutions
 with conventional finite element methods. A covariance matrix is then
 constructed,
 \[
-  C_{ij} = a(\varphi_i, \varphi_j)
+  C_{ij} = z(\varphi_i, \varphi_j)
 \]
 where the bilinear symmetric positive definite covariance function
-$a(\cdot,\cdot)$ is left unspecified for the time being. Given eigenpairs
+$z(\cdot,\cdot)$ is left unspecified for the time being. Given eigenpairs
 $(\lambda_j, \bm v^j)$ of $\bm C$, one may then pick suitably small number $M$
 of reduced basis functions, and form them as \cite[(6.10)]{Quarteroni2016rbm}
 \begin{equation}
@@ -594,28 +597,28 @@ of reduced basis functions, and form them as \cite[(6.10)]{Quarteroni2016rbm}
   \psi_j = \frac{1}{\sqrt{\lambda_j}} \sum_{i=1}^N v^j_i \varphi_i,
   \qquad 1 \leq j \leq M.
 \end{equation}
-and they are orthonormal in the $a(\cdot,\cdot)$ inner product by construction.
+and they are orthonormal in the $z(\cdot,\cdot)$ inner product by construction.
 The basis $V = \left\{ \psi_j \right\}_{j=1}^m$ is our reduced basis.
 
 This basis is optimal in the follwing sense. Let
 $W = \left\{ w_j \right\}_{j=1}^M$ be any orthonormal basis of size $M$, and
 $\bm P_W$ be the orthogonal projection onto $W$, i.e.
 \begin{equation}
-  \bm P_W \varphi = \sum_{j=1}^M a(\varphi, w_j) w_j
+  \bm P_W \varphi = \sum_{j=1}^M z(\varphi, w_j) w_j
 \end{equation}
 Then it holds (see \cite[Proposition 6.2]{Quarteroni2016rbm})
 \begin{equation}
-  \sum_{i=1}^N \| \varphi_i - \bm P_W \varphi_i \|_a^2 \geq
-  \sum_{i=1}^N \| \varphi_i - \bm P_V \varphi_i \|_a^2 =
+  \sum_{i=1}^N \| \varphi_i - \bm P_W \varphi_i \|_z^2 \geq
+  \sum_{i=1}^N \| \varphi_i - \bm P_V \varphi_i \|_z^2 =
   \sum_{k=M+1}^N \lambda_k.
 \end{equation}
 Indeed, since we have by construction that
 \begin{equation}
-  \sum_{i=1}^N \| \varphi_i \|_a^2 = \sum_{k=1}^N \lambda_k,
+  \sum_{i=1}^N \| \varphi_i \|_z^2 = \sum_{k=1}^N \lambda_k,
 \end{equation}
 we obtain the relationship
 \begin{equation}
-  \frac{ \sum_{i=1}^N \| \varphi_i - \bm P_V \varphi \|_a^2 }{ \sum_{i=1}^N \| \varphi_i \|_a^2 }
+  \frac{ \sum_{i=1}^N \| \varphi_i - \bm P_V \varphi \|_z^2 }{ \sum_{i=1}^N \| \varphi_i \|_z^2 }
   \leq \frac{ \sum_{k=M+1}^N \lambda_k }{ \sum_{k=1}^N \lambda_k }.
 \end{equation}
 From this it follows that if $M = M(\epsilon)$ is chosen according to the inequality
@@ -626,14 +629,14 @@ From this it follows that if $M = M(\epsilon)$ is chosen according to the inequa
 \end{equation}
 then the reduced basis $V$ satisfies the error bound
 \begin{equation}
-  \sqrt{ \sum_{i=1}^N \| \varphi_i - \bm P_V \varphi_i \|_a^2 }
-  \leq \epsilon \sqrt{ \sum_{i=1}^N \| \varphi_i \|_a^2 },
+  \sqrt{ \sum_{i=1}^N \| \varphi_i - \bm P_V \varphi_i \|_z^2 }
+  \leq \epsilon \sqrt{ \sum_{i=1}^N \| \varphi_i \|_z^2 },
 \end{equation}
 and furthermore, if the ensemble $\Phi$ is representative of the complete
 solution space \eqref{eqn:nspace}, then we may expect it to hold that
 \begin{equation}
-  \sqrt{ \int_\mathcal{P} \| \varphi(\bm \mu) - \bm P_V \varphi(\bm \mu) \|_a^2 \dd\bm \mu }
-  \leq \epsilon \sqrt{ \int_\mathcal{P} \| \varphi(\bm \mu) \|_a^2 \dd\bm \mu }.
+  \sqrt{ \int_\mathcal{P} \| \varphi(\bm \mu) - \bm P_V \varphi(\bm \mu) \|_z^2 \dd\bm \mu }
+  \leq \epsilon \sqrt{ \int_\mathcal{P} \| \varphi(\bm \mu) \|_z^2 \dd\bm \mu }.
 \end{equation}
 
 \subsection{Field separation}
@@ -642,7 +645,7 @@ In practice, this construction is performed separately on the velocity and
 pressure components. In other words, first one may choose a velocity covariance
 function
 \begin{equation}
-  a = a_u, \qquad a_u((\hat{\bm u}_0, \hat{p}), (\hat{\bm v}_0, \hat{q})) =
+  z = z_u, \qquad a_u((\hat{\bm u}_0, \hat{p}), (\hat{\bm v}_0, \hat{q})) =
   \left( \hat{\bm u}_0, \hat{\bm v}_0 \right)_{H^1(\hat{\Omega})}
   = \int_{\hat{\Omega}} \nabla \hat{\bm u}_0 : \nabla \hat{\bm v}_0.
 \end{equation}
@@ -662,14 +665,14 @@ basis functions
   \qquad 1 \leq j \leq M_U
 \end{equation}
 where $M_U$ is the chosen dimension of the reduced velocity space. Even though
-$a_u$ is globally only semidefinite, since the basis is restricted to only those
-components on which $a_u$ \emph{is} definite, the basis functions remain
+$a_z$ is globally only semidefinite, since the basis is restricted to only those
+components on which $a_z$ \emph{is} definite, the basis functions remain
 linearly independent.
 
 A pressure basis may then be generated by exactly the same method using for
 example
 \begin{equation}
-  a = a_p, \qquad a_p((\hat{\bm u}_0, \hat{p}), (\hat{\bm v}_0, \hat{q})) =
+  z = z_p, \qquad z_p((\hat{\bm u}_0, \hat{p}), (\hat{\bm v}_0, \hat{q})) =
   \left( \hat{p}, \hat{q} \right)_{L^2(\hat{\Omega})}.
 \end{equation}
 
@@ -853,25 +856,25 @@ the way to generate fully divergence-free reduced velocity spaces.
 
 To ensure that solenoidal velocity fields remain solenoidal even in the case of
 parameter-dependent geometries, one employs the Piola transform, whereby the
-physical manifestation of the reference velocity field $\hat{\bm v}$ is not the pullback
-$\pi_{\bm \mu}^* \hat{\bm v}$ as previously indicated (which, indeed, does not
+physical manifestation of the reference velocity field $\hat{\bm v}$ is not the
+canonical transformation \eqref{eqn:cantrf} (which, indeed, does not
 preserve the solenoidal property in general), but rather
 \begin{equation}
   \label{eqn:piola}
-  \bm v = \frac{\bm J}{|\bm J|} \pi_{\bm \mu}^* \hat{\bm v}
+  \bm v = \frac{\bm J}{|\bm J|} (\hat{\bm v} \circ \chi_{\bm\mu})
 \end{equation}
-where $\bm J$ is the Jacobian of the mapping $\pi_{\bm \mu}^{-1}$. This modified
+where $\bm J$ is the Jacobian of the mapping $\chi_{\bm \mu}^{-1}$. This modified
 mapping must then be used in \eqref{eqn:war-1}--\eqref{eqn:war-2}. It should be
 noted that the affine representations \eqref{eqn:split-1}--\eqref{eqn:split-5}
 may be considerably more complicated in this case, since $\bm J$ in general is
 parameter-dependent.
 
 We must also point out that to ensure the success of this method, the lift
-functions $\bm \ell(\bm \mu)$ \emph{must} also be solenoidal. Since the total
-solution $\bm u = \bm u_0 + \bm \ell$, and since the reduced spaces are all
-concerned with the approximation of $\bm u_0$ (and not $\bm u$), this is
-necessary to ensure the equivalence between the solenoidality of $\bm u_0$ and
-that of $\bm u$. In practice one may solve the Stokes problem with a
+functions $\hat{\bm \ell}(\bm \mu)$ \emph{must} also be solenoidal. Since the total
+solution $\hat{\bm u} = \hat{\bm u}_0 + \hat{\bm \ell}$, and since the reduced spaces are all
+concerned with the approximation of $\hat{\bm u}_0$ (and not $\hat{\bm u}$), this is
+necessary to ensure the equivalence between the solenoidality of $\hat{\bm u}_0$ and
+that of $\hat{\bm u}$. In practice one may solve the Stokes problem with a
 divergence-conforming method to generate solenoidal lift functions.
 
 With a fully solenoidal reduced velocity space, we are free to employ the
@@ -1156,7 +1159,7 @@ With this, we can write $\tilde{\theta}_\varphi(r) = \varphi \theta(r)$.
 The mapping from reference coordinates to physical coordinates can then be
 expressed as
 \[
-  \pi_{\varphi}^{-1} \hat{\bm r}
+  \chi_{\varphi}^{-1} \hat{\bm r}
   = \bm R(\varphi \theta(r)) \; \hat{\bm r},
 \]
 where $\hat{\bm r} = \left( \hat{x}, \hat{y} \right)$,
@@ -1166,7 +1169,7 @@ and $\bm R$ is the rotation matrix,
   \bm R(a) = \begin{pmatrix} \cos a & - \sin a \\ \sin a & \cos a \end{pmatrix}.
 \]
 
-The Jacobian $\bm J = \bm J(\pi_{\varphi}^{-1})$ can be expressed,
+The Jacobian $\bm J = \bm J(\chi_{\varphi}^{-1})$ can be expressed,
 using $a = \varphi \theta(r)$ as shorthand, as
 \begin{align}
   \nonumber
@@ -1247,11 +1250,11 @@ comparatively trivial.
 
 \subsection{Non-Piola formulation}
 
-For the laplacian form $d$ we get
+For the Laplacian form $a$ we get
 \begin{align}
-  d(
-    \pi_{\varphi}^* \hat{\bm u},
-    \pi_{\varphi}^* \hat{\bm w};
+  ({\bm\pi}^*_{\bm\mu}a)(
+    \hat{\bm u},
+    \hat{\bm w};
     \varphi
   )
   &= \nu \int_{\hat{\Omega}} (\bm J^{-\intercal} \nabla) \hat{\bm u} : (\bm J^{-\intercal} \nabla) \hat{\bm w}
@@ -1268,11 +1271,11 @@ and we find for the matrix $\bm J^{-1} \bm J^{-\intercal}$ that
     - \varphi^2 \underbrace{\bm P \bm Q^2 \bm P}_{\bm D_2} \\
   &= \bm I + \varphi \bm D_1 - \varphi^2 \bm D_2.
 \end{align}
-Giving a three-term affine representation of $d$ as
+Giving a three-term affine representation of $a$ as
 \begin{equation}
-  d(
-    \pi_{\varphi}^* \hat{\bm u},
-    \pi_{\varphi}^* \hat{\bm w};
+  ({\bm\pi}^*_{\bm\mu}a)(
+    \hat{\bm u},
+    \hat{\bm w};
     \varphi
   ) =
   \nu \int_{\hat{\Omega}} \nabla \hat{\bm u} : \nabla \hat{\bm w}
@@ -1284,9 +1287,9 @@ Giving a three-term affine representation of $d$ as
 
 For the divergence form $b$ we have
 \begin{equation}
-  b(
-    \pi_{\varphi}^* \hat{p},
-    \pi_{\varphi}^* \hat{\bm w};
+  ({\bm\pi}^*_{\bm\mu}b)(
+    \hat{p},
+    \hat{\bm w};
     \varphi
   ) =
   \int_{\hat{\Omega}} \hat{p} (\bm J^{-\intercal} \nabla) \cdot \hat{\bm w}
@@ -1315,9 +1318,9 @@ representation of $b$ in $2n$ terms, where $n$ is a suitable number of terms for
 a truncated Taylor series for $\sin$ or $\cos$, given the range of $\varphi$
 under consideration.
 \begin{equation}
-  b(
-    \pi_{\varphi}^* \hat{p},
-    \pi_{\varphi}^* \hat{\bm w};
+  ({\bm\pi}^*_{\bm\mu}b)(
+    \hat{p},
+    \hat{\bm w};
     \varphi
   ) \approx \sum_{i=0}^{2n} \varphi^i
   \int_{\hat{\Omega}} \hat{p} \bm B^{(-)}_i : \nabla \hat{\bm w}
@@ -1325,10 +1328,10 @@ under consideration.
 
 The same expansion will work with the convective term $c$, viz.
 \begin{equation}
-  c(
-    \pi_{\varphi}^* \hat{\bm u},
-    \pi_{\varphi}^* \hat{\bm v},
-    \pi_{\varphi}^* \hat{\bm w};
+  ({\bm\pi}^*_{\bm\mu}c)(
+    \hat{\bm u},
+    \hat{\bm v},
+    \hat{\bm w};
     \varphi
   )
   = \int_{\hat{\Omega}} (\hat{\bm u} \cdot \bm J^{-\intercal}\nabla) \hat{\bm v} \cdot \hat{\bm w}
@@ -1357,9 +1360,9 @@ J^{-\intercal}$.
 For the form $b$ we then get
 \begin{align}
   \nonumber
-  b(
-    \pi_{\varphi}^* \hat{p},
-    \pi_{\varphi}^* \hat{\bm w};
+  ({\bm\pi}^*_{\bm\mu}b)(
+    \hat{p},
+    \hat{\bm w};
     \varphi
   ) &= \int_{\hat{\Omega}} \hat{p} \bm J^{-\intercal} : \nabla (\bm J \hat{\bm w})
     \approx \int_{\hat{\Omega}} \hat{p}
@@ -1375,10 +1378,10 @@ terms, this is an affine representation with $4n$ terms.
 The form $c$ has similar complexity.
 \begin{align}
   \nonumber
-  c(
-    \pi_{\varphi}^* \hat{\bm u},
-    \pi_{\varphi}^* \hat{\bm v},
-    \pi_{\varphi}^* \hat{\bm w};
+  ({\bm\pi}^*_{\bm\mu}c)(
+    \hat{\bm u},
+    \hat{\bm v},
+    \hat{\bm w};
     \varphi
   )
   &= \int_{\hat{\Omega}} (\bm J \hat{\bm u} \cdot \bm J^{-\intercal}\nabla)
@@ -1390,12 +1393,12 @@ The form $c$ has similar complexity.
     \int_{\hat{\Omega}} (\hat{\bm u} \cdot \nabla) \bm B^{(+)}_i \hat{\bm v} \cdot \bm B^{(+)}_j \hat{\bm w}.
 \end{align}
 
-And finally, $d$ can be represented as
+And finally, $a$ can be represented as
 \begin{align}
   \nonumber
-  d(
-    \pi_{\varphi}^* \hat{\bm u},
-    \pi_{\varphi}^* \hat{\bm w};
+  ({\bm\pi}^*_{\bm\mu}a)(
+    \hat{\bm u},
+    \hat{\bm w};
     \varphi
   ) &= \int_{\hat{\Omega}}
       (\bm J^{-\intercal} \nabla) (\bm J \hat{\bm u}) :
