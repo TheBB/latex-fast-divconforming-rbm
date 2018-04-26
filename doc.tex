@@ -176,7 +176,9 @@ we assess the computational efficiency of such an approach.
 
 An important additional aspect of the present work is the use of divergence-conforming B-spline
 approximations for the high-fidelity simulations. These methods have recently been introduced
-by Evans and Hughes~\cite{Evans2013idc1,Evans2013idc2}, and rely on formulating a pressure space that
+by Evans and Hughes~\cite{Evans2012dsa,Evans2013idc1,Evans2013idc2,Evans2013idc3}. See also work in
+\cite{Buffa2011ias,vanOpstal2017idc}.
+TThey rely on formulating a pressure space that
 is exactly equal to the divergence of the velocity space. This is enabled by the use of
 B-spline basis functions, recently popularized in the field of isogeometric
 analysis~\cite{Cottrell2009iat}. The divergence-conforming approximations provide pointwise
@@ -300,10 +302,6 @@ boundary conditions automatically by categorizing degrees of freedom as internal
 (free) and boundary (constrained), requiring no cognitive overhead for the user.
 However, it is worth alluding to this point here since the reduced-basis method
 presupposes homogeneous Dirichlet boundary conditions, in order to form a linear space.
-[XXX: I do not understand the next sentence]
-Indeed, the reduced model will be a reflection of \eqref{eqn:vvar-1}--\eqref{eqn:vvar-2}, and
-the lift function is only applied \emph{after} lifting the reduced solution into
-the high-fidelity space.
 
 \subsection{Velocity-only formulation}
 
@@ -347,10 +345,9 @@ solenoidal basis is indeed significant. However, the computational cost of const
 inherent to RBM, and it is ignored because this expense is incurred in the offline stage.  Second,
 the pressure solution can be recovered \emph{a posteriori}, by solving \eqref{eqn:vvar-1} with a
 different test space, to find $p\in P$ such that for all $\bm s \in S$ it holds that
-[XXX: Why $\ell$ here?]
 %
 \begin{equation}
-  b(p, \bm s) = d_0(\bm s) - a(\bm u_0, \bm s) - c(\bm u_0 + \bm \ell, \bm u_0 + \bm\ell, \bm s),
+  b(p, \bm s) = d_0(\bm s) - a(\bm u_0, \bm s) - c(\bm u_0, \bm u_0, \bm s) - c_0(\bm u_0, \bm s),
   \label{eqn:sup-vvar}
 \end{equation}
 where $\bm u_0$ is the RB velocity solution. Here, the test space $S$ should
@@ -423,7 +420,6 @@ transformation:
 %
 However, alternate maps can be constructed. The pullback of the multi-linear forms
 $a,b,c,c_0$ (to the reference domain, by the map~$\bm{\pi}_{\bm\mu}$) is then defined by:
-[XXX: Do $c_0$ the easy way?]
 %
 \begin{equation}
 \begin{aligned}
@@ -447,9 +443,15 @@ c\big({\pi}_{\bm\mu}^0\hat{\bm{\ell}}(\bm{\mu}),{\pi}_{\bm\mu}^0\hat{\bm{u}},{\p
 \end{aligned}
 \end{equation}
 %
-and the pullback of the linear forms $d_0$ and $d_1$ is defined analogously. Let us allude to the
-choice of the pullback of the bilinear form~$c_0$ and the linear form $d_0$, where we opt to construct
-the lift on the reference domain, and then transport it to the parametrized domain.
+and the pullback of the linear forms $d_0$ and $d_1$ is defined analogously.
+\begin{remark}
+  \label{rem:lift}
+  Note that the lift $\hat{\bm \ell}$ is constructed on the reference domain, and then transported
+  via $\pi_{\bm \mu}^0$ to the parametrized domain. In this construction it is important to point
+  out that $\pi_{\bm \mu}^0 \hat{\bm \ell}$ is assumed to actually be a valid lift, i.e.~it
+  has the correct value on the Dirichlet boundaries, and that the reference lifts and
+  transformations must be designed so that this assumption holds.
+\end{remark}
 
 %Then the pullback $\pi_{\bm \mu}^*$ is an isomorphism between function
 %spaces on $\hat{\Omega}$ and function spaces on $\Omega(\bm \mu)$ (be that $U$,
@@ -1100,7 +1102,13 @@ so that
 \]
 and which smoothly interpolates between the two in the region
 $r_\text{min} < r < r_\text{max}$. See Figure~\ref{fig:thetatilde} for an
-example.
+example. Note that we also require
+\[
+  \tilde{\theta}_\varphi'(r_\text{min}) =
+  \tilde{\theta}_\varphi'(r_\text{max}) = 0
+\]
+so that Remark~\ref{rem:lift} is satisfied, i.e.~the mapping of lifts between reference and
+transformed domains will not modify the boundary data.
 
 \begin{figure}
   \begin{center}
