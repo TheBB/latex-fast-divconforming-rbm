@@ -1438,17 +1438,22 @@ NACA0015 profile with a chord length of $1$, thus giving an approximate maximal
 Reynold's number of $120$.
 
 The reference domain $\hat{\Omega}$ was chosen as a cylinder of radius $10$,
-centered at the center of the airfoil. The mesh had $80$ elements in
-the angular direction and $30$ elements in the radial direction. Given
-discretization nodes $\{c_i\}_{i=1}^{80}$ for the airfoil, and
-uniformly spaced nodes $\{b_i\}_{i=1}^{80}$ for the surrounding
+centered at the center of the airfoil. The mesh had $120$ elements in
+the angular direction and $40$ elements in the radial direction. Given
+discretization nodes $\{c_i\}_{i=1}^{120}$ for the airfoil, and
+uniformly spaced nodes $\{b_i\}_{i=1}^{120}$ for the surrounding
 circle, the interior nodes of the mesh were chosen as
 \begin{equation}
   \label{eq:meshgen}
-  d_{ij} = \left( \frac{j}{30} \right)^3 b_i +
-  \left( 1 - \left( \frac{j}{30} \right)^3 \right) c_i
+  d_{ij} = z(j) b_i + (1 - z(j)) c_i
 \end{equation}
-providing an algebraically graded mesh with finer resolution near the airfoil.
+where
+\[
+  z(j) = \frac{e^{\gamma j / 120} - 1}{e^{\gamma} - 1}, \qquad
+  \gamma = 120 \log{\alpha}
+\]
+and where $\alpha$ is a grading factor. This produces a mesh where the elements grow in size by a
+factor of approximately $\alpha$ for each radial layer. We used $\alpha = 1.2$.
 
 The boundary conditions were enforced strongly at the inflow boundary,
 with no-slip conditions on the airfoil and a do-nothing zero Neumann
@@ -2012,17 +2017,17 @@ significantly faster if the block solver algorithm is employed.
       legend columns=2,
       ]
       \addplot[blue, thick, mark=*, mark options={solid}]
-      table[x index={19}, y index={4}]{data/airfoil-results-no-piola-sups-no-block.csv};
+      table[x index={15}, y index={4}]{data/airfoil-results-no-piola-sups-no-block.csv};
       \addplot[blue, thick, densely dashed, mark=o, mark options={solid}]
-      table[x index={19}, y index={8}]{data/airfoil-results-no-piola-sups-no-block.csv};
+      table[x index={15}, y index={8}]{data/airfoil-results-no-piola-sups-no-block.csv};
       \addplot[red, thick, mark=*, mark options={solid}]
-      table[x index={19}, y index={4}]{data/airfoil-results-piola-sups-no-block.csv};
+      table[x index={15}, y index={4}]{data/airfoil-results-piola-sups-no-block.csv};
       \addplot[red, thick, densely dashed, mark=o, mark options={solid}]
-      table[x index={19}, y index={8}]{data/airfoil-results-piola-sups-no-block.csv};
+      table[x index={15}, y index={8}]{data/airfoil-results-piola-sups-no-block.csv};
       \addplot[green, thick, mark=*, mark options={solid}]
-      table[x index={19}, y index={4}]{data/airfoil-results-piola-sups-block.csv};
+      table[x index={15}, y index={4}]{data/airfoil-results-piola-sups-block.csv};
       \addplot[green, thick, densely dashed, mark=o, mark options={solid}]
-      table[x index={19}, y index={8}]{data/airfoil-results-piola-sups-block.csv};
+      table[x index={15}, y index={8}]{data/airfoil-results-piola-sups-block.csv};
       \legend{
         Regular stabilized ($v$),
         Regular stabilized ($p$),
