@@ -1882,6 +1882,13 @@ enrichment procedure to control the stability of the method. It also highlights
 that no significant degradation of stability is to be expected for
 divergence-conforming reduced methods.
 
+Table~\ref{tbl:subspaceangles} show the angles between the velocity and supremizer spaces. Since
+linear independence between the two spaces are not enforced \emph{a priori}, these angles are
+relevant to the question whether the sum velocity space may possibly be degenerate. This shows that
+for all bases considered in this work, the two spaces are suitably linearly
+independent. Nevertheless, the divergence-conforming bases show remarkable near-orthogonality for
+larger $M$ that the Taylor-Hood method does not match.
+
 \begin{table}
   \begin{center}
     \bgroup\def\arraystretch{1.2}
@@ -1905,6 +1912,26 @@ divergence-conforming reduced methods.
     method were all indistinguishable from zero to machine precision.
   }
   \label{tbl:lbb}
+\end{table}
+
+\begin{table}
+  \begin{center}
+    \bgroup\def\arraystretch{1.2}
+    \begin{tabular}{crr}
+      $\sharp$ DoFs ($M$) & {\bf Taylor-Hood} & {\bf Conforming} \\
+      \hline $10$ & $\SI{82.2}{\degree}$ & $\SI{89.9}{\degree}$ \\
+      \hline $20$ & $\SI{75.4}{\degree}$ & $\SI{88.9}{\degree}$ \\
+      \hline $30$ & $\SI{65.7}{\degree}$ & $\SI{88.3}{\degree}$ \\
+      \hline $40$ & $\SI{62.7}{\degree}$ & $\SI{86.9}{\degree}$ \\
+      \hline $50$ & $\SI{59.4}{\degree}$ & $\SI{85.7}{\degree}$ \\
+      \hline
+    \end{tabular}
+    \egroup
+  \end{center}
+  \caption{
+    Angles between the velocity and supremizer spaces for the two methods for various basis sizes.
+  }
+  \label{tbl:subspaceangles}
 \end{table}
 
 \subsection{Performance}
