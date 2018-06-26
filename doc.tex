@@ -409,9 +409,9 @@ In other words, it holds that
 %
 and that $\hat{\Gamma}_\text{D}$ as defined is independent of $\bm
 \mu$. Based on the domain map $\chi_{\bm \mu}$, we introduce
-two homeomorphisms ${\pi}_{\bm\mu}^0:[H^1(\hat{\Omega})]^d\to{}[H^1(\Omega(\bm \mu))]^d$
-and ${\pi}_{\bm\mu}^1:L^2(\hat{\Omega})\to{}L^2(\Omega(\bm{\mu}))$. For instance,
-$\bm{\pi}_{\bm\mu}:=({\pi}_{\bm\mu}^0,{\pi}_{\bm\mu}^1)$ can be defined as the canonical
+two homeomorphisms ${\pi}_{\bm\mu}^\textsc{v}:[H^1(\hat{\Omega})]^d\to{}[H^1(\Omega(\bm \mu))]^d$
+and ${\pi}_{\bm\mu}^\textsc{p}:L^2(\hat{\Omega})\to{}L^2(\Omega(\bm{\mu}))$. For instance,
+$\bm{\pi}_{\bm\mu}:=({\pi}_{\bm\mu}^\textsc{v},{\pi}_{\bm\mu}^\textsc{p})$ can be defined as the canonical
 transformation:
 %
 \begin{equation}
@@ -427,47 +427,31 @@ $a,b,c,c_0$ (to the reference domain, by the map~$\bm{\pi}_{\bm\mu}$) is then de
 \begin{aligned}
 ({\bm\pi}^*_{\bm\mu}a)\big(\hat{\bm{u}},\hat{\bm{w}};\bm{\mu}\big)
 &=
-a\big({\pi}_{\bm\mu}^0\hat{\bm{u}},{\pi}_{\bm\mu}^0\hat{\bm{w}};\bm{\mu}\big)
+a\big({\pi}_{\bm\mu}^\textsc{v}\hat{\bm{u}},{\pi}_{\bm\mu}^\textsc{v}\hat{\bm{w}};\bm{\mu}\big)
 \\
-({\bm\pi}^*_{\bm\mu}b)\big(\hat{p}_0,\hat{\bm{w}};\bm{\mu}\big)
+({\bm\pi}^*_{\bm\mu}b)\big(\hat{p},\hat{\bm{w}};\bm{\mu}\big)
 &=
-b\big({\pi}_{\bm\mu}^1\hat{p}_0,{\pi}_{\bm\mu}^0\hat{\bm{w}};\bm{\mu}\big)
+b\big({\pi}_{\bm\mu}^\textsc{p}\hat{p},{\pi}_{\bm\mu}^\textsc{v}\hat{\bm{w}};\bm{\mu}\big)
 \\
 ({\bm\pi}^*_{\bm\mu}c)\big(\hat{\bm{u}},\hat{\bm{v}},\hat{\bm{w}};\bm{\mu}\big)
 &=
-c\big({\pi}_{\bm\mu}^0\hat{\bm{u}},{\pi}_{\bm\mu}^0\hat{\bm{v}},{\pi}_{\bm\mu}^0\hat{\bm{w}};\bm{\mu}\big)
+c\big({\pi}_{\bm\mu}^\textsc{v}\hat{\bm{u}},{\pi}_{\bm\mu}^\textsc{v}\hat{\bm{v}},{\pi}_{\bm\mu}^\textsc{v}\hat{\bm{w}};\bm{\mu}\big)
 \\
 ({\bm\pi}^*_{\bm\mu}c_0)\big(\hat{\bm{u}},\hat{\bm{w}};\bm{\mu}\big)
 &=
-c\big({\pi}_{\bm\mu}^0\hat{\bm{u}},{\pi}_{\bm\mu}^0\hat{\bm{\ell}}(\bm{\mu}),{\pi}_{\bm\mu}^0\hat{\bm{w}};\bm{\mu}\big)
+c\big({\pi}_{\bm\mu}^\textsc{v}\hat{\bm{u}},{\pi}_{\bm\mu}^\textsc{v}\hat{\bm{\ell}}(\bm{\mu}),{\pi}_{\bm\mu}^\textsc{v}\hat{\bm{w}};\bm{\mu}\big)
 +
-c\big({\pi}_{\bm\mu}^0\hat{\bm{\ell}}(\bm{\mu}),{\pi}_{\bm\mu}^0\hat{\bm{u}},{\pi}_{\bm\mu}^0\hat{\bm{w}};\bm{\mu}\big)
+c\big({\pi}_{\bm\mu}^\textsc{v}\hat{\bm{\ell}}(\bm{\mu}),{\pi}_{\bm\mu}^\textsc{v}\hat{\bm{u}},{\pi}_{\bm\mu}^\textsc{v}\hat{\bm{w}};\bm{\mu}\big)
 \end{aligned}
 \end{equation}
 %
-and the pullback of the linear forms $d_0$ and $d_1$ is defined analogously.
-\begin{remark}
-  \label{rem:lift}
-  Note that the lift $\hat{\bm \ell}$ is constructed on the reference domain, and then transported
-  via $\pi_{\bm \mu}^0$ to the parametrized domain. In this construction it is important to point
-  out that $\pi_{\bm \mu}^0 \hat{\bm \ell}$ is assumed to actually be a valid lift, i.e.~it
-  has the correct value on the Dirichlet boundaries, and that the reference lifts and
-  transformations must be designed so that this assumption holds.
-\end{remark}
-
-%Then the pullback $\pi_{\bm \mu}^*$ is an isomorphism between function
-%spaces on $\hat{\Omega}$ and function spaces on $\Omega(\bm \mu)$ (be that $U$,
-%$U_0$ or $P$), defined such that for any suitable function $\hat{f}$ with domain
-%$\hat{\Omega}$ it hold that
-%\begin{equation}
-%  (\pi_{\bm \mu}^* \hat{f})(x) = \hat{f}(\pi_{\bm \mu}^*(x)) = \hat{f}(\hat{x})
-%\end{equation}
-The parametric version of \eqref{eqn:vvar-1}--\eqref{eqn:vvar-2} can then be cast in
-canonical form by transporting it to the reference configuration via $\pi_{\bm\mu}$.
-Introducing the reference function spaces
-the objective is to find $(\hat{\bm u}_0, \hat{p}) \in (\hat{U}_0, \hat{P})$ such
+and the pullback of the linear forms $d_0$ and $d_1$ is defined analogously. By means of the
+pullback operation ${\bm\pi}^*_{\bm\mu}$, the parametric version
+of~\eqref{eqn:vvar-1}\nobreakdash--\eqref{eqn:vvar-2} can be cast
+in the canonical form: find $(\hat{\bm u}_0, \hat{p}) \in (\hat{U}_0, \hat{P})$ such
 that, for all $(\hat{\bm w}, \hat{q}) \in (\hat{U}_0, \hat{P})$ it holds
 that
+%
 \begin{align}
   \nonumber (\bm\pi_{\bm\mu}^* a)(
     \hat{\bm u}_0,
@@ -502,9 +486,28 @@ that
     \bm \mu
   ). \label{eqn:war-2}
 \end{align}
-This expression is precisely \eqref{eqn:vvar-1}--\eqref{eqn:vvar-2} expressed
+%
+One may note that~\eqref{eqn:war-2} is precisely \eqref{eqn:vvar-1}--\eqref{eqn:vvar-2} expressed
 with pullbacks through $\bm \pi_{\bm \mu}^*$ and parameter-dependent forms.
 
+
+\begin{remark}
+  \label{rem:lift}
+  It is to be noted that the lift $\hat{\bm \ell}$ in~\eqref{eqn:newform} is constructed on
+  the reference domain, and then transported
+  via $\pi_{\bm \mu}^\textsc{v}$ to the parametrized domain. In this construction it is important
+  that $\smash[t]{\pi_{\bm \mu}^0 \hat{\bm \ell}}$ and~$\pi_{\bm \mu}^0$ are compatible, so that
+  the trace of $\bm{\ell}=\smash[t]{\pi_{\bm \mu}^0\textsc{v}\hat{\bm \ell}}$ on $\Gamma_\text{D}$
+  coincides with the prescribed Dirichlet data.
+\end{remark}
+
+%Then the pullback $\pi_{\bm \mu}^*$ is an isomorphism between function
+%spaces on $\hat{\Omega}$ and function spaces on $\Omega(\bm \mu)$ (be that $U$,
+%$U_0$ or $P$), defined such that for any suitable function $\hat{f}$ with domain
+%$\hat{\Omega}$ it hold that
+%\begin{equation}
+%  (\pi_{\bm \mu}^* \hat{f})(x) = \hat{f}(\pi_{\bm \mu}^*(x)) = \hat{f}(\hat{x})
+%\end{equation}
 \subsection{Affine representation}
 \label{sec:affrep}
 
@@ -538,10 +541,12 @@ combinations of forms that are parameter-\emph{in}dependent.
     \bm \mu
   ) &= \sum_{i=1}^{N_2} \theta^1_i(\bm \mu) \hat{d}^1_i(\hat{q}) \label{eqn:split-5}
 \end{align}
-Most boundary condition parameters naturally produce such representations so
+%
+Most boundary-condition parameters naturally produce such representations so
 long as the conditions themselves adhere to the same form, i.e.~if
 $\bm g = \sum_i \xi_i(\bm \mu) \bm g_i$ then we can also write
-$\hat{\bm \ell} = \sum_i \xi_i(\bm \mu) \hat{\bm \ell_i}$ where $\pi_{\bm\mu}^1 \bm \ell_i = \bm g_i$ on
+$\hat{\bm \ell} = \sum_i \xi_i(\bm \mu) \hat{\bm \ell_i}$ where
+$\pi_{\bm\mu}^\textsc{v} \bm \hat{\bm{\ell}}_i = \bm{g}_i$ on
 $\Gamma_\text{D}$. This expression is substituted into
 \eqref{eqn:newform}, and the resulting affine
 representation follows directly. The same derivation can be done for Neumann
@@ -558,51 +563,91 @@ possible.
 \section{Model order reduction}
 \label{sec:reduction}
 
-Typically, the accurate solution of the Navier-Stokes equations (and, indeed,
-many other physical models) may require a discrete solution space whose
-dimension far exceeds the natural dimension of the model itself. In other words,
-the \emph{practical} dimension (where by ``practical'' we mean
-``within reasonable error'') of the space
+\subsection{High-fidelity approximation}
+The reduced basis is build from underlying high-fidelity finite-element or isogeometric~\cite{Cottrell2009iat}
+approximations of~\eqref{eqn:war-1}--\eqref{eqn:war-2}. To provide a setting for the RB, we therefore
+first introduce the high-fidelity setting.
+We introduce a partition $\mathcal{T}^h$ of the reference domain~$\hat{\Omega}$ into non-overlapping
+element domains. The superscript $h$ indicates dependence
+on a mesh-resolution parameter. We insist that $\mathcal{T}^h$ satisfies the usual uniformity and
+regularity conditions. The mesh $\mathcal{T}^h$ serves as a support structure for conforming
+finite-dimensional approximation spaces $\hat{U}_0^h\subset\hat{U}_0$ and $\hat{P}^h\subset\hat{P}$.
+We assume that the pairing of the velocity and pressure spaces is stable in the inf-sup sense; see,
+for instance, \cite{} and~\cite{} for stable velocity-pressure pairs in the finite-element and isogeometric setting,
+respectively. For each $\bm{\mu}\in\mathcal{P}$, the high-fidelity approximation
+$(\hat{\bm{u}}_0^h(\bm{\mu}),\hat{p}^h(\bm{\mu}))$ corresponds to the solution
+of~\eqref{eqn:war-1}\nobreakdash--\eqref{eqn:war-2} with $\hat{U}_0,\hat{P}$ replaced by their
+discrete counterparts $\hat{U}_0^h,\hat{P}^h$.
+
+The considered high-fidelity approximation spaces $\hat{U}_0^h,\hat{P}^h$ must be sufficiently fine to
+ensure that the error in the high-fidelity approximations is acceptable in accordance with a prescribed tolerance
+for all considered parameter values $\bm{\mu}\in\mathcal{P}$. For instance, one may insist that
+%
 \begin{equation}
-  \left\{ (\hat{u}_0(\bm \mu), p(\bm \mu)) \;|\; \bm \mu \in \mathcal{P} \right\}
-  \subset \hat{U}_0 \times \hat{P}
+\label{eqn:hifi_con}
+\sup_{\bm{\mu}\in\mathcal{P}}
+\big\|\hat{u}_0(\bm{\mu})-\hat{u}_0^h(\bm{\mu})\big\|_{H^1(\hat{\Omega})}\leq\textsc{tol}_0,
+\qquad
+\sup_{\bm{\mu}\in\mathcal{P}}
+\big\|\hat{p}(\bm{\mu})-\hat{p}^h(\bm{\mu})\big\|_{L^2(\hat{\Omega})}\leq\textsc{tol}_1,
+\end{equation}
+%
+for certain prescribed tolerances $\textsc{tol}_{0,1}$.
+The requirements imposed by~\eqref{eqn:hifi_con} generally lead to very high dimensionality of $\hat{U}_0^h\times\hat{P}^h$,
+impeding direct use of the high-fidelity model for fast- or many-query applications.
+
+\subsection{Construction of the Reduced Basis by Proper Orthogonal Decomposition}
+The main notion underlying RB methods is that in many applications, the dimension of the
+high-fidelity discrete solution space  far exceeds the natural dimension of the parametrized
+model itself. In other words, it is anticipated that the high-fidelity solution space
+%
+\begin{equation}
+  \left\{ (\hat{\bm u}^h_0(\bm \mu), \hat{p}^h(\bm \mu)) \;|\; \bm \mu \in \mathcal{P} \right\}
+  \subset \hat{U}_0^h \times \hat{P}^h
   \label{eqn:nspace}
 \end{equation}
-which by construction is the space with the most suitable approximation
-properties for all parameters $\bm \mu \in \mathcal{P}$. This dimension may be
-considerably more manageable than the dimension of any discretization of
-$\hat{U}_0 \times \hat{P}$ neccessary to achieve good accuracy with conventional
-finite element methods.
+%
+admits an adequately accurate approximation by a finite-dimensional space whose dimension is
+significantly lower than that of the high-fidelity approximation space $\smash[t]{\hat{U}_0^h \times \hat{P}^h}$.
+This dimension may be
+considerably more manageable than the dimension of any discretization of $\hat{U}_0 \times \hat{P}$
+necessary to achieve sufficient accuracy with conventional methods.
 
-We use Proper Orthogonal Decomposition (POD)
-\cite{Chatterjee2000ipo,Quarteroni2016rbm} to produce an approximation of the
-space \eqref{eqn:nspace}. It proceeds by sampling $\mathcal{P}$ and generating
-an \emph{ensemble} of solutions
-\[
+We use standard Proper Orthogonal Decomposition (POD)~\cite{Chatterjee2000ipo,Quarteroni2016rbm} to produce
+a low-dimensional approximation of the space~\eqref{eqn:nspace}. POD proceeds by sampling $\mathcal{P}$
+and generating an \emph{ensemble} of high-fidelity approximations
+%
+\begin{equation}
+\label{eqn:ensemble}
   \Phi = \left\{
-    \varphi_i = (\hat{\bm u}^i_0(\bm \mu_i), \hat{p}^i(\bm \mu_i))
+    \varphi_i = (\hat{\bm u}^h_0(\bm \mu_i), \hat{p}^h(\bm \mu_i))
   \right\}_{i=1}^N
-\]
-with conventional finite element methods. A covariance matrix is then
+\end{equation}
+%
+with conventional finite element or isogeometric methods. A covariance matrix is then
 constructed,
 \[
   C_{ij} = z(\varphi_i, \varphi_j)
 \]
 where the bilinear symmetric positive definite covariance function
 $z(\cdot,\cdot)$ is left unspecified for the time being. Given eigenpairs
-$(\lambda_j, \bm v^j)$ of $\bm C$, one may then pick suitably small number $M$
-of reduced basis functions, and form them as \cite[(6.10)]{Quarteroni2016rbm}
+$(\lambda_j, \bm v^j)$ ($\lambda_1\geq\lambda_2\geq\cdots\geq\lambda_N$)
+of $\bm C$, one may then compose a suitably small number $M$
+of basis functions~\cite[(6.10)]{Quarteroni2016rbm}:
+%
 \begin{equation}
   \label{eqn:spd}
   \psi_j = \frac{1}{\sqrt{\lambda_j}} \sum_{i=1}^N v^j_i \varphi_i,
   \qquad 1 \leq j \leq M.
 \end{equation}
-and they are orthonormal in the $z(\cdot,\cdot)$ inner product by construction.
-The basis $V = \left\{ \psi_j \right\}_{j=1}^m$ is our reduced basis.
-
-This basis is optimal in the follwing sense. Let
-$W = \left\{ w_j \right\}_{j=1}^M$ be any orthonormal basis of size $M$, and
-$\bm P_W$ be the orthogonal projection onto $W$, i.e.
+%
+The basis $V=\{\psi_j\}_{j=1}^M$ constitutes a reduced basis in the sense
+that $\operatorname{span}V\subset\operatorname{span}\Phi$. The basis~$V$ is orthonormal
+in the $z(\cdot,\cdot)$ inner product by construction and it
+is optimal in the following sense: Let
+$W =\{ w_j\}_{j=1}^M$ be any orthonormal basis of size $M$, and
+$\bm P_W:\Phi\to{}W$ be the orthogonal projection onto $W$, i.e.
+%
 \begin{equation}
   \bm P_W \varphi = \sum_{j=1}^M z(\varphi, w_j) w_j
 \end{equation}
@@ -616,10 +661,12 @@ Indeed, since we have by construction that
 \begin{equation}
   \sum_{i=1}^N \| \varphi_i \|_z^2 = \sum_{k=1}^N \lambda_k,
 \end{equation}
+%
 we obtain the relationship
+%
 \begin{equation}
-  \frac{ \sum_{i=1}^N \| \varphi_i - \bm P_V \varphi \|_z^2 }{ \sum_{i=1}^N \| \varphi_i \|_z^2 }
-  \leq \frac{ \sum_{k=M+1}^N \lambda_k }{ \sum_{k=1}^N \lambda_k }.
+  \frac{ \sum_{i=1}^N \| \varphi_i - \bm P_V \varphi_i \|_z^2 }{ \sum_{i=1}^N \| \varphi_i \|_z^2 }
+  = \frac{ \sum_{k=M+1}^N \lambda_k }{ \sum_{k=1}^N \lambda_k }.
 \end{equation}
 From this it follows that if $M = M(\epsilon)$ is chosen according to the inequality
 \begin{equation}
@@ -627,57 +674,178 @@ From this it follows that if $M = M(\epsilon)$ is chosen according to the inequa
   \sum_{j=1}^M \lambda_j
   \geq \left(1 - \epsilon^2\right) \sum_{j=1}^N \lambda_j,
 \end{equation}
+%
 then the reduced basis $V$ satisfies the error bound
+%
 \begin{equation}
-  \sqrt{ \sum_{i=1}^N \| \varphi_i - \bm P_V \varphi_i \|_z^2 }
-  \leq \epsilon \sqrt{ \sum_{i=1}^N \| \varphi_i \|_z^2 },
+\label{eqn:PVbound}
+\left( \sum_{i=1}^N \big\| \varphi_i - \bm P_V \varphi_i \big\|_z^2 \right)^{1/2}
+  \leq \epsilon \left( \sum_{i=1}^N \big\| \varphi_i \big\|_z^2 \right)^{1/2}.
 \end{equation}
-and furthermore, if the ensemble $\Phi$ is representative of the complete
-solution space \eqref{eqn:nspace}, then we may expect it to hold that
+%
+If the ensemble $\Phi$ is representative of the complete high-fidelity solution space~\eqref{eqn:nspace}
+in the sense that the latter is contained in $\operatorname{span}\Phi$, then~\eqref{eqn:PVbound}
+implies the following bound for the projection error:
+%
 \begin{equation}
-  \sqrt{ \int_\mathcal{P} \| \varphi(\bm \mu) - \bm P_V \varphi(\bm \mu) \|_z^2 \dd\bm \mu }
-  \leq \epsilon \sqrt{ \int_\mathcal{P} \| \varphi(\bm \mu) \|_z^2 \dd\bm \mu }.
+\label{eqn:RBerror}
+\frac{\left( \int_\mathcal{P}\big\|\varphi(\bm \mu) - \bm P_V \varphi(\bm \mu)\big\|_z^2\dd\bm \mu \right)^{1/2}}
+{\left( \int_\mathcal{P} \big\| \varphi(\bm \mu) \big\|_z^2 \dd\bm \mu \right)^{1/2}}
+  \leq \epsilon
+  .
 \end{equation}
+%
+
 
 \subsection{Field separation}
-
-In practice, this construction is performed separately on the velocity and
-pressure components. In other words, first one may choose a velocity covariance
-function
+In practice, the extraction of a reduced basis from~\eqref{eqn:ensemble} is performed separately
+on the velocity and pressure components. In other words, first one selects a velocity covariance
+function $z=z_\textsc{v}$. Typically,
+%
 \begin{equation}
-  z = z_u, \qquad a_u((\hat{\bm u}_0, \hat{p}), (\hat{\bm v}_0, \hat{q})) =
+\label{eqn:z_u}
+z_\textsc{v}\big((\hat{\bm u}_0, \hat{p}), (\hat{\bm v}_0, \hat{q})\big) =
   \left( \hat{\bm u}_0, \hat{\bm v}_0 \right)_{H^1(\hat{\Omega})}
   = \int_{\hat{\Omega}} \nabla \hat{\bm u}_0 : \nabla \hat{\bm v}_0.
 \end{equation}
-This is equivalent to using the $H^1$-seminorm for the velocity space. It must
-be noted that since $|\hat{\Gamma}_\text{D}| > 0$, this covariance function is
-still SPD on the smaller solution space $U_0$. On the full solution space
-$U_0 \times P$ it is only semidefinite.
-
-This covariance function then yields the velocity covariance matrix
+%
+This is equivalent to using the $H^1$-seminorm for the velocity space. By virtue of the standing
+assumption $|\hat{\Gamma}_\text{D}| > 0$, this covariance function is
+SPD on~$U_0$. On the product space $U_0 \times P$, it is only semidefinite.
+The covariance function~\eqref{eqn:z_u} yields the velocity covariance matrix:
+%
 \begin{equation}
-  C^{(u)}_{ij} = \left( \hat{\bm u}^i_0, \hat{\bm v}^i_0 \right)_{H^1(\hat{\Omega})}
+  C^{\textsc{v}}_{ij} = \left( \hat{\bm u}^h_0(\bm{\mu}_i), \hat{\bm u}^h_0(\bm{\mu}_j) \right)_{H^1(\hat{\Omega})}
 \end{equation}
-whose eigenpairs $(\lambda^{(u)}_j, \bm v^{(u),j})$ give the reduced velocity
+%
+whose eigenpairs $(\lambda_j, \bm v^{j})$ give the reduced velocity
 basis functions
+%
 \begin{equation}
-  \hat{\bm u}^\text{R}_j = \frac{1}{\sqrt{\lambda_j}} \sum_{i=1}^N v^{(u),j}_i \hat{\bm u}^i_0,
-  \qquad 1 \leq j \leq M_U
+  \hat{\bm u}^\textsc{r}_j = \frac{1}{\sqrt{\lambda_j}} \sum_{i=1}^N v^{j}_i \hat{\bm u}^h_0(\bm{\mu}_i),
+  \qquad 1 \leq j \leq M_\textsc{v}
 \end{equation}
-where $M_U$ is the chosen dimension of the reduced velocity space. Even though
-$a_z$ is globally only semidefinite, since the basis is restricted to only those
-components on which $a_z$ \emph{is} definite, the basis functions remain
+%
+where $M_\textsc{v}$ is the chosen dimension of the reduced velocity space. Even though
+$z_\textsc{v}$ is only semidefinite, since the basis is restricted to only those
+components on which $z_\textsc{v}$ \emph{is} definite, the basis functions remain
 linearly independent.
 
-A pressure basis may then be generated by exactly the same method using for
-example
+Independent of the construction of the reduced velocity bases, a pressure basis can
+be generated by exactly the same method using, for example, the covariance function
+$z=z_\textsc{p}$ according to:
+%
 \begin{equation}
-  z = z_p, \qquad z_p((\hat{\bm u}_0, \hat{p}), (\hat{\bm v}_0, \hat{q})) =
+z_\textsc{p}\big((\hat{\bm u}_0, \hat{p}), (\hat{\bm v}_0, \hat{q})\big) =
   \left( \hat{p}, \hat{q} \right)_{L^2(\hat{\Omega})}.
 \end{equation}
+%
+providing a reduced pressure basis:
+%
+\begin{equation}
+  \hat{p}^\textsc{r}_j = \frac{1}{\sqrt{\lambda_j}} \sum_{i=1}^N v^{j}_i \hat{p}^h(\bm{\mu}_i),
+  \qquad 1 \leq j \leq M_\textsc{p}
+\end{equation}
+%
+where $M_\textsc{p}$ is the specified dimension of the reduced velocity space, and $(\lambda_j,\bm{v}^j)$ now
+refers to the eigenpairs of the pressure covariance matrix.
+
+
+\subsection{Pressure stabilization}
+\label{sec:stab}
+The reduced velocity and pressure spaces, $U_0^{\textsc{r}},P^{\textsc{r}}$, do not generally inherit the
+inf-sup stability of the high-fidelity approximation spaces. Given the reduced spaces, the solution of
+the reduced model generally involves solving a sequence of linear-algebraic problems of the block form
+%
+\begin{equation}
+  \label{eqn:sys-instab}
+  \begin{pmatrix} \bm A_\textsc{vv} & \bm B_\textsc{vp} \\ \bm B_\textsc{pv} & 0\end{pmatrix}
+  \begin{pmatrix} \bm v \\ \bm p \end{pmatrix}
+  =
+  \begin{pmatrix} \bm f_\textsc{v} \\ \bm f_\textsc{p} \end{pmatrix}
+\end{equation}
+%
+with $(\bm B_\textsc{vp})_{ij}=\bm{\pi}^*_{\bm{\mu}}b(\hat{p}_j^\textsc{r},\hat{\bm{u}}_i^\textsc{r};\bm{\mu})$.
+On account of the loss of inf-sup stability of the reduced velocity-pressure pair,
+one typically observes that the matrix $\bm B_\textsc{vp}$ is row-rank-deficient, i.e.~it
+has a nontrivial kernel, therefore leading to unstable pressure solutions. One procedure to resolve this
+instability, and the one we will follow, is to artificially enrich the velocity space with so-called
+\emph{supremizers}, viz.~basis functions whose purpose is not to achieve greater approximative power but
+rather to keep the system well-posed; see \cite{Ballarin2015ssp}.
+
+For each pressure snapshot $\hat{p}^h(\bm{\mu}_i)$, the corresponding supremizer is the
+velocity function in $\hat{U}^h_0$ that realizes the supremum in the LBB condition,
+%
+\begin{equation}
+  \label{eqn:lbb}
+  \inf_{\hat{p}^h \in \hat{P}^h} \sup_{\hat{\bm u}_0^h \in \hat{U}_0^h}
+  \frac{\bm{\pi}^*_{\bm{\mu}}b(\hat{p}^h, \hat{\bm u}^h_0; \bm \mu)}
+  {\|\hat{p}^h\|_{L^2(\hat{\Omega})} \|\hat{\bm{u}}_0^h\|_{H^1(\hat{\Omega})}}
+  \geq \beta_h > 0;
+\end{equation}
+%
+see \cite{Ballarin2015ssp} for the theoretical background.
+%Let us note that the parameter value~$\bm{\mu}$
+%in~\eqref{eqn:lbb} must be fixed and typically it is set to $\bm{\mu}_i$.
+%
+The supremizers can in fact be conceived of as Riesz representations of the pressure solutions as
+viewed through the $\bm{\pi}^*_{\bm{\mu}}b(\cdot,\cdot\,;\bm \mu)$-form. In other words,
+given a reduced pressure function $\hat{p}^\textsc{r}$, its corresponding supremizer $\smash[t]{\hat{\bm s}^h_0}$ is
+the Riesz representation in $\hat{U}_0^h$ of the linear functional
+$\smash[t]{\bm{\pi}^*_{\bm{\mu}}b(\hat{p}^h,\cdot\,; \bm \mu)}$, i.e.~the solution of
+%
+\begin{equation}
+  \label{eqn:riesz}
+\hat{\bm s}^h_0\in  \hat{U}^h_0:
+\qquad
+  \left( \hat{\bm w}^h_0, \hat{\bm s}^h_0 \right)_{H^1(\hat{\Omega})} = \bm{\pi}^*_{\bm{\mu}}b(\hat{p}^h, \hat{\bm w}^h_0; \bm \mu)
+  \qquad\forall\hat{\bm w}^h_0 \in \hat{U}^h_0.
+\end{equation}
+%
+
+From~\eqref{eqn:riesz} it follows that the supremizers are formally $\bm{\mu}$\nobreakdash-dependent functions,
+via the dependence of the right member of~\eqref{eqn:riesz} on~$\bm{\mu}$, although this dependence
+is generally restricted to geometric parameters. They are therefore not directly suitable for use
+as basis functions in a reduced-basis method. To bypass the $\bm{\mu}$\nobreakdash-dependence of the supremizers,
+we apply the process described as ``approximate supremizer enrichment'' in
+\cite[4.2.3]{Ballarin2015ssp}. In this method, supremizer snapshots $\hat{\bm s}^h_0(\bm\mu_i)$ are constructed
+offline in tandem with the pressure snapshots $p(\bm \mu_i)$. These supremizer snapshots are then
+reduced via POD in exactly the same manner as the velocity snapshots, into a separate and independent reduced space,
+which is subsequently added to the reduced velocity space via a direct-sum composition.
+
+Introduction of the supremizer modes yields the following extension of the linear-algebraic
+systems~\eqref{eqn:sys-instab}:
+%
+\begin{equation}
+  \label{eqn:block}
+  \begin{pmatrix}
+    \bm A_\textsc{vv} & \bm A_\textsc{vs} & \bm B_\textsc{vp} \\
+    \bm A_\textsc{sv} & \bm A_\textsc{ss} & \bm B_\textsc{sp} \\
+    \bm B_\textsc{pv} & \bm B_\textsc{ps} & 0 \end{pmatrix}
+  \begin{pmatrix} \bm v \\ \bm s \\ \bm p \end{pmatrix}
+  =
+  \begin{pmatrix} \bm f_\textsc{v} \\ \bm f_\textsc{s} \\ \bm f_\textsc{p} \end{pmatrix}
+\end{equation}
+%
+One may note that with \emph{exact} supremizer enrichment, the practical
+consequence of~\eqref{eqn:riesz} is that $\bm B_\textsc{sp}$ coincides
+with the Gramian matrix $(\bm B_\textsc{sp})_{ij}=\left( \hat{\bm s}^h_i, \hat{\bm s}^h_j \right)_{H^1(\hat{\Omega})}$,
+which is nonsingular by design as discussed in Section~\ref{sec:reduction}.
+
+The computation of supremizers introduces an additional offline cost which in
+our experience is quite negligible. The solution of \eqref{eqn:riesz} for every
+parameter sample is cheap next to the more challenging Navier-Stokes problem. A
+cost is also paid in the online stage, as the system \eqref{eqn:block} is larger
+than \eqref{eqn:sys-instab} by several degrees of freedom that do not
+meaningfully contribute to better approximations, as we will see shortly.
+
+It must be noted that the supremizer method is not the only stabilization method
+proposed in the literature, see for example
+\cite{Weller2008nml,Bergmann2009erp}, where reduced basis methods are stabilized
+based on fine-scale Variational Multiscale Methods (VMS).
+
 
 \subsection{Assembly of the reduced system}
-
 Let $\bm V \in \mathbb{R}^{N \times M}$ be a $\bm \mu$-independent
 tall \emph{transformation matrix}, mapping coefficient vectors in the
 reduced basis to coefficient vectors in the original high-fidelity
@@ -686,10 +854,10 @@ vectors of the reduced basis functions.
 
 We aim then to express the solution to a generic finite element system
 $\bm A(\bm \mu) \bm u(\bm \mu) = \bm f(\bm \mu)$ by the reduced
-coefficient vector $\bm u(\bm \mu) = \bm V \bm u^\text{R}(\bm \mu)$, i.e.
+coefficient vector $\bm u(\bm \mu) = \bm V \bm u^\textsc{r}(\bm \mu)$, i.e.
 \begin{equation}
   \label{eqn:redsys}
-  \bm A(\bm \mu) \bm V \bm u^\text{R}(\bm \mu) = \bm f(\bm \mu).
+  \bm A(\bm \mu) \bm V \bm u^\textsc{r}(\bm \mu) = \bm f(\bm \mu).
 \end{equation}
 Since \eqref{eqn:redsys} is overdetermined, we choose the Galerkin
 approach of enforcing that the residual must be orthogonal to the
@@ -697,13 +865,13 @@ reduced space, i.e.
 \begin{equation}
   \label{eqn:redorth}
   \bm V^\intercal \left(
-  \bm A(\bm \mu) \bm V \bm u^\text{R}(\bm \mu) - \bm f(\bm \mu)
+  \bm A(\bm \mu) \bm V \bm u^\textsc{r}(\bm \mu) - \bm f(\bm \mu)
   \right) = \bm 0,
 \end{equation}
 or, more traditionally,
 \begin{equation}
   \label{eqn:redorth-final}
-  \bm V^\intercal \bm A(\bm \mu) \bm V \bm u^\text{R}(\bm \mu) =
+  \bm V^\intercal \bm A(\bm \mu) \bm V \bm u^\textsc{r}(\bm \mu) =
   \bm V^\intercal \bm f(\bm \mu).
 \end{equation}
 
@@ -715,19 +883,19 @@ systems remains nontrivial. However, given \eqref{eqn:redorth-final},
 each matrix and vector corresponding to a bilinear or linear form in
 \eqref{eqn:split-1}--\eqref{eqn:split-5} may be reduced to the new
 basis independently without regard to parametric dependence. It is
-then vital that $\bm V$ is indeed parameter-independnet.
+then vital that $\bm V$ is indeed parameter-independent.
 
 For example, let us consider \eqref{eqn:split-1}. Let the matrix
-$\bm D^\text{H}_i$ be the high-fidelity matrix corresponding to the bilinear
+$\bm D^\textsc{h}_i$ be the high-fidelity matrix corresponding to the bilinear
 form $\hat{d}_i$. (Here, superscript H refers to \emph{high-fidelity} and
-superscript L refers to the reduced model.) Then we have
+superscript R refers to the reduced model.) Then we have
 \begin{equation}
-  \bm D^\text{R}(\bm \mu)
-  = \bm V^\intercal \bm D^\text{H}(\bm \mu) \bm V
-  = \bm V^\intercal \left( \sum_i \theta^d_i(\bm \mu) \bm D^\text{H}_i \right) \bm V
-  = \sum_i \theta^d_i(\bm \mu) \underbrace{\bm V^\intercal \bm D^\text{H}_i \bm V}_{\bm D^\text{R}_i},
+  \bm D^\textsc{r}(\bm \mu)
+  = \bm V^\intercal \bm D^\textsc{h}(\bm \mu) \bm V
+  = \bm V^\intercal \left( \sum_i \theta^d_i(\bm \mu) \bm D^\textsc{h}_i \right) \bm V
+  = \sum_i \theta^d_i(\bm \mu) \underbrace{\bm V^\intercal \bm D^\textsc{h}_i \bm V}_{\bm D^\textsc{r}_i},
 \end{equation}
-where each of the small matrices $\bm D^\text{R}_i$ can be computed in the
+where each of the small matrices $\bm D^\textsc{r}_i$ can be computed in the
 offline stage. Assembling the reduced model system matrices then becomes
 trivial.
 
@@ -759,84 +927,6 @@ computed and stored as part of the offline stage. Although these tensors are
 dense, we find that the modest sizes keep the storage requirements realistic,
 typically in the regions of hundreds of megabytes for $\sim 100$ basis
 functions.
-
-\subsection{Pressure stabilization}
-\label{sec:stab}
-
-Given reduced spaces for $U_0,P$, the solution of the reduced model requires
-solving several systems of the block form
-\begin{equation}
-  \label{eqn:sys-instab}
-  \begin{pmatrix} \bm A_{vv} & \bm B_{vp} \\ \bm B_{pv} \end{pmatrix}
-  \begin{pmatrix} \bm v \\ \bm p \end{pmatrix}
-  =
-  \begin{pmatrix} \bm f_v \\ \bm f_p \end{pmatrix}
-\end{equation}
-Typically one observes that the matrix $\bm B_{vp}$ is numerically
-rank-deficient, i.e.~it has a nontrivial kernel, therefore leading to unstable
-pressure solutions. One procedure, and the one we will follow, is to
-artificially enrich the velocity space with \emph{supremizers}, basis functions
-whose purpose is not to achieve greater approximative power but rather to keep
-the system well-conditioned, see \cite{Ballarin2015ssp}.
-
-For each pressure snapshot $\hat{p}_i$, the corresponding supremizer is the
-velocity function that maximizes the supremum part of the LBB condition,
-\begin{equation}
-  \label{eqn:lbb}
-  \inf_{p \in P} \sup_{\bm u \in U_0}
-  \frac{b(p, \bm u; \bm \mu)}{\|p\|_P \|u\|_{U_0}} \geq \beta_h > 0.
-\end{equation}
-See \cite{Ballarin2015ssp} for the theoretical background.
-
-These supremizers are in fact Riesz representations of the pressure solutions as
-viewed through the $b(\cdot,\cdot;\bm \mu)$-form. In other words, given a
-pressure function $p$, its corresponding supremizer $\bm s$ is the Riesz
-representation in $U_0$ of the linear functional $\bm u \mapsto b(p, \bm u; \bm
-\mu)$, i.e.~the solution of
-\begin{equation}
-  \label{eqn:riesz}
-  \left( \bm w, \bm s \right)_{U_0(\bm \mu)} = b(p, \bm w; \bm \mu)
-\end{equation}
-for all $\bm w \in U_0$.
-
-The supremizers are formally parameter-dependent functions, although their
-dependence is mostly restricted to geometric parameters (the $\bm \mu$ in
-\eqref{eqn:lbb} and \eqref{eqn:riesz} is the parameter that the solution takes
-place in, known only in the online stage). They are therefore unsuitable for use
-as basis functions in a reduced basis method. To work around this, we have
-employed the algorithm described as ``approximate supremizer enrichment'' in
-\cite[4.2.3]{Ballarin2015ssp}. In this method, supremizer snapshots $\bm s(\bm
-\mu)$ along with pressure snapshots $p(\bm \mu)$ at specific parameter-values.
-These supremizer snapshots are then reduced via POD in exactly the same way as
-the velocity snapshots are, into a separate and independent reduced space.
-
-The final result is the modified block system.
-\begin{equation}
-  \label{eqn:block}
-  \begin{pmatrix}
-    \bm A_{vv} & \bm A_{vs} & \bm B_{vp} \\
-    \bm A_{sv} & \bm A_{ss} & \bm B_{sp} \\
-    \bm B_{pv} & \bm B_{ps} & \end{pmatrix}
-  \begin{pmatrix} \bm v \\ \bm s \\ \bm p \end{pmatrix}
-  =
-  \begin{pmatrix} \bm f_v \\ \bm f_s \\ \bm f_p \end{pmatrix}
-\end{equation}
-One may note that with \emph{exact} supremizer enrichment, the practical
-consequence of \eqref{eqn:riesz} is that $\bm B_{sp}$ becomes approximately
-equal to the mass matrix of the supremizer space, which is nonsingular by
-design as discussed in Section~\ref{sec:reduction}.
-
-The computation of supremizers introduces an additional offline cost which in
-our experience is quite negligible. The solution of \eqref{eqn:riesz} for every
-parameter sample is cheap next to the more challenging Navier-Stokes problem. A
-cost is also paid in the online stage, as the system \eqref{eqn:block} is larger
-than \eqref{eqn:sys-instab} by several degrees of freedom that do not
-meaningfully contribute to better approximations, as we will see shortly.
-
-It must be noted that the supremizer method is not the only stabilization method
-proposed in the literature, see for example
-\cite{Weller2008nml,Bergmann2009erp}, where reduced basis methods are stabilized
-based on fine-scale Variational Multiscale Methods (VMS).
 
 \section{Conforming methods}
 \label{sec:conforming}
