@@ -1879,21 +1879,21 @@ To understand the stability properties of the four methods, we computed the LBB
 constants $\beta_h$ from \eqref{eqn:lbb}. The results can be seen in
 Table~\ref{tbl:lbb}. This clearly demonstrates the ability of the supremizer
 enrichment procedure to control the stability of the method. It also highlights
-that the conforming method is \emph{generally} somewhat more unstable than the
-regular method, but not significantly so.
+that no significant degradation of stability is to be expected for
+divergence-conforming reduced methods.
 
 \begin{table}
   \begin{center}
     \bgroup\def\arraystretch{1.2}
     \begin{tabular}{crrrr}
-      & \multicolumn{2}{c}{\bf Regular} & \multicolumn{2}{c}{\bf Conforming} \\
+      & \multicolumn{2}{c}{\bf Taylor-Hood} & \multicolumn{2}{c}{\bf Conforming} \\
       \hline
-      $\sharp$ DoFs ($M$) & \multicolumn{1}{c}{Unstabilized} & \multicolumn{1}{c}{Stabilized} & \multicolumn{1}{c}{Unstabilized} & \multicolumn{1}{c}{Stabilized} \\
-      \hline $10$ & $\SI{1.19e-5}{}$ & $\SI{4.07e-1}{}$ & $\SI{4.20e-18}{}$ & $\SI{3.97e-1}{}$ \\
-      $20$ & $\SI{9.58e-6}{}$ & $\SI{2.56e-1}{}$ & $\SI{2.80e-19}{}$ & $\SI{2.69e-1}{}$ \\
-      $30$ & $\SI{6.44e-7}{}$ & $\SI{3.27e-1}{}$ & $\SI{1.08e-17}{}$ & $\SI{2.86e-1}{}$ \\
-      $40$ & $\SI{7.28e-8}{}$ & $\SI{2.81e-1}{}$ & $\SI{2.46e-19}{}$ & $\SI{2.61e-1}{}$ \\
-      $50$ & $\SI{1.62e-8}{}$ & $\SI{2.92e-1}{}$ & $\SI{1.42e-18}{}$ & $\SI{2.26e-1}{}$ \\
+      $\sharp$ DoFs ($M$) & \multicolumn{1}{c}{Unstabilized} & \multicolumn{1}{c}{Stabilized} & \multicolumn{1}{c}{Stabilized} \\
+      \hline $10$ & $\SI{8.06e-6}{}$ & $\SI{3.93e-1}{}$ & $\SI{4.11e-1}{}$ \\
+      $20$ & $\SI{5.68e-6}{}$ & $\SI{2.54e-1}{}$ & $\SI{3.37e-1}{}$ \\
+      $30$ & $\SI{1.03e-6}{}$ & $\SI{3.15e-1}{}$ & $\SI{3.13e-1}{}$ \\
+      $40$ & $\SI{2.65e-8}{}$ & $\SI{2.67e-1}{}$ & $\SI{2.90e-1}{}$ \\
+      $50$ & $\SI{1.77e-9}{}$ & $\SI{2.75e-1}{}$ & $\SI{2.72e-1}{}$ \\
       \hline
     \end{tabular}
     \egroup
@@ -1901,7 +1901,8 @@ regular method, but not significantly so.
   \caption{
     LBB constants $\beta_h$, as defined by \eqref{eqn:lbb}, for various basis
     sizes and methods. The reported values are \emph{minima} over a sampling of
-    $15 \times 15$ parameter values.
+    $15 \times 15$ parameter values. The LBB constants for the unstabilized conforming
+    method were all indistinguishable from zero to machine precision.
   }
   \label{tbl:lbb}
 \end{table}
