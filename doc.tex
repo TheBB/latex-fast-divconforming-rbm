@@ -56,7 +56,7 @@
 \maketitle
 
 \begin{abstract}
-  Reduced-basis methods (RBMs) form one of the most promising techniques to
+  Reduced-basis methods (RB methods or RBMs) form one of the most promising techniques to
   deliver numerical solutions of parametrized PDEs in real-time performance
   with reasonable accuracy. For incompressible flow problems, RBMs based on LBB
   stable velocity-pressure spaces do not generally inherit the stability
@@ -81,8 +81,8 @@
 \section{Introduction}
 
 Conventional methods for simulating partial differential equations include
-well-established techniques such as Finite Volumes (FVM),
-Finite Differences (FDM) and Finite Elements (FEM).
+well-established techniques such as Finite Volume Methods (FVM),
+Finite Difference Methods (FDM) and Finite Element Methods (FEM).
 Common to all of these methods is the large number of
 degrees of freedom that is typically required to accurately model a physical system, often
 numbering in the millions or billions. Given the good and well-established
@@ -97,7 +97,8 @@ and hybrid analytics, in view of the need for additional special infrastructure 
 the incurrence of further communication overheads.
 
 The excessive computational complexity of high-fidelity models is also at odds
-with the increasing demand for real-time low-cost models for the repetitive solution of PDEs
+with the increasing demand for real-time low-cost models for the repetitive solution of
+partial differential equations (PDEs)
 in many-query scenarios. This is particularly relevant in optimization, control systems,
 inverse and inference problems, and uncertainty quantification. Common for many of these
 applications is that the PDE in question is
@@ -141,7 +142,7 @@ online to the offline stage, so that the total cost per online execution is very
 small in an amortized sense. In other words, work in the offline stage is
 considered ``free'' and all efforts will be focused on creating a cheap online stage.
 
-RB methods have been applied in various application areas, e.g. XXX. Development and
+RB methods have been applied in various application areas, e.g.~\cite{}. Development and
 application of RB methods to flow problems have been considered in for instance~\cite{}.
 The principal novelty of the present paper is the development of a solenoidal (divergence-free)
 velocity-only RB method for incompressible-fluid flow problems with geometric parametrizations, based on
@@ -178,7 +179,7 @@ An important additional aspect of the present work is the use of divergence-conf
 approximations for the high-fidelity simulations. These methods have recently been introduced
 by Evans and Hughes~\cite{Evans2012dsa,Evans2013idc1,Evans2013idc2,Evans2013idc3}. See also work in
 \cite{Buffa2011ias,vanOpstal2017idc}.
-TThey rely on formulating a pressure space that
+They rely on formulating a pressure space that
 is exactly equal to the divergence of the velocity space. This is enabled by the use of
 B-spline basis functions, recently popularized in the field of isogeometric
 analysis~\cite{Cottrell2009iat}. The divergence-conforming approximations provide pointwise
@@ -711,7 +712,7 @@ z_\textsc{v}\big((\hat{\bm u}_0, \hat{p}), (\hat{\bm v}_0, \hat{q})\big) =
 %
 This is equivalent to using the $H^1$-seminorm for the velocity space. By virtue of the standing
 assumption $|\hat{\Gamma}_\text{D}| > 0$, this covariance function is
-SPD on~$U_0$. On the product space $U_0 \times P$, it is only semidefinite.
+symmetric positive definite on~$U_0$. On the product space $U_0 \times P$, it is only semidefinite.
 The covariance function~\eqref{eqn:z_u} yields the velocity covariance matrix:
 %
 \begin{equation}
@@ -769,12 +770,15 @@ with $(\bm B_\textsc{vp})_{ij}=\bm{\pi}^*_{\bm{\mu}}b(\hat{p}_j^\textsc{r},\hat{
 On account of the loss of inf-sup stability of the reduced velocity-pressure pair,
 one typically observes that the matrix $\bm B_\textsc{vp}$ is row-rank-deficient, i.e.~it
 has a nontrivial kernel, therefore leading to unstable pressure solutions. One procedure to resolve this
-instability, and the one we will follow, is to artificially enrich the velocity space with so-called
+instability, is to artificially enrich the velocity space with so-called
 \emph{supremizers}, viz.~basis functions whose purpose is not to achieve greater approximative power but
-rather to keep the system well-posed; see \cite{Ballarin2015ssp}.
+rather to keep the system well-posed; see \cite{Ballarin2015ssp}. We will use this technique
+both for comparative purposes and for generating pressure solutions for velocity-only
+discretizations, see Section \ref{sec:conforming}.
 
 For each pressure snapshot $\hat{p}^h(\bm{\mu}_i)$, the corresponding supremizer is the
-velocity function in $\hat{U}^h_0$ that realizes the supremum in the LBB condition,
+velocity function in $\hat{U}^h_0$ that realizes the supremum in the
+LBB\footnote{Ladyzhenskaya-Babu\v{s}ka-Brezzi, also known as the inf-sup condition.} condition,
 %
 \begin{equation}
   \label{eqn:lbb}
@@ -1005,7 +1009,10 @@ merely functioning as a test space when solving for the pressure.
 The system \eqref{eqn:blocksolve-1}--\eqref{eqn:blocksolve-2} also facilitates a
 much faster reduced method than \eqref{eqn:block}, solving two systems of size
 $M$ rather than one of size $3M$. We shall see in the following that this may
-lead to speedups of more than an order of magnitude.
+lead to speedups of more than an order of magnitude. It is also worth pointing out
+that since reduced systems are full rather than dense, the benefits of this
+reduction in size is amplified further compared to the usual situation of high-fidelity
+sparse systems.
 
 For other methods for pressure stabilization based on pure velocity solutions
 followed by pressure recovery in various forms, see
@@ -1611,6 +1618,15 @@ might be improved for different choices of $\theta$.) The spectra for the
 supremizers closely mimic those of the pressure solutions, as should be
 expected.
 
+\begin{remark}
+  The difference in the pressure spectra can be partially explained by quadrature. We have used the
+  same quadrature rule (9-point Gaussian quadrature) for both methods. However, the conforming
+  method has higher order integrands than the Taylor-Hood method, and thus requires stronger
+  quadrature rules. The relative quadrature error for the conforming method is estimated at roughly
+  $\SI{e-4}{}$ for both velocity and pressure, while the same errors for the Taylor-Hood method are
+  $\SI{e-5}{}$ and $\SI{e-6}{}$, respectively.
+\end{remark}
+
 \begin{figure}
   \begin{tikzpicture}
     \begin{axis}[
@@ -2170,8 +2186,8 @@ significantly faster if the block solver algorithm is employed.
 Two methods have been investigated for the parametrized problem of flow around a NACA0015
 airfoil with varying angle-of-attack and inflow velocity. One based on a
 Taylor-Hood high-fidelity method, and the other based on a divergence-conforming
-isogeometric high-fidelity method. The reduced models of both were stabilized
-using supremizers \cite{Ballarin2015ssp}.
+isogeometric high-fidelity method. Supremizers used to stabilize the former \cite{Ballarin2015ssp}
+and to provide pressure solutions for the latter
 
 While the accuracy of the reduced methods were comparable, the
 divergence-conforming model was able to achieve a significantly faster online
@@ -2180,13 +2196,12 @@ stage thanks to the block form of its linear systems.
 This faster online stage is offset by a more complicated offline stage. In
 particular, the affine representations \eqref{eqn:split-1}--\eqref{eqn:split-5}
 of the divergence-conforming method required approximately three times as many
-terms ($\sim 12n$ versus $\sim 4n$). While the gains in the online stage was not
-affected by this, the added complexity in the offline stage should nevertheless
-not be taken lightly. It remains to be seen whether automatic ``black box''
+terms ($\sim 12n$ versus $\sim 4n$). In spite of this, the conforming method
+yields faster online stages. We aim to see in future work that automatic ``black box''
 methods such as Empirical Interpolation (EIM)
 \cite{Barrault2004eim,Grepl2007erb,Maday2007gmi}
 \cite[Chapter 10]{Quarteroni2016rbm}
-may alleviate this issue.
+alleviates the additional work needed to produce such affine representations.
 
 \bibliography{common/references}
 \bibliographystyle{plain}
