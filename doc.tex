@@ -126,7 +126,7 @@ PDE in the parameter regime of interest. In comparison, while finite-element spa
 generally have well-established asymptotic approximation properties, e.g. density and
 quasi-optimality for smooth functions, and the computational cost of constructing a FEM basis
 function is generally negligible, the approximation properties of a FEM basis per-degree-of-freedom
-(i.e. for each of the basis function separately) is clearly limited. RB methods seek
+(i.e.~for each of the basis function separately) is clearly limited. RB methods seek
 to construct an approximation space that has optimal approximation properties with respect
 to dimension for a restricted class of functions, viz. the solutions of the PDE in the parameter space
 under consideration, under the premise that the cost of constructing the basis is inconsequential. The
@@ -134,7 +134,7 @@ latter premise arises because the construction of the basis is carried out a pri
 offline stage. To do this, some high-fidelity solutions must be computed in advance, called
 an \emph{ensemble} of \emph{snapshots}.
 
-RB methods are strictly divided in two stages, viz. the \emph{offline} and
+RB methods are strictly divided in two stages, viz.~the \emph{offline} and
 \emph{online} stages. The offline stage is run only once, and the online stage
 is run once for each problem instance to solve (that is to say, for each
 parameter query). The goal is then to off-load as much work as possible from the
@@ -339,14 +339,14 @@ On the other hand, two problems arise. The first problem is that it is
 practically infeasible to create divergence-free function spaces, which is
 why this formulation does not see much use in conventional approximation methods.
 The second problem is that the pressure
-is often of interest, e.g. in post-processing operations to determine flow-induced loads by means
+is often of interest, e.g.~in post-processing operations to determine flow-induced loads by means
 of extraction functions~\cite{Melbo2003goe,Brummelen2012fep}, depreciating a solver
 based on~\eqref{eqn:velonly} in many applications.
 
 The proposed solenoidal RB method forms an instance of the velocity-only formulation~\eqref{eqn:velonly}.
 However, the problems mentioned above for conventional approximation methods are mitigated in the
 RBM setting. First, the inherent solenoidality of the snapshots facilitates the construction of a
-divergence-free~\emph{reduced bases}. Each snapshot corresponds to a high-fidelity solution
+divergence-free~\emph{reduced basis}. Each snapshot corresponds to a high-fidelity solution
 of~\eqref{eqn:vvar-1}--\eqref{eqn:vvar-2} and, hence, the computational cost of constructing the
 solenoidal basis is indeed significant. However, the computational cost of constructing snapshots is
 inherent to RBM, and it is ignored because this expense is incurred in the offline stage.  Second,
@@ -503,8 +503,8 @@ with pullbacks through $\bm \pi_{\bm \mu}^*$ and parameter-dependent forms.
   It is to be noted that the lift $\hat{\bm \ell}$ in~\eqref{eqn:newform} is constructed on
   the reference domain, and then transported
   via $\pi_{\bm \mu}^\textsc{v}$ to the parametrized domain. In this construction it is important
-  that $\smash[t]{\pi_{\bm \mu}^0 \hat{\bm \ell}}$ and~$\pi_{\bm \mu}^0$ are compatible, so that
-  the trace of $\bm{\ell}=\smash[t]{\pi_{\bm \mu}^0\textsc{v}\hat{\bm \ell}}$ on $\Gamma_\text{D}$
+  that $\smash[t]{\pi_{\bm \mu}^\textsc{v} \hat{\bm \ell}}$ and~${\bm \ell}$ are compatible, so that
+  the trace of $\bm{\ell}=\smash[t]{\pi_{\bm \mu}^\textsc{v}\hat{\bm \ell}}$ on $\Gamma_\text{D}$
   coincides with the prescribed Dirichlet data.
 \end{remark}
 
@@ -571,7 +571,7 @@ possible.
 \label{sec:reduction}
 
 \subsection{High-fidelity approximation}
-The reduced basis is build from underlying high-fidelity finite-element or isogeometric~\cite{Cottrell2009iat}
+The reduced basis is built from underlying high-fidelity finite-element or isogeometric~\cite{Cottrell2009iat}
 approximations of~\eqref{eqn:war-1}--\eqref{eqn:war-2}. To provide a setting for the RB, we therefore
 first introduce the high-fidelity setting.
 We introduce a partition $\mathcal{T}^h$ of the reference domain~$\hat{\Omega}$ into non-overlapping
@@ -617,7 +617,7 @@ model itself. In other words, it is anticipated that the high-fidelity solution 
 admits an adequately accurate approximation by a finite-dimensional space whose dimension is
 significantly lower than that of the high-fidelity approximation space $\smash[t]{\hat{U}_0^h \times \hat{P}^h}$.
 This dimension may be
-considerably more manageable than the dimension of any discretization of $\hat{U}_0 \times \hat{P}$
+considerably more manageable than the dimension of any discretization of $\smash[t]{\hat{U}_0 \times \hat{P}}$
 necessary to achieve sufficient accuracy with conventional methods.
 
 We use standard Proper Orthogonal Decomposition (POD)~\cite{Chatterjee2000ipo,Quarteroni2016rbm} to produce
@@ -776,7 +776,7 @@ with $(\bm B_\textsc{vp})_{ij}=\bm{\pi}^*_{\bm{\mu}}b(\hat{p}_j^\textsc{r},\hat{
 On account of the loss of inf-sup stability of the reduced velocity-pressure pair,
 one typically observes that the matrix $\bm B_\textsc{vp}$ is row-rank-deficient, i.e.~it
 has a nontrivial kernel, therefore leading to unstable pressure solutions. One procedure to resolve this
-instability, is to artificially enrich the velocity space with so-called
+instability is to artificially enrich the velocity space with so-called
 \emph{supremizers}, viz.~basis functions whose purpose is not to achieve greater approximative power but
 rather to keep the system well-posed; see \cite{Ballarin2015ssp}. We will use this technique
 both for comparative purposes and for generating pressure solutions for velocity-only
@@ -839,7 +839,7 @@ systems~\eqref{eqn:sys-instab}:
 %
 One may note that with \emph{exact} supremizer enrichment, the practical
 consequence of~\eqref{eqn:riesz} is that $\bm B_\textsc{sp}$ coincides
-with the Gramian matrix $(\bm B_\textsc{sp})_{ij}=\left( \hat{\bm s}^h_i, \hat{\bm s}^h_j \right)_{H^1(\hat{\Omega})}$,
+with the Gramian matrix $\smash[t]{(\bm B_\textsc{sp})_{ij}=( \hat{\bm s}^h_i, \hat{\bm s}^h_j )_{H^1(\hat{\Omega})}}$,
 which is nonsingular by design as discussed in Section~\ref{sec:reduction}.
 
 The computation of supremizers introduces an additional offline cost which in
@@ -981,7 +981,7 @@ With a fully solenoidal reduced velocity space, we are free to employ the
 velocity-only formulation \eqref{eqn:velonly}, so that \eqref{eqn:block} reduces
 to
 \begin{equation}
-  \bm A_{vv} \bm v = \bm f_v.
+  \bm A_\textsc{vv} \bm v = \bm f_\textsc{v}.
   \label{eqn:blocksolve-1}
 \end{equation}
 which is a system of size $M$ compared to \eqref{eqn:block} of size $3M$.
@@ -989,22 +989,20 @@ which is a system of size $M$ compared to \eqref{eqn:block} of size $3M$.
 The supremizers of Section~\ref{sec:stab} function as the test functions in the
 pressure recovery equation \eqref{eqn:sup-vvar}. Indeed, one obtains the system
 \begin{equation}
-  \bm B_{sp} \bm p = \bm f_s - \bm A_{sv} \bm v
+  \bm B_\textsc{sp} \bm p = \bm f_\textsc{s} - \bm A_\textsc{sv} \bm v.
   \label{eqn:blocksolve-2}
 \end{equation}
-where $\bm f_s = \overline{f}_1(\bm s)$ and $\bm A_{sv}$ is the
-velocity-velocity coupling matrix with supremizers as test functions.
 
-In fact, the same expressions can be reached by setting $\bm B_{vp} = 0$ and
-$\bm f_p = 0$ in \eqref{eqn:block}, obtaining
+In fact, the same expressions can be reached by setting $\bm B_\textsc{vp} = 0$ and
+$\bm f_\textsc{p} = 0$ in \eqref{eqn:block}, obtaining
 \begin{equation}
   \label{eqn:piolablock}
   \begin{pmatrix}
-    \bm A_{vv} & \bm A_{vs} & \\
-    \bm A_{sv} & \bm A_{ss} & \bm B_{sp} \\
-    & \bm B_{ps} & \end{pmatrix}
+    \bm A_\textsc{vv} & \bm A_\textsc{vs} & \\
+    \bm A_\textsc{sv} & \bm A_\textsc{ss} & \bm B_\textsc{sp} \\
+    & \bm B_\textsc{ps} & \end{pmatrix}
   \begin{pmatrix} \bm v \\ \bm s \\ \bm p \end{pmatrix}
-  = \begin{pmatrix} \bm r_v \\ \bm r_s \\ \bm 0 \end{pmatrix}
+  = \begin{pmatrix} \bm r_\textsc{v} \\ \bm r_\textsc{s} \\ \bm 0 \end{pmatrix}
 \end{equation}
 If all spaces are of equal size $M$, the system \eqref{eqn:piolablock} is
 block-triangular, and can be solved as
@@ -1338,13 +1336,13 @@ In doing so we will truncate the series for $\bm R(a)$ to a number of terms that
 can achieve the desired precision. It is important to note that the system
 \eqref{eqn:piolablock} only obtains its desired form for high accuracy
 approximations, and that if the affine representation form for
-$b(\cdot,\cdot,\bm \mu)$ is not exact, the matrix $\bm B_{vp}$ from
+$b(\cdot,\cdot,\bm \mu)$ is not exact, the matrix $\bm B_\textsc{vp}$ from
 \eqref{eqn:block} will correspondingly not be exactly zero, and the solution of
 \eqref{eqn:blocksolve-1}--\eqref{eqn:blocksolve-2} will not agree with the
 solution of \eqref{eqn:block}.
 
 The error made by truncating \eqref{eqn:rotsum} to $n$ terms is approximately
-$\varphi_\text{max}^n / n!$. For a maximal angle of attack of
+$\varphi_\textsc{max}^n / n!$. For a maximal angle of attack of
 $\SI{35}{\degree}$ for example, we can expect about $10$ digits of accuracy
 with $n=10$ terms.
 
