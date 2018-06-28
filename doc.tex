@@ -821,7 +821,10 @@ we apply the process described as ``approximate supremizer enrichment'' in
 \cite[4.2.3]{Ballarin2015ssp}. In this method, supremizer snapshots $\hat{\bm s}^h_0(\bm\mu_i)$ are constructed
 offline in tandem with the pressure snapshots $p(\bm \mu_i)$. These supremizer snapshots are then
 reduced via POD in exactly the same manner as the velocity snapshots, into a separate and independent reduced space,
-which is subsequently added to the reduced velocity space via a direct-sum composition.
+which is subsequently added to the reduced velocity space via a direct-sum composition. Formally,
+the sum space should be orthogonalized to ensure linear independence. We have ignored this on the
+presumption that linear independence is already satisfactory. Results confirming this can be found in
+Section~\ref{sec:stability}.
 
 Introduction of the supremizer modes yields the following extension of the linear-algebraic
 systems~\eqref{eqn:sys-instab}:
@@ -911,15 +914,14 @@ trivial.
 
 \subsubsection{Assembly of nonlinear terms}
 
-Typically, the presence of a nonlinear term such as $c(\bm u_0, \bm u_0, \bm w)$
-in \eqref{eqn:vvar-2} is treated by introducing a nonlinear solver
-(e.g.~Newton's method or fixed-point iteration), which converges to the correct
-solution $\bm u_0$ by solving a series of \emph{linear} systems. These systems
-generally involve the assembly of terms such as $c(\bm u_0, \bm u_0^*, \bm w)$,
-where $\bm u_0^*$ is the current best approximation, which is known and kept
-fixed, while $\bm u_0$ is the unknown better approximation, which must be solved
-for. Because $\bm u_0^*$ is not known in advance, the assembly of this term is
-generally done by an integration loop within the loop of the nonlinear solver.
+Typically, the presence of a quadratic nonlinear term such as $c(\bm u_0, \bm u_0, \bm w)$ in
+\eqref{eqn:vvar-2} is treated by introducing a nonlinear solver (e.g.~Newton's method or fixed-point
+iteration), which converges to the correct solution $\bm u_0$ by solving a Picard sequence of
+\emph{linear} systems. These systems generally involve the assembly of terms such as $c(\bm u_0, \bm
+u_0^*, \bm w)$, where $\bm u_0^*$ is the current best approximation, which is known and kept fixed,
+while $\bm u_0$ is the unknown better approximation, which must be solved for. Because $\bm u_0^*$
+is not known in advance, the assembly of this term is generally done by an integration loop within
+the loop of the nonlinear solver.
 
 Alternatively, one might consider assembling a full third-order tensor
 \emph{a priori}, that is
@@ -935,7 +937,7 @@ that no integration loops can occur within the nonlinear solver, and therefore
 the full tensors \eqref{eqn:tensor} corresponding to \eqref{eqn:split-2} must be
 computed and stored as part of the offline stage. Although these tensors are
 dense, we find that the modest sizes keep the storage requirements realistic,
-typically in the regions of hundreds of megabytes for $\sim 100$ basis
+typically in the regions of hundreds of megabytes for $\sim100$ basis
 functions.
 
 \section{Conforming methods}
@@ -975,7 +977,8 @@ solution $\hat{\bm u} = \hat{\bm u}_0 + \hat{\bm \ell}$, and since the reduced s
 concerned with the approximation of $\hat{\bm u}_0$ (and not $\hat{\bm u}$), this is
 necessary to ensure the equivalence between the solenoidality of $\hat{\bm u}_0$ and
 that of $\hat{\bm u}$. In practice one may solve the Stokes problem with a
-divergence-conforming method to generate solenoidal lift functions.
+divergence-conforming method to generate solenoidal lift functions. Since the lift is constructed in
+the offline stage, the cost of this can be ignored.
 
 With a fully solenoidal reduced velocity space, we are free to employ the
 velocity-only formulation \eqref{eqn:velonly}, so that \eqref{eqn:block} reduces
@@ -993,7 +996,7 @@ pressure recovery equation \eqref{eqn:sup-vvar}. Indeed, one obtains the system
   \label{eqn:blocksolve-2}
 \end{equation}
 
-In fact, the same expressions can be reached by setting $\bm B_\textsc{vp} = 0$ and
+It is worth noting that the same expressions can be reached by setting $\bm B_\textsc{vp} = 0$ and
 $\bm f_\textsc{p} = 0$ in \eqref{eqn:block}, obtaining
 \begin{equation}
   \label{eqn:piolablock}
@@ -1007,8 +1010,8 @@ $\bm f_\textsc{p} = 0$ in \eqref{eqn:block}, obtaining
 If all spaces are of equal size $M$, the system \eqref{eqn:piolablock} is
 block-triangular, and can be solved as
 \eqref{eqn:blocksolve-1}--\eqref{eqn:blocksolve-2} together with $\bm s = 0$.
-This illustrates the fact that supremizers serve no approximative purpose,
-merely functioning as a test space when solving for the pressure.
+This illustrates the fact that supremizers serve no approximative purpose and
+merely functionins as a test space for the pressure.
 
 The system \eqref{eqn:blocksolve-1}--\eqref{eqn:blocksolve-2} also facilitates a
 much faster reduced method than \eqref{eqn:block}, solving two systems of size
@@ -1021,6 +1024,13 @@ sparse systems.
 For other methods for pressure stabilization based on pure velocity solutions
 followed by pressure recovery in various forms, see
 \cite{Akhtar2009ser,Caiazzo2014niv,Baiges2013ero}.
+
+Other methods for pressure recovery from pure velocity solutions have been investigated. In
+\cite{Caiazzo2014niv}, three different methods based on modified equations and spaces are
+compared. The authors in \cite{Akhtar2009ser} compute the pressure by taking the divergence of the
+Navier-Stokes equation, projecting the result onto the pressure modes. In \cite{Baiges2013ero} the
+pressure is recovered explicitly by realizing all reduced basis functions as joint velocity-pressure
+basis functions.
 
 % \section{Problems and their affine representations}
 
@@ -1145,9 +1155,9 @@ followed by pressure recovery in various forms, see
 
 We consider a two-dimensional airfoil suspended in a mesh at the origin. We wish
 to perform airflow simulations around this airfoil with the angle of attack
-$\varphi$ and the inflow velocity $u_\infty$ as parameters. (In other words,
-$\bm \mu = (\varphi, u_\infty)$.) See Figure~\ref{fig:airfoil-sketch} for a
-sketch. The purpose of the present chapter is to develop an affine
+$\varphi$ and the inflow velocity $u_\infty$ as parameters, in other words
+$\bm \mu = (\varphi, u_\infty)$; see Figure~\ref{fig:airfoil-sketch} for a
+sketch. The purpose of the present section is to develop an affine
 representation of this problem, as understood by
 \eqref{eqn:split-1}--\eqref{eqn:split-5}.
 
@@ -1211,9 +1221,9 @@ example. Note that we also require
   \tilde{\theta}_\varphi'(r_\text{min}) =
   \tilde{\theta}_\varphi'(r_\text{max}) = 0
 \]
-so that Remark~\ref{rem:lift} is satisfied, i.e.~the mapping of lifts between reference and
+in accordance with Remark~\ref{rem:lift}, i.e.~the mapping of lifts between reference and
 transformed domains will not modify the boundary data.
-
+%
 \begin{figure}
   \begin{center}
     \begin{tikzpicture}
@@ -1242,7 +1252,7 @@ transformed domains will not modify the boundary data.
   \caption{$\tilde{\theta}_\varphi(r)$ as a function of $r$.}
   \label{fig:thetatilde}
 \end{figure}
-
+%
 It is desirable that the entire airfoil is contained within the region $r <
 r_\text{min}$, and that the boundary of the mesh is entirely inside the region
 $r > r_\text{max}$. Given these restrictions, the mesh may otherwise be freely
@@ -1296,14 +1306,11 @@ matrix),
   \det \bm J = 1 + \frac{\varphi\theta'}{r} \hat{\bm r}^\intercal \bm P \hat{\bm r} = 1,
 \]
 since the last term may be recognized as the inner product between two
-orthogonal vectors.
-
-The inverse of $\bm J$ follows from the Sherman-Morrison theorem,
+orthogonal vectors. The inverse of $\bm J$ follows from the Sherman-Morrison theorem,
 \[
   \bm J^{-1} = \left( \bm I - \varphi \bm P \bm Q \right)
   \bm R(a)^\intercal.
 \]
-
 It can then be seen that the problem of finding affine representations of
 $\bm J$ and $\bm J^{-1}$ reduces to the affine representation of $\bm R$.
 We therefore proceed as follows.
@@ -1326,19 +1333,15 @@ so the series expansion can be more succinctly written as
   = \sum_{i=0}^\infty \varphi^i \bm R_i.
 \end{equation}
 
-To investigate the effect of the Piola transformation, we consider the affine
-representations \eqref{eqn:split-1}--\eqref{eqn:split-3} for two different
-methods. First, a conventional method using the pullback $\pi_{\bm \mu}^*$ to
-map between function spaces, and second a divergence-conforming method based on
-the Piola mapping \eqref{eqn:piola}.
-
-In doing so we will truncate the series for $\bm R(a)$ to a number of terms that
-can achieve the desired precision. It is important to note that the system
-\eqref{eqn:piolablock} only obtains its desired form for high accuracy
-approximations, and that if the affine representation form for
-$b(\cdot,\cdot,\bm \mu)$ is not exact, the matrix $\bm B_\textsc{vp}$ from
-\eqref{eqn:block} will correspondingly not be exactly zero, and the solution of
-\eqref{eqn:blocksolve-1}--\eqref{eqn:blocksolve-2} will not agree with the
+To investigate the effect of the Piola transformation, we consider the affine representations
+\eqref{eqn:split-1}--\eqref{eqn:split-3} for two different methods. First, a conventional method
+using the pullback $\pi_{\bm \mu}^\textsc{v}$ to map between function spaces, and second a
+divergence-conforming method based on the Piola mapping \eqref{eqn:piola}.  In doing so we will
+truncate the series for $\bm R(a)$ to a number of terms that can achieve the desired precision. It
+is important to note that the system \eqref{eqn:piolablock} only obtains its desired form for high
+accuracy approximations, and that if the affine representation form for $b(\cdot,\cdot,\bm \mu)$ is
+not exact, the matrix $\bm B_\textsc{vp}$ from \eqref{eqn:block} will correspondingly not be exactly
+zero, and the solution of \eqref{eqn:blocksolve-1}--\eqref{eqn:blocksolve-2} will not agree with the
 solution of \eqref{eqn:block}.
 
 The error made by truncating \eqref{eqn:rotsum} to $n$ terms is approximately
@@ -1346,8 +1349,9 @@ $\varphi_\textsc{max}^n / n!$. For a maximal angle of attack of
 $\SI{35}{\degree}$ for example, we can expect about $10$ digits of accuracy
 with $n=10$ terms.
 
-In the following, only the parameter $\varphi$ is treated, as $u_\infty$ is
-comparatively trivial.
+In the following, only the parameter $\varphi$ is considered, as $u_\infty$ is
+comparatively trivial. In all transformations, the Jacobian determinant $|\bm J|$ is identically
+equal to $1$.
 
 \subsection{Non-Piola formulation}
 
@@ -1358,8 +1362,10 @@ For the Laplacian form $a$ we get
     \hat{\bm w};
     \varphi
   )
-  &= \nu \int_{\hat{\Omega}} (\bm J^{-\intercal} \nabla) \hat{\bm u} : (\bm J^{-\intercal} \nabla) \hat{\bm w}
-  = \nu \int_{\hat{\Omega}} \nabla \hat{\bm u} : (\bm J^{-1} \bm J^{-\intercal} \nabla) \hat{\bm w},
+  &= \nu \int_{\hat{\Omega}} (\bm J^{-\intercal} \nabla) \hat{\bm u} : (\bm J^{-\intercal} \nabla)
+    \hat{\bm w} |\bm J|
+  = \nu \int_{\hat{\Omega}} \nabla \hat{\bm u} : (\bm J^{-1} \bm J^{-\intercal} \nabla) \hat{\bm w}
+    |\bm J|,
 \end{align}
 and we find for the matrix $\bm J^{-1} \bm J^{-\intercal}$ that
 \begin{align}
@@ -1372,7 +1378,7 @@ and we find for the matrix $\bm J^{-1} \bm J^{-\intercal}$ that
     - \varphi^2 \underbrace{\bm P \bm Q^2 \bm P}_{\bm D_2} \\
   &= \bm I + \varphi \bm D_1 - \varphi^2 \bm D_2.
 \end{align}
-Giving a three-term affine representation of $a$ as
+Since $|\bm J| = 1$, this gives a three-term affine representation of $a$ as
 \begin{equation}
   ({\bm\pi}^*_{\bm\mu}a)(
     \hat{\bm u},
@@ -1393,8 +1399,8 @@ For the divergence form $b$ we have
     \hat{\bm w};
     \varphi
   ) =
-  \int_{\hat{\Omega}} \hat{p} (\bm J^{-\intercal} \nabla) \cdot \hat{\bm w}
-  = \int_{\hat{\Omega}} \hat{p} \bm J^{-\intercal} : \nabla \hat{\bm w},
+  \int_{\hat{\Omega}} \hat{p} (\bm J^{-\intercal} \nabla) \cdot \hat{\bm w} |\bm J|
+  = \int_{\hat{\Omega}} \hat{p} \bm J^{-\intercal} : \nabla \hat{\bm w} |\bm J|,
 \end{equation}
 meaning we need a series representation of $\bm J^{-\intercal}$:
 \begin{align}
@@ -1426,7 +1432,6 @@ under consideration.
   ) \approx \sum_{i=0}^{2n} \varphi^i
   \int_{\hat{\Omega}} \hat{p} \bm B^{(-)}_i : \nabla \hat{\bm w}
 \end{equation}
-
 The same expansion will work with the convective term $c$, viz.
 \begin{equation}
   ({\bm\pi}^*_{\bm\mu}c)(
@@ -1436,17 +1441,16 @@ The same expansion will work with the convective term $c$, viz.
     \varphi
   )
   = \int_{\hat{\Omega}} (\hat{\bm u} \cdot \bm J^{-\intercal}\nabla) \hat{\bm v} \cdot \hat{\bm w}
+  |\bm J|
   \approx \sum_{i=0}^{2n} \varphi^i \int_{\hat{\Omega}}
     (\hat{\bm u} \cdot \bm B^{(-)}_i \nabla) \hat{\bm v} \cdot \hat{\bm w}.
 \end{equation}
 
 \subsection{Piola formulation}
 
-This proceeds as for the non-Piola case, except every vector field is
-pre-multiplied with the Jacobian (recall, the determinant is $1$, which
-simplifies \eqref{eqn:piola} somewhat). For this, we need an affine
-representation of $\bm J$. It looks deceptively like that of $\bm
-J^{-\intercal}$.
+This proceeds as for the non-Piola case, except every vector field is pre-multiplied with the
+Jacobian (recall, the determinant is $1$, which simplifies \eqref{eqn:piola} somewhat). For this, we
+need an affine representation of $\bm J$. It looks deceptively like that of $\bm J^{-\intercal}$:
 \begin{align}
   \nonumber
   \bm J
@@ -1465,7 +1469,7 @@ For the form $b$ we then get
     \hat{p},
     \hat{\bm w};
     \varphi
-  ) &= \int_{\hat{\Omega}} \hat{p} \bm J^{-\intercal} : \nabla (\bm J \hat{\bm w})
+  ) &= \int_{\hat{\Omega}} \hat{p} \bm J^{-\intercal} : \nabla (\bm J \hat{\bm w}) |\bm J|
     \approx \int_{\hat{\Omega}} \hat{p}
       \left( \sum_{i=0}^{2n} \varphi^i \bm B^{(-)}_i \right) : \nabla
       \left( \sum_{j=0}^{2n} \varphi^j \bm B^{(+)}_j \hat{\bm w} \right) \\
@@ -1486,7 +1490,7 @@ The form $c$ has similar complexity.
     \varphi
   )
   &= \int_{\hat{\Omega}} (\bm J \hat{\bm u} \cdot \bm J^{-\intercal}\nabla)
-    \bm J \hat{\bm v} \cdot \bm J \hat{\bm w}
+    \bm J \hat{\bm v} \cdot \bm J \hat{\bm w} |\bm J|
   \approx \int_{\hat{\Omega}} (\hat{\bm u} \cdot \nabla)
       \left( \sum_{i=0}^{2n} \varphi^i \bm B^{(+)}_i \hat{\bm v} \right) \cdot
     \left( \sum_{i=0}^{2n} \varphi^j \bm B^{(+)}_j \hat{\bm w} \right) \\
@@ -1503,10 +1507,10 @@ And finally, $a$ can be represented as
     \varphi
   ) &= \int_{\hat{\Omega}}
       (\bm J^{-\intercal} \nabla) (\bm J \hat{\bm u}) :
-      (\bm J^{-\intercal} \nabla) (\bm J \hat{\bm w})
+      (\bm J^{-\intercal} \nabla) (\bm J \hat{\bm w}) |\bm J|
     = \int_{\hat{\Omega}}
       \nabla (\bm J \hat{\bm u}) :
-      (\bm J^{-1} \bm J^{-\intercal} \nabla) (\bm J \hat{\bm w}) \\
+      (\bm J^{-1} \bm J^{-\intercal} \nabla) (\bm J \hat{\bm w}) |\bm J| \\
   \nonumber
     &\approx \int_{\hat{\Omega}}
       \nabla \left( \sum_{i=0}^{2n} \varphi^i \bm B^{(+)}_i \hat{\bm u} \right) :
@@ -1526,8 +1530,8 @@ which is an affine representation with $4n+2$ terms.
 \section{Results}
 \label{sec:results}
 
-For both methods, an ensemble of 225 solutions was generated at the
-$15 \times 15$ Gauss points for the parameter set
+For both the Taylor-Hood and the conforming method an ensemble of 225 solutions was generated at
+the $15 \times 15$ Gauss points for the parameter set
 \[
   \mathcal{P} = \left\{ (\varphi,u_\infty) \;|\;
     \varphi \in [-\SI{35}{\degree},\SI{35}{\degree}],
@@ -1538,12 +1542,11 @@ The viscosity was set at $\nu = \nicefrac{1}{6}$. The airfoil was chosen as a
 NACA0015 profile with a chord length of $1$, thus giving an approximate maximal
 Reynold's number of $120$.
 
-The reference domain $\hat{\Omega}$ was chosen as a cylinder of radius $10$,
-centered at the center of the airfoil. The mesh had $120$ elements in
-the angular direction and $40$ elements in the radial direction. Given
-discretization nodes $\{c_i\}_{i=1}^{120}$ for the airfoil, and
-uniformly spaced nodes $\{b_i\}_{i=1}^{120}$ for the surrounding
-circle, the interior nodes of the mesh were chosen as
+The reference domain $\hat{\Omega}$ was chosen as an airfoil disk of radius $10$, centered at the
+center of the airfoil. The mesh had $120$ elements in the angular direction and $40$ elements in the
+radial direction. Given discretization nodes $\{c_i\}_{i=1}^{120}$ for the airfoil, and uniformly
+spaced nodes $\{b_i\}_{i=1}^{120}$ for the external, the interior nodes of the mesh were
+chosen as
 \begin{equation}
   \label{eq:meshgen}
   d_{ij} = z(j) b_i + (1 - z(j)) c_i
@@ -1585,17 +1588,13 @@ see Figures~\ref{fig:thetatilde} and \ref{fig:domain}.
   \label{fig:domain}
 \end{figure}
 
-For the regular high-fidelity mododel, we chose a Lagrangian
-biquadratic basis for velocity, and Lagrangian bilinear basis for the
-pressure. This fulfils the Taylor-Hood property, leading to a stable
-method.
-
-For the conforming high-fidelity model, we chose a bilinear lagrangian
-basis for the pressure, and a mixed quadratic and linear B-spline
-basis for the velocity, giving a fully divergence-conforming method
-for the reference geometry at $\varphi=0$. Note that by design, the
-divergence-conforming method will retain this property for other
-angles.
+For the conventional high-fidelity mododel, we chose a Lagrangian biquadratic basis for velocity,
+and Lagrangian bilinear basis for the pressure. This fulfils the Taylor-Hood property, leading to a
+stable method. For the conforming high-fidelity model, we chose a bilinear Lagrangian basis for the
+pressure, and a mixed quadratic and linear B-spline basis for the velocity, giving a fully
+divergence-conforming method for the reference geometry at $\varphi=0$ (see
+\cite{Evans2013idc1}). Note that by design, the divergence-conforming method will retain this
+property for other angles.
 
 For solving the nonlinear equation we used Newton iteration, stopping when the
 velocity update reached $10^{-10}$ or less, as measured in the $H^1$ seminorm.
@@ -1613,14 +1612,12 @@ between a naive solver and a block solver (see
 
 \subsection{Spectrum}
 
-The decay rate of the eigenvalue spectrum of the solution ensembles indicate to
-which degree one might expect a reduced basis to adequately capture the most
-significant behavioral patterns of the model. As can be seen from
-Figure~\ref{fig:spectra}, the decay is rapid for the first $20$ or so modes, and
-then flattens out somewhat after that. (There is reason to believe that this
-might be improved for different choices of $\theta$.) The spectra for the
-supremizers closely mimic those of the pressure solutions, as should be
-expected.
+The decay rate of the eigenvalue spectrum of the solution ensembles indicates to which degree one
+might expect a reduced basis to adequately capture the most significant behavioral patterns of the
+model. As can be seen from Figure~\ref{fig:spectra}, the decay is rapid for the first $20$ or so
+modes, and then flattens out somewhat after that. (There is reason to believe that this might be
+improved for different choices of the angle function $\theta$.) The spectra for the supremizers
+closely mimic those of the pressure solutions, as should be expected.
 
 \begin{remark}
   The difference in the pressure spectra can be partially explained by quadrature. We have used the
@@ -1679,27 +1676,23 @@ expected.
 
 \subsection{Basis functions}
 
-The six dominant modes for for velocity, pressure and supremizers are shown. See
-Figures~\ref{fig:modes-vel-noconf}--\ref{fig:modes-sup-noconf} for the regular
-method and Figures~\ref{fig:modes-vel-conf}--\ref{fig:modes-sup-conf} for the
-conforming method. As is common with reduced basis methods, we can see that the
-first modes represent the most dominant flow patterns, and that it is left for
-the higher order modes to represent finer details, in this case wake effects. It
-is interesting that the first velocity modes of the two methods do not agree
-(in fact, the second mode of the conforming method agrees with the first mode of
-the regular method). The first two supremizer modes of the two methods also
-appear to be ``switched''. As for the pressure modes, aside from sign flips,
-they are in good agreement between the two methods, which is natural considering
-that the function space mapping for the pressure is identical.
+The six dominant modes for velocity, pressure and supremizers are shown. See
+Figures~\ref{fig:modes-vel-noconf}--\ref{fig:modes-sup-noconf} for the regular method and
+Figures~\ref{fig:modes-vel-conf}--\ref{fig:modes-sup-conf} for the conforming method. As is common
+with reduced basis methods, we can see that the first modes represent the most dominant flow
+patterns, and that it is left for the higher order modes to represent finer details, in this case
+wake effects. It is interesting that the first velocity modes of the two methods do not agree (in
+fact, the second mode of the conforming method agrees with the first mode of the regular
+method). The first two supremizer modes of the two methods also appear to be ``switched''. As for
+the pressure modes, aside from irrelevant sign flips, they are in good agreement between the two
+methods, which is natural considering that the function space mapping for the pressure is identical.
 
-The divergences are shown in Figure~\ref{fig:divs}. Here, the \emph{mean} and
-\emph{maximal} divergence of the ten first basis functions for each method
-(measured in the $L^2$-norm) are shown for various angles of attack. It shows
-that the divergences of the conforming basis functions are consistently zero to
-$11$ or $12$ digits of accuracy (well within the $10$ digits chosen as a
-baseline when choosing the number of terms $n$.) More importantly, it reveals
-that the solenoidal property is consistently satisfied throughout the parameter
-domain, with no significant variability.
+The divergences are shown in Figure~\ref{fig:divs}. Here, the \emph{mean} and \emph{maximal}
+divergence of the ten first basis functions for each method (measured in the $L^2$-norm) are shown
+for various angles of attack. It shows that the divergences of the conforming basis functions are
+consistently zero to $11$ or $12$ digits of accuracy (well within the $10$ digits chosen as a
+baseline when choosing the number of terms $n$.) More importantly, it reveals that the solenoidal
+property is consistently satisfied throughout the parameter domain, with no significant variability.
 
 \begin{figure}
   \begin{center}
@@ -1721,13 +1714,9 @@ domain, with no significant variability.
     \adjustbox{trim={0.13\width} {0.12\height} {0.13\width} {0.12\height}, clip}{
       \includegraphics[width=0.4\textwidth]{figs/bfun-v-no-piola-v005}
     }
-    \caption{First six velocity modes (regular method).}
+    \caption{First six velocity modes (Taylor-Hood method).}
     \label{fig:modes-vel-noconf}
-  \end{center}
-\end{figure}
-
-\begin{figure}
-  \begin{center}
+    \vspace{\floatsep}
     \adjustbox{trim={0.3\width} {0.3\height} {0.3\width} {0.3\height}, clip}{
       \includegraphics[width=0.4\textwidth]{figs/bfun-p-no-piola-p000}
     }
@@ -1746,32 +1735,28 @@ domain, with no significant variability.
     \adjustbox{trim={0.3\width} {0.3\height} {0.3\width} {0.3\height}, clip}{
       \includegraphics[width=0.4\textwidth]{figs/bfun-p-no-piola-p005}
     }
-    \caption{First six pressure modes (regular method).}
+    \caption{First six pressure modes (Taylor-Hood method).}
     \label{fig:modes-press-noconf}
-  \end{center}
-\end{figure}
-
-\begin{figure}
-  \begin{center}
-    \adjustbox{trim={0.2\width} {0.2\height} {0.2\width} {0.2\height}, clip}{
+    \vspace{\floatsep}
+    \adjustbox{trim={0.24\width} {0.23\height} {0.22\width} {0.24\height}, clip}{
       \includegraphics[width=0.4\textwidth]{figs/bfun-s-no-piola-v000}
     }
-    \adjustbox{trim={0.2\width} {0.2\height} {0.2\width} {0.2\height}, clip}{
+    \adjustbox{trim={0.24\width} {0.23\height} {0.22\width} {0.24\height}, clip}{
       \includegraphics[width=0.4\textwidth]{figs/bfun-s-no-piola-v001}
     }
-    \adjustbox{trim={0.2\width} {0.2\height} {0.2\width} {0.2\height}, clip}{
+    \adjustbox{trim={0.24\width} {0.23\height} {0.22\width} {0.24\height}, clip}{
       \includegraphics[width=0.4\textwidth]{figs/bfun-s-no-piola-v002}
     } \\
-    \adjustbox{trim={0.2\width} {0.2\height} {0.2\width} {0.2\height}, clip}{
+    \adjustbox{trim={0.24\width} {0.23\height} {0.22\width} {0.24\height}, clip}{
       \includegraphics[width=0.4\textwidth]{figs/bfun-s-no-piola-v003}
     }
-    \adjustbox{trim={0.2\width} {0.2\height} {0.2\width} {0.2\height}, clip}{
+    \adjustbox{trim={0.24\width} {0.23\height} {0.22\width} {0.24\height}, clip}{
       \includegraphics[width=0.4\textwidth]{figs/bfun-s-no-piola-v004}
     }
-    \adjustbox{trim={0.2\width} {0.2\height} {0.2\width} {0.2\height}, clip}{
+    \adjustbox{trim={0.24\width} {0.23\height} {0.22\width} {0.24\height}, clip}{
       \includegraphics[width=0.4\textwidth]{figs/bfun-s-no-piola-v005}
     }
-    \caption{First six supremizer modes (regular method).}
+    \caption{First six supremizer modes (Taylor-Hood method).}
     \label{fig:modes-sup-noconf}
   \end{center}
 \end{figure}
@@ -1798,11 +1783,7 @@ domain, with no significant variability.
     }
     \caption{First six velocity modes (conforming method).}
     \label{fig:modes-vel-conf}
-  \end{center}
-\end{figure}
-
-\begin{figure}
-  \begin{center}
+    \vspace{\floatsep}
     \adjustbox{trim={0.3\width} {0.3\height} {0.3\width} {0.3\height}, clip}{
       \includegraphics[width=0.4\textwidth]{figs/bfun-p-piola-p000}
     }
@@ -1823,27 +1804,23 @@ domain, with no significant variability.
     }
     \caption{First six pressure modes (conforming method).}
     \label{fig:modes-press-conf}
-  \end{center}
-\end{figure}
-
-\begin{figure}
-  \begin{center}
-    \adjustbox{trim={0.2\width} {0.2\height} {0.2\width} {0.2\height}, clip}{
+    \vspace{\floatsep}
+    \adjustbox{trim={0.24\width} {0.23\height} {0.22\width} {0.24\height}, clip}{
       \includegraphics[width=0.4\textwidth]{figs/bfun-s-piola-v000}
     }
-    \adjustbox{trim={0.2\width} {0.2\height} {0.2\width} {0.2\height}, clip}{
+    \adjustbox{trim={0.24\width} {0.23\height} {0.22\width} {0.24\height}, clip}{
       \includegraphics[width=0.4\textwidth]{figs/bfun-s-piola-v001}
     }
-    \adjustbox{trim={0.2\width} {0.2\height} {0.2\width} {0.2\height}, clip}{
+    \adjustbox{trim={0.24\width} {0.23\height} {0.22\width} {0.24\height}, clip}{
       \includegraphics[width=0.4\textwidth]{figs/bfun-s-piola-v002}
     } \\
-    \adjustbox{trim={0.2\width} {0.2\height} {0.2\width} {0.2\height}, clip}{
+    \adjustbox{trim={0.24\width} {0.23\height} {0.22\width} {0.24\height}, clip}{
       \includegraphics[width=0.4\textwidth]{figs/bfun-s-piola-v003}
     }
-    \adjustbox{trim={0.2\width} {0.2\height} {0.2\width} {0.2\height}, clip}{
+    \adjustbox{trim={0.24\width} {0.23\height} {0.22\width} {0.24\height}, clip}{
       \includegraphics[width=0.4\textwidth]{figs/bfun-s-piola-v004}
     }
-    \adjustbox{trim={0.2\width} {0.2\height} {0.2\width} {0.2\height}, clip}{
+    \adjustbox{trim={0.24\width} {0.23\height} {0.22\width} {0.24\height}, clip}{
       \includegraphics[width=0.4\textwidth]{figs/bfun-s-piola-v005}
     }
     \caption{First six supremizer modes (conforming method).}
@@ -1894,20 +1871,20 @@ domain, with no significant variability.
 \end{figure}
 
 \subsection{Stability}
+\label{sec:stability}
 
-To understand the stability properties of the four methods, we computed the LBB
-constants $\beta_h$ from \eqref{eqn:lbb}. The results can be seen in
-Table~\ref{tbl:lbb}. This clearly demonstrates the ability of the supremizer
-enrichment procedure to control the stability of the method. It also highlights
-that no significant degradation of stability is to be expected for
-divergence-conforming reduced methods.
+To understand the stability properties of the four methods, viz.~stable and unstable Taylor-Hood and
+conforming, we computed the LBB constants $\beta_h$ from \eqref{eqn:lbb}. The results are presented
+Table~\ref{tbl:lbb}. This clearly demonstrates the ability of the supremizer enrichment procedure to
+stabilize the method. It also highlights that no significant degradation of stability is to be
+expected for divergence-conforming reduced methods.
 
-Table~\ref{tbl:subspaceangles} show the angles between the velocity and supremizer spaces. Since
-linear independence between the two spaces are not enforced \emph{a priori}, these angles are
-relevant to the question whether the sum velocity space may possibly be degenerate. This shows that
-for all bases considered in this work, the two spaces are suitably linearly
-independent. Nevertheless, the divergence-conforming bases show remarkable near-orthogonality for
-larger $M$ that the Taylor-Hood method does not match.
+Table~\ref{tbl:subspaceangles} shows the minimal principal angles between the velocity and supremizer
+spaces, computed according to \cite{Knyazev2002pab}. Since linear independence between the two is
+not enforced \emph{a priori}, these angles are relevant to the question whether the sum velocity
+space may possibly be degenerate. This shows that for all bases considered in this work, the two
+spaces are suitably linearly independent. It is noteworthy that the divergence-conforming bases show
+remarkable near-orthogonality for larger $M$ that the Taylor-Hood method does not match.
 
 \begin{table}
   \begin{center}
@@ -1949,7 +1926,8 @@ larger $M$ that the Taylor-Hood method does not match.
     \egroup
   \end{center}
   \caption{
-    Angles between the velocity and supremizer spaces for the two methods for various basis sizes.
+    Minimal principal angles between the velocity and supremizer spaces for the two methods for various
+    reduced basis sizes.
   }
   \label{tbl:subspaceangles}
 \end{table}
@@ -1963,8 +1941,8 @@ freedom.
     \emph{mean relative error} between the result of the high-fidelity and the
     reduced basis method. The mean is taken over $225 = 15 \times 15$ uniformly
     spaced points in the parameter space. The error norms used are $H^1$
-    seminorm for velocities and $L^2$ norm for pressure. For the regular
-    un-stabilized reduced methods, we found that they consistently failed to
+    seminorm for velocities and $L^2$ norm for pressure. For the
+    unstabilized reduced methods, we found that they consistently failed to
     converge, thus the errors reported for those methods are based on fewer
     parameter values (those where convergence could be achieved).
   \item \emph{Expected error} is, given $M$, the smallest $\epsilon$ satisfying
@@ -1973,32 +1951,34 @@ freedom.
   \item \emph{Time usage} is the mean time spent solving one instance of the problem. This includes
     time spent in both the assembly and the linear solver phase, and notably will also be affected
     by the number of \emph{iterations} the nonlinear solver needs to converge.
-  \item \emph{Degrees of freedom} is the number $M$ of basis functions in a
-    \emph{single} reduced space. For the regular method, this implies a total of
-    $2M$ degrees of freedom in velocity (although only $M$ of these can be
-    expected to have approximative power, the supremizer functions \emph{do}
-    contribute to the final solution), and $M$ degrees of freedom in pressure.
-    For the conforming method, there are $M$ degrees of freedom in both spaces.
+  \item \emph{Degrees of freedom} is the number $M$ of basis functions in a reduced space for a
+    single field. For the regular method, this implies a total of $2M$ degrees of freedom in
+    velocity (although only $M$ of these can be expected to have approximative power, the supremizer
+    functions are indispensable and \emph{do} contribute to the final solution), and $M$ degrees of
+    freedom in pressure.  For the conforming method, there are $M$ degrees of freedom in both
+    spaces.
 \end{itemize}
 
-Figure~\ref{fig:perf1-unstab} first shows measured error as a function of
-expected error, for the stabilized and un-stabilized regular methods. While the
-stabilized method can be seen to converge, the velocity solution of the
-un-stabilized methods does not, and the pressure solution diverges.
+Figure~\ref{fig:perf1-unstab} first shows measured error as a function of expected error, for the
+stabilized and unstabilized Taylor-Hood methods. While the stabilized method can be seen to
+converge, the velocity solution of the un-stabilized methods does not, and the pressure solution
+diverges. In addition to this, the Taylor-Hood un-stabilized methods has serious convergence
+problems in the nonlinear solver, especially for larger $M$, and the conforming un-stabilized
+methods essentially never converges for any parameter values. In the following we will therefore
+ignore the unstabilized methods.
 
-In addition to this, the regular un-stabilized methods has serious convergence
-problems, especially for larger $M$, and the conforming un-stabilized methods
-essentially never converges for any parameter values. In the following we will
-therefore not dwell on the un-stabilized methods.
+Figure~\ref{fig:perf1} shows the same results, comparing the regular and the conforming methods
+(both stabilized). We see a clear linear relationship between the expected and measured errors. The
+conforming method obtains somewhat better velocity results and comparable pressure results to the
+Taylor-Hood method.
 
-Figure~\ref{fig:perf1} shows the same results, comparing the regular and the
-conforming methods (both stabilized). We see a clear linear relationship between
-the expected and mesured errors, as hoped. The conforming method obtains
-somewhat better velocity results and comparable pressure results to the regular
-method, although the pressure convergence pattern is noticeably more erratic.
-
-The error as a function of degrees of freedom (Figure~\ref{fig:perf2}) tells the
-same story.
+Figure~\ref{fig:perf2} shows error as a function of degrees of freedom. Here, it is clear that the
+pressure results for the conforming method are worse \emph{per degree of freedom}. The pressure
+errors look more dramatic than Figure~\ref{fig:perf1} because part of the discrepancy is expected
+based on the spectrum (Figure~\ref{fig:spectra}). That is to say, due to the slightly slower decay
+of eigenvalues in the conforming pressure snapshots as compared to the Taylor-Hood modes, the
+expected error for reduced models with the same number of degrees of freedom will be higher for the
+latter method.
 
 Figure~\ref{fig:perf3} shows the measured errors as a function of mean time usage, measured in
 seconds. This clearly shows the ability of the conforming method to achieve the same results
@@ -2187,25 +2167,27 @@ significantly faster if the block solver algorithm is employed.
 \section{Conclusions}
 \label{sec:conc}
 
-Two methods have been investigated for the parametrized problem of flow around a NACA0015
-airfoil with varying angle-of-attack and inflow velocity. One based on a
-Taylor-Hood high-fidelity method, and the other based on a divergence-conforming
-isogeometric high-fidelity method. Supremizers used to stabilize the former \cite{Ballarin2015ssp}
-and to provide pressure solutions for the latter
+We have formulated the fundamentals for Reduced Basis Methods (RBMs) for stationary Navier-Stokes
+problems. Using a divergence-conforming isogeometric high-fidelity method, we were able to generate
+divergence-free reduced bases, yielding a velocity-only reduced formulation. To solve for pressure,
+we employed supremizers as test functions, a technique used to stabilize conventional reduced basis
+methods. This allowed us to achieve accurate reduced solutions for both velocity in pressure with
+significant speed benefits over a coupled conventional formulation.
 
-While the accuracy of the reduced methods were comparable, the
-divergence-conforming model was able to achieve a significantly faster online
-stage thanks to the block form of its linear systems.
+Investigations were performed for the parametrized problem of flow around a NACA0015 airfoil with
+varying angle-of-attack and inflow velocity. The divergence-conforming method was compared with a
+supremizer stabilized reduced method based on the Taylor-Hood high-fidelity scheme with the same
+mesh and comparable polynomial degree. While the accuracy of the reduced methods were comparable,
+the divergence-conforming model was able to achieve a significantly faster online stage thanks to
+the block form of its linear systems.
 
-This faster online stage is offset by a more complicated offline stage. In
-particular, the affine representations \eqref{eqn:split-1}--\eqref{eqn:split-5}
-of the divergence-conforming method required approximately three times as many
-terms ($\sim 12n$ versus $\sim 4n$). In spite of this, the conforming method
-yields faster online stages. We aim to see in future work that automatic ``black box''
-methods such as Empirical Interpolation (EIM)
-\cite{Barrault2004eim,Grepl2007erb,Maday2007gmi}
-\cite[Chapter 10]{Quarteroni2016rbm}
-alleviates the additional work needed to produce such affine representations.
+This faster online stage is offset by a more complicated offline stage. In particular, the affine
+representations \eqref{eqn:split-1}--\eqref{eqn:split-5} of the divergence-conforming method
+required approximately three times as many terms ($\sim 12n$ versus $\sim 4n$). In spite of this,
+the conforming method yielded faster online stages. We aim to see in future work that automatic
+``black box'' methods such as Empirical Interpolation (EIM)
+\cite{Barrault2004eim,Grepl2007erb,Maday2007gmi} \cite[Chapter 10]{Quarteroni2016rbm} alleviates the
+additional work needed to produce such affine representations.
 
 \bibliography{common/references}
 \bibliographystyle{plain}
