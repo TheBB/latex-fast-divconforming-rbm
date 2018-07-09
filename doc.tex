@@ -62,7 +62,8 @@
   stable velocity-pressure spaces do not generally inherit the stability
   of the underlying high-fidelity model and, instead, additional stabilization techniques
   must be introduced. One way of bypassing the loss of LBB stability in the RBM is to
-  inflate the velocity space with supremizer modes~\cite{Ballarin2015ssp,Stabile2017fvp}. This however
+  inflate the velocity space with supremizer modes.%~\cite{Ballarin2015ssp,Stabile2017fvp}.
+  This however
   deteriorates the performance of the RBM in the performance-critical online stage, as
   additional DOFs must be introduced to retain stability, while these DOFs do not effectively
   contribute to accuracy of the RB approximation. In this work we consider a velocity-only
@@ -480,7 +481,7 @@ that
     \hat{\bm w};
     \bm \mu
   ) &= (\bm\pi_{\bm\mu}^* d_0)(
-    \pi_{\bm \mu}^* \hat{\bm w};
+    \hat{\bm w};
     \bm \mu
   )
   \label{eqn:war-1}, \\
@@ -526,27 +527,33 @@ combinations of forms that are parameter-\emph{in}dependent.
     \hat{\bm u},
     \hat{\bm w};
     \bm \mu
-  ) &= \sum_{i=1}^{N_a} \theta^a_i(\bm \mu) \hat{a}_i(\hat{\bm u}, \hat{\bm w}), \label{eqn:split-1} \\
+  ) &= \sum_{i=1}^{N_a} \theta^a_i(\bm \mu) \hat{a}_i(\hat{\bm u}, \hat{\bm w}), \label{eqn:split-a} \\
+    (\bm\pi_{\bm\mu}^* b)(
+    \hat{p},
+     \hat{\bm w};
+    \bm \mu
+  ) &= \sum_{i=1}^{N_b} \theta^b_i(\bm \mu) \hat{b}_i(\hat{p}, \hat{\bm w}), \label{eqn:split-b} \\
   (\bm\pi_{\bm\mu}^* c)(
     \hat{\bm u},
     \hat{\bm v},
     \hat{\bm w};
     \bm \mu
   ) &= \sum_{i=1}^{N_c} \theta^c_i(\bm \mu)
-      \hat{c}_i(\hat{\bm u}, \hat{\bm v}, \hat{\bm w}), \label{eqn:split-2} \\
-  (\bm\pi_{\bm\mu}^* b)(
-    \hat{p},
-     \hat{\bm w};
+      \hat{c}_i(\hat{\bm u}, \hat{\bm v}, \hat{\bm w}), \label{eqn:split-c} \\
+  (\bm\pi_{\bm\mu}^* c_0)(
+    \hat{\bm u},
+    \hat{\bm w};
     \bm \mu
-  ) &= \sum_{i=1}^{N_b} \theta^b_i(\bm \mu) \hat{b}_i(\hat{p}, \hat{\bm w}), \label{eqn:split-3} \\
+  ) &= \sum_{i=1}^{N_c} \theta^{c_0}_i(\bm \mu)
+      \hat{c}{}^{0}_i(\hat{\bm u}, \hat{\bm w}), \label{eqn:split-c0} \\
   (\bm\pi_{\bm\mu}^* d_0)(
     \hat{\bm w};
     \bm \mu
-  ) &= \sum_{i=1}^{N_1} \theta^0_i(\bm \mu) \hat{d}^0_i(\hat{\bm w}), \label{eqn:split-4} \\
+  ) &= \sum_{i=1}^{N_1} \theta^{d_0}_i(\bm \mu) \hat{d}^0_i(\hat{\bm w}), \label{eqn:split-d0} \\
   (\bm\pi_{\bm\mu}^* d_1)(
     \hat{q};
     \bm \mu
-  ) &= \sum_{i=1}^{N_2} \theta^1_i(\bm \mu) \hat{d}^1_i(\hat{q}) \label{eqn:split-5}
+  ) &= \sum_{i=1}^{N_2} \theta^{d_1}_i(\bm \mu) \hat{d}^1_i(\hat{q}) \label{eqn:split-d1}
 \end{align}
 %
 Most boundary-condition parameters naturally produce such representations so
@@ -563,7 +570,7 @@ Geometric parameters can lead to significantly more complicated representations
 unless they are of the trivial sort. In this case one must map the integrals
 \eqref{eqn:form-1}--\eqref{eqn:form-4} to the reference configuration, and the
 resulting expressions must be brought into forms compatible with
-\eqref{eqn:split-1}--\eqref{eqn:split-5}. Since these expressions usually
+\eqref{eqn:split-a}--\eqref{eqn:split-d1}. Since these expressions usually
 involve the Jacobian and its inverse, it is desirable that they are as simple as
 possible.
 
@@ -580,7 +587,9 @@ on a mesh-resolution parameter. We insist that $\mathcal{T}^h$ satisfies the usu
 regularity conditions. The mesh $\mathcal{T}^h$ serves as a support structure for conforming
 finite-dimensional approximation spaces $\hat{U}_0^h\subset\hat{U}_0$ and $\hat{P}^h\subset\hat{P}$.
 We assume that the pairing of the velocity and pressure spaces is stable in the inf-sup sense; see,
-for instance, \cite{} and~\cite{} for stable velocity-pressure pairs in the finite-element and isogeometric setting,
+for instance, \cite{Taylor1973nsn,Nedelec1986nfm,Raviart1981mfe}
+and~\cite{Evans2013idc1,Evans2013idc3,Buffa2011ias} for stable velocity-pressure pairs in
+the finite-element and isogeometric setting,
 respectively. For each $\bm{\mu}\in\mathcal{P}$, the high-fidelity approximation
 $(\hat{\bm{u}}_0^h(\bm{\mu}),\hat{p}^h(\bm{\mu}))$ corresponds to the solution
 of~\eqref{eqn:war-1}\nobreakdash--\eqref{eqn:war-2} with $\hat{U}_0,\hat{P}$ replaced by their
@@ -729,6 +738,7 @@ whose eigenpairs $(\lambda_j, \bm v^{j})$ give the reduced velocity
 basis functions
 %
 \begin{equation}
+\label{eqn:uRj}
   \hat{\bm u}^\textsc{r}_j = \frac{1}{\sqrt{\lambda_j}} \sum_{i=1}^N v^{j}_i \hat{\bm u}^h_0(\bm{\mu}_i),
   \qquad 1 \leq j \leq M_\textsc{v}
 \end{equation}
@@ -767,7 +777,7 @@ the reduced model generally involves solving a sequence of linear-algebraic prob
 \begin{equation}
   \label{eqn:sys-instab}
   \begin{pmatrix} \bm A_\textsc{vv} & \bm B_\textsc{vp} \\ \bm B_\textsc{pv} & 0\end{pmatrix}
-  \begin{pmatrix} \bm v \\ \bm p \end{pmatrix}
+  \begin{pmatrix} \bm u \\ \bm p \end{pmatrix}
   =
   \begin{pmatrix} \bm f_\textsc{v} \\ \bm f_\textsc{p} \end{pmatrix}
 \end{equation}
@@ -822,9 +832,9 @@ we apply the process described as ``approximate supremizer enrichment'' in
 offline in tandem with the pressure snapshots $p(\bm \mu_i)$. These supremizer snapshots are then
 reduced via POD in exactly the same manner as the velocity snapshots, into a separate and independent reduced space,
 which is subsequently added to the reduced velocity space via a direct-sum composition. Formally,
-the sum space should be orthogonalized to ensure linear independence. We have ignored this on the
-presumption that linear independence is already satisfactory. Results confirming this can be found in
-Section~\ref{sec:stability}.
+the sum space should be orthogonalized to ensure linear independence. Following~\cite{Ballarin2015ssp}, we have ignored
+this on the presumption that the reduced velocity space and the supremizer space are sufficiently disparate to
+retain linear independence. This hypothesis is verified in the numerical experiments in Section~\ref{sec:stability}.
 
 Introduction of the supremizer modes yields the following extension of the linear-algebraic
 systems~\eqref{eqn:sys-instab}:
@@ -835,7 +845,7 @@ systems~\eqref{eqn:sys-instab}:
     \bm A_\textsc{vv} & \bm A_\textsc{vs} & \bm B_\textsc{vp} \\
     \bm A_\textsc{sv} & \bm A_\textsc{ss} & \bm B_\textsc{sp} \\
     \bm B_\textsc{pv} & \bm B_\textsc{ps} & 0 \end{pmatrix}
-  \begin{pmatrix} \bm v \\ \bm s \\ \bm p \end{pmatrix}
+  \begin{pmatrix} \bm u \\ \bm s \\ \bm p \end{pmatrix}
   =
   \begin{pmatrix} \bm f_\textsc{v} \\ \bm f_\textsc{s} \\ \bm f_\textsc{p} \end{pmatrix}
 \end{equation}
@@ -888,55 +898,75 @@ or, more traditionally,
   \bm V^\intercal \bm f(\bm \mu).
 \end{equation}
 
-The importance of \eqref{eqn:split-1}--\eqref{eqn:split-5} then
+The importance of \eqref{eqn:split-a}--\eqref{eqn:split-d1} then
 becomes clear.  Although the solution of the reduced problem involves
 nonlinear systems of size $M$, which are quick to solve when $M$ is
 small (even if they are dense, as they will be), the assembly of these
 systems remains nontrivial. However, given \eqref{eqn:redorth-final},
 each matrix and vector corresponding to a bilinear or linear form in
-\eqref{eqn:split-1}--\eqref{eqn:split-5} may be reduced to the new
+\eqref{eqn:split-a}--\eqref{eqn:split-d1} may be reduced to the new
 basis independently without regard to parametric dependence. It is
 then vital that $\bm V$ is indeed parameter-independent.
 
-For example, let us consider \eqref{eqn:split-1}. Let the matrix
-$\bm D^\textsc{h}_i$ be the high-fidelity matrix corresponding to the bilinear
-form $\hat{d}_i$. (Here, superscript H refers to \emph{high-fidelity} and
+For example, let us consider \eqref{eqn:split-a}. Let the matrix
+$\bm M^\textsc{h}_i$ be the high-fidelity matrix corresponding to the bilinear
+form $\hat{a}_i$. (Here, superscript H refers to \emph{high-fidelity} and
 superscript R refers to the reduced model.) Then we have
 \begin{equation}
-  \bm D^\textsc{r}(\bm \mu)
-  = \bm V^\intercal \bm D^\textsc{h}(\bm \mu) \bm V
-  = \bm V^\intercal \left( \sum_i \theta^d_i(\bm \mu) \bm D^\textsc{h}_i \right) \bm V
-  = \sum_i \theta^d_i(\bm \mu) \underbrace{\bm V^\intercal \bm D^\textsc{h}_i \bm V}_{\bm D^\textsc{r}_i},
+  \bm M^\textsc{r}(\bm \mu)
+  = \bm V^\intercal \bm M^\textsc{h}(\bm \mu) \bm V
+  = \bm V^\intercal \left( \sum_i \theta^d_i(\bm \mu) \bm M^\textsc{h}_i \right) \bm V
+  = \sum_i \theta^d_i(\bm \mu) \underbrace{\bm V^\intercal \bm M^\textsc{h}_i \bm V}_{\bm M^\textsc{r}_i},
 \end{equation}
-where each of the small matrices $\bm D^\textsc{r}_i$ can be computed in the
+where each of the small matrices $\bm M^\textsc{r}_i$ can be computed in the
 offline stage. Assembling the reduced model system matrices then becomes
 trivial.
 
-\subsubsection{Assembly of nonlinear terms}
+\subsection{Assembly of nonlinear terms}
 
-Typically, the presence of a quadratic nonlinear term such as $c(\bm u_0, \bm u_0, \bm w)$ in
-\eqref{eqn:vvar-2} is treated by introducing a nonlinear solver (e.g.~Newton's method or fixed-point
-iteration), which converges to the correct solution $\bm u_0$ by solving a Picard sequence of
-\emph{linear} systems. These systems generally involve the assembly of terms such as $c(\bm u_0, \bm
-u_0^*, \bm w)$, where $\bm u_0^*$ is the current best approximation, which is known and kept fixed,
-while $\bm u_0$ is the unknown better approximation, which must be solved for. Because $\bm u_0^*$
-is not known in advance, the assembly of this term is generally done by an integration loop within
-the loop of the nonlinear solver.
+Typically, the presence of a nonlinear term such as $(\bm\pi_{\bm\mu}^* c)(\hat{\bm u}_0,\hat{\bm u}_0,\hat{\bm w};\bm \mu)$ in~\eqref{eqn:war-1} is treated by introducing a nonlinear solver (e.g.~Newton's method or Picard fixed-point
+iteration) that is based on solving a sequence of \emph{linear} systems. These linear systems generally involve
+(an approximation to) the Fr\'echet derivative of the nonlinear term, evaluated at a sequence of approximations to
+the solution of the nonlinear problem. Because the sequence of approximations is evidently not known in advance,
+the assembly of the Jacobian matrices corresponding to the Fr\'echet derivatives is generally done by a standard assembly
+procedure that includes an integration loop. However, the computational cost of such an assembly operation is prohibitive
+in the online stage of an RBM. Currently, there is no standard methodology for the efficient treatment of general
+nonlinear terms in the online stage of an RBM.
 
-Alternatively, one might consider assembling a full third-order tensor
-\emph{a priori}, that is
+The nonlinear term in the Navier--Stokes equations has a particular structure that can be exploited to obtain an efficient assembly in the online stage. Specifically, the nonlinear term in~\eqref{eqn:war-1} is quadratically nonlinear, as indicated by the fact that it can be represented as a trilinear form with a repeated argument. The
+quadrature-based assembly of the Jacobian matrix in the online stage can then be avoided by assembling in the
+offline stage the RB third-order tensors corresponding to the components $\hat{c}_i$ in the affine representation~\eqref{eqn:split-c} of the trilinear form.
+In particular, one can construct the third-order tensors $\smash[t]{\{{\bm C}^i\}_{i=1}^{N_c}}$ with components:
+%
 \begin{equation}
-  \bm C_{ijk} = c(\bm b_i, \bm b_j, \bm b_k)
+  C^i_{jkl} = \hat{c}{}_i\big(\hat{\bm u}^\textsc{r}_j, \hat{\bm u}^\textsc{r}_k, \hat{\bm u}^\textsc{r}_l\big)
+  \qquad
+  j,k,l\in\{1,2,\ldots,M_{\textsc{v}}\}
   \label{eqn:tensor}
 \end{equation}
-for all combinations of velocity basis functions $\bm b_i$. For large models,
-however, the storage requirements for such a tensor is prohibitive.
-
-Since the primary objective of reduced basis methods is speed, it is imperative
-that no integration loops can occur within the nonlinear solver, and therefore
-the full tensors \eqref{eqn:tensor} corresponding to \eqref{eqn:split-2} must be
-computed and stored as part of the offline stage. Although these tensors are
-dense, we find that the modest sizes keep the storage requirements realistic,
+%
+For any approximation $\underline{\hat{\bm u}}{}_0\in{}U_0^{\textsc{r}}$ the Jacobian matrix associated with the
+Fr\'echet derivative of $\bm\pi_{\bm\mu}^* c$ restricted to the reduced velocity space~$U_0^{\textsc{r}}$ can then be assembled in accordance with the ultimate expression in the chain of identities:
+%
+\begin{multline}
+\frac{d}{ds}(\bm\pi_{\bm\mu}^* c)(\underline{\hat{\bm u}}{}_0+s\hat{\bm u}^\textsc{r}_j,\underline{\hat{\bm u}}{}_0+s\hat{\bm u}^\textsc{r}_j,\hat{\bm u}^\textsc{r}_k;\bm \mu)\bigg|_{s=0}
+=
+(\bm\pi_{\bm\mu}^* c)(\underline{\hat{\bm u}}{}_0,\hat{\bm u}^\textsc{r}_j,\hat{\bm u}^\textsc{r}_k;\bm \mu)
++
+(\bm\pi_{\bm\mu}^* c)(\hat{\bm u}^\textsc{r}_j,\underline{\hat{\bm u}}{}_0,\hat{\bm u}^\textsc{r}_k;\bm \mu)
+\\
+=
+\sum_{i=1}^{N_c}\theta^c_i(\bm\mu)
+\sum_{l=1}^{M_{\textsc{v}}}
+\big(C^i_{ljk}+C^i_{jlk}\big)\eta_l
+\end{multline}
+%
+where $\eta_l$ denote the coefficients of $\underline{\hat{\bm u}}{}_0$ relative to the reduced basis, i.e.
+$\underline{\hat{\bm u}}{}_0=\sum_{l=1}^{M_{\textsc{v}}}\eta_l\hat{\bm u}^\textsc{r}_l$. Hence, for any
+approximation $\underline{\hat{\bm u}}{}_0\in{}U^{\textsc{r}}_0$, the Jacobian matrix can be assembled on the
+basis of the pre-computed third-order tensors. For large models, the storage requirements for the third-order
+tensor are unmanageable. However, the storage of such a tensor for a reduced space {\em is\/} feasible.
+Although these tensors are dense, we find that the modest sizes keep the storage requirements realistic,
 typically in the regions of hundreds of megabytes for $\sim100$ basis
 functions.
 
@@ -958,16 +988,16 @@ the way to generate fully divergence-free reduced velocity spaces.
 
 To ensure that solenoidal velocity fields remain solenoidal even in the case of
 parameter-dependent geometries, one employs the Piola transform, whereby the
-physical manifestation of the reference velocity field $\hat{\bm v}$ is not the
+physical manifestation of the reference velocity field $\hat{\bm u}$ is not the
 canonical transformation \eqref{eqn:cantrf} (which, indeed, does not
 preserve the solenoidal property in general), but rather
 \begin{equation}
   \label{eqn:piola}
-  \bm v = \frac{\bm J}{|\bm J|} (\hat{\bm v} \circ \chi_{\bm\mu})
+  \bm u = \frac{\bm J}{|\bm J|} (\hat{\bm u} \circ \chi_{\bm\mu})
 \end{equation}
 where $\bm J$ is the Jacobian of the mapping $\chi_{\bm \mu}^{-1}$. This modified
 mapping must then be used in \eqref{eqn:war-1}--\eqref{eqn:war-2}. It should be
-noted that the affine representations \eqref{eqn:split-1}--\eqref{eqn:split-5}
+noted that the affine representations \eqref{eqn:split-a}--\eqref{eqn:split-d1}
 may be considerably more complicated in this case, since $\bm J$ in general is
 parameter-dependent.
 
@@ -978,13 +1008,13 @@ concerned with the approximation of $\hat{\bm u}_0$ (and not $\hat{\bm u}$), thi
 necessary to ensure the equivalence between the solenoidality of $\hat{\bm u}_0$ and
 that of $\hat{\bm u}$. In practice one may solve the Stokes problem with a
 divergence-conforming method to generate solenoidal lift functions. Since the lift is constructed in
-the offline stage, the cost of this can be ignored.
+the offline stage, the cost of this construction can be ignored.
 
 With a fully solenoidal reduced velocity space, we are free to employ the
 velocity-only formulation \eqref{eqn:velonly}, so that \eqref{eqn:block} reduces
 to
 \begin{equation}
-  \bm A_\textsc{vv} \bm v = \bm f_\textsc{v}.
+  \bm A_\textsc{vv} \bm u = \bm f_\textsc{v}.
   \label{eqn:blocksolve-1}
 \end{equation}
 which is a system of size $M$ compared to \eqref{eqn:block} of size $3M$.
@@ -992,10 +1022,10 @@ which is a system of size $M$ compared to \eqref{eqn:block} of size $3M$.
 The supremizers of Section~\ref{sec:stab} function as the test functions in the
 pressure recovery equation \eqref{eqn:sup-vvar}. Indeed, one obtains the system
 \begin{equation}
-  \bm B_\textsc{sp} \bm p = \bm f_\textsc{s} - \bm A_\textsc{sv} \bm v.
+  \bm B_\textsc{sp} \bm p = \bm f_\textsc{s} - \bm A_\textsc{sv} \bm u.
   \label{eqn:blocksolve-2}
 \end{equation}
-
+%
 It is worth noting that the same expressions can be reached by setting $\bm B_\textsc{vp} = 0$ and
 $\bm f_\textsc{p} = 0$ in \eqref{eqn:block}, obtaining
 \begin{equation}
@@ -1004,14 +1034,14 @@ $\bm f_\textsc{p} = 0$ in \eqref{eqn:block}, obtaining
     \bm A_\textsc{vv} & \bm A_\textsc{vs} & \\
     \bm A_\textsc{sv} & \bm A_\textsc{ss} & \bm B_\textsc{sp} \\
     & \bm B_\textsc{ps} & \end{pmatrix}
-  \begin{pmatrix} \bm v \\ \bm s \\ \bm p \end{pmatrix}
+  \begin{pmatrix} \bm u \\ \bm s \\ \bm p \end{pmatrix}
   = \begin{pmatrix} \bm r_\textsc{v} \\ \bm r_\textsc{s} \\ \bm 0 \end{pmatrix}
 \end{equation}
 If all spaces are of equal size $M$, the system \eqref{eqn:piolablock} is
 block-triangular, and can be solved as
 \eqref{eqn:blocksolve-1}--\eqref{eqn:blocksolve-2} together with $\bm s = 0$.
 This illustrates the fact that supremizers serve no approximative purpose and
-merely functionins as a test space for the pressure.
+merely function as a test space for the pressure.
 
 The system \eqref{eqn:blocksolve-1}--\eqref{eqn:blocksolve-2} also facilitates a
 much faster reduced method than \eqref{eqn:block}, solving two systems of size
@@ -1156,10 +1186,10 @@ basis functions.
 We consider a two-dimensional airfoil suspended in a mesh at the origin. We wish
 to perform airflow simulations around this airfoil with the angle of attack
 $\varphi$ and the inflow velocity $u_\infty$ as parameters, in other words
-$\bm \mu = (\varphi, u_\infty)$; see Figure~\ref{fig:airfoil-sketch} for a
+$\bm \mu = (\varphi, u_\infty)$; See Figure~\ref{fig:airfoil-sketch} for a
 sketch. The purpose of the present section is to develop an affine
 representation of this problem, as understood by
-\eqref{eqn:split-1}--\eqref{eqn:split-5}.
+\eqref{eqn:split-a}--\eqref{eqn:split-d1}.
 
 \begin{figure}
   \begin{center}
@@ -1221,6 +1251,7 @@ example. Note that we also require
   \tilde{\theta}_\varphi'(r_\text{min}) =
   \tilde{\theta}_\varphi'(r_\text{max}) = 0
 \]
+%
 in accordance with Remark~\ref{rem:lift}, i.e.~the mapping of lifts between reference and
 transformed domains will not modify the boundary data.
 %
@@ -1334,8 +1365,8 @@ so the series expansion can be more succinctly written as
 \end{equation}
 
 To investigate the effect of the Piola transformation, we consider the affine representations
-\eqref{eqn:split-1}--\eqref{eqn:split-3} for two different methods. First, a conventional method
-using the pullback $\pi_{\bm \mu}^\textsc{v}$ to map between function spaces, and second a
+\eqref{eqn:split-a}--\eqref{eqn:split-c0} for two different methods. First, a conventional method
+using the pullback via $\pi_{\bm \mu}^\textsc{v}$ to map between function spaces, and second a
 divergence-conforming method based on the Piola mapping \eqref{eqn:piola}.  In doing so we will
 truncate the series for $\bm R(a)$ to a number of terms that can achieve the desired precision. It
 is important to note that the system \eqref{eqn:piolablock} only obtains its desired form for high
@@ -1542,25 +1573,25 @@ The viscosity was set at $\nu = \nicefrac{1}{6}$. The airfoil was chosen as a
 NACA0015 profile with a chord length of $1$, thus giving an approximate maximal
 Reynold's number of $120$.
 
-The reference domain $\hat{\Omega}$ was chosen as an airfoil disk of radius $10$, centered at the
-center of the airfoil. The mesh had $120$ elements in the angular direction and $40$ elements in the
-radial direction. Given discretization nodes $\{c_i\}_{i=1}^{120}$ for the airfoil, and uniformly
-spaced nodes $\{b_i\}_{i=1}^{120}$ for the external, the interior nodes of the mesh were
-chosen as
+The reference domain $\hat{\Omega}$ was chosen as an disk of radius $10$, centered at the
+center of the airfoil, excluding the airfoil at $\varphi=\SI{0}{\degree}$. The mesh had
+$120$ elements in the circumferential direction and $40$ elements in the
+radial direction. Given discretization nodes $\{n^{\textsc{int}}_i\}_{i=1}^{120}$ for the airfoil, and uniformly
+spaced nodes $\{n^{\textsc{ext}}_i\}_{i=1}^{120}$ for the external boundary, the interior nodes of the mesh were
+positioned as
+%
 \begin{equation}
-  \label{eq:meshgen}
-  d_{ij} = z(j) b_i + (1 - z(j)) c_i
+  \label{eqn:meshgen}
+  n^{\textsc{dom}}_{ij} = \bigg(\frac{e^{\gamma j / 120} - 1}{e^{\gamma} - 1}\bigg) n^{\textsc{int}}_i
+  + \bigg(1 - \frac{e^{\gamma j / 120} - 1}{e^{\gamma} - 1}\bigg) n^{\textsc{ext}}_i
 \end{equation}
-where
-\[
-  z(j) = \frac{e^{\gamma j / 120} - 1}{e^{\gamma} - 1}, \qquad
-  \gamma = 120 \log{\alpha}
-\]
-and where $\alpha$ is a grading factor. This produces a mesh where the elements grow in size by a
-factor of approximately $\alpha$ for each radial layer. We used $\alpha = 1.2$.
+%
+where $\gamma = 120 \log{\alpha}$ and $\alpha$ is a grading factor. This produces a mesh where the elements
+grow in size by a factor of approximately $\alpha$ for each radial layer, starting from the airfoil. We
+used $\alpha = 1.2$.
 
 The boundary conditions were enforced strongly at the inflow boundary,
-with no-slip conditions on the airfoil and a do-nothing zero Neumann
+with no-slip conditions on the airfoil and a do-nothing homogeneous Neumann
 boundary condition on the outflow. The lift function was chosen as the
 solution to the Stokes problem with $\varphi=0$, which is solenoidal.
 
@@ -1588,9 +1619,9 @@ see Figures~\ref{fig:thetatilde} and \ref{fig:domain}.
   \label{fig:domain}
 \end{figure}
 
-For the conventional high-fidelity mododel, we chose a Lagrangian biquadratic basis for velocity,
-and Lagrangian bilinear basis for the pressure. This fulfils the Taylor-Hood property, leading to a
-stable method. For the conforming high-fidelity model, we chose a bilinear Lagrangian basis for the
+For the conventional high-fidelity model, we chose a Lagrangian bi-quadratic basis for velocity,
+and Lagrangian bilinear basis for the pressure. This fulfills the Taylor--Hood property, leading to an
+inf-sup stable formulation. For the conforming high-fidelity model, we chose a bilinear Lagrangian basis for the
 pressure, and a mixed quadratic and linear B-spline basis for the velocity, giving a fully
 divergence-conforming method for the reference geometry at $\varphi=0$ (see
 \cite{Evans2013idc1}). Note that by design, the divergence-conforming method will retain this
@@ -1598,7 +1629,6 @@ property for other angles.
 
 For solving the nonlinear equation we used Newton iteration, stopping when the
 velocity update reached $10^{-10}$ or less, as measured in the $H^1$ seminorm.
-
 The affine representations were derived from a truncated version of
 \eqref{eqn:rotsum} with $n=12$ terms, sufficient to represent the rotation
 matrix $\bm R(a)$ to $10$ digits accuracy within the range of angles considered.
@@ -1687,11 +1717,13 @@ method). The first two supremizer modes of the two methods also appear to be ``s
 the pressure modes, aside from irrelevant sign flips, they are in good agreement between the two
 methods, which is natural considering that the function space mapping for the pressure is identical.
 
-The divergences are shown in Figure~\ref{fig:divs}. Here, the \emph{mean} and \emph{maximal}
+The divergence of the velocity basis functions is shown in Figure~\ref{fig:divs}. Here, the \emph{mean} and \emph{maximal}
 divergence of the ten first basis functions for each method (measured in the $L^2$-norm) are shown
-for various angles of attack. It shows that the divergences of the conforming basis functions are
+for various angles of attack. The figure shows that the divergences of the basis functions for the
+conventional method range between approximately~1 and~10. The divergences of the reduced-basis functions
+for the conforming method are
 consistently zero to $11$ or $12$ digits of accuracy (well within the $10$ digits chosen as a
-baseline when choosing the number of terms $n$.) More importantly, it reveals that the solenoidal
+baseline when choosing the number of terms $n$.) More importantly, it reveals that the solenoidality
 property is consistently satisfied throughout the parameter domain, with no significant variability.
 
 \begin{figure}
@@ -1873,11 +1905,11 @@ property is consistently satisfied throughout the parameter domain, with no sign
 \subsection{Stability}
 \label{sec:stability}
 
-To understand the stability properties of the four methods, viz.~stable and unstable Taylor-Hood and
+To understand the stability properties of the four methods, viz.~stabilized and unstabilized Taylor-Hood and
 conforming, we computed the LBB constants $\beta_h$ from \eqref{eqn:lbb}. The results are presented
-Table~\ref{tbl:lbb}. This clearly demonstrates the ability of the supremizer enrichment procedure to
-stabilize the method. It also highlights that no significant degradation of stability is to be
-expected for divergence-conforming reduced methods.
+in Table~\ref{tbl:lbb}. The results clearly demonstrate the ability of the supremizer enrichment
+procedure to stabilize the method. In addition, the results highlight that no significant degradation
+of stability is to be expected for divergence-conforming reduced methods.
 
 Table~\ref{tbl:subspaceangles} shows the minimal principal angles between the velocity and supremizer
 spaces, computed according to \cite{Knyazev2002pab}. Since linear independence between the two is
@@ -1964,7 +1996,7 @@ freedom.
 Figure~\ref{fig:perf1-unstab} first shows measured error as a function of expected error, for the
 stabilized and unstabilized Taylor-Hood methods. While the stabilized method can be seen to
 converge, the velocity solution of the un-stabilized methods does not, and the pressure solution
-diverges. In addition to this, the Taylor-Hood un-stabilized methods has serious convergence
+diverges. In addition to this, the Taylor-Hood un-stabilized method has serious convergence
 problems in the nonlinear solver, especially for larger $M$, and the conforming un-stabilized
 methods essentially never converges for any parameter values. In the following we will therefore
 ignore the unstabilized methods.
@@ -1975,9 +2007,10 @@ conforming method obtains somewhat better velocity results and comparable pressu
 Taylor-Hood method.
 
 Figure~\ref{fig:perf2} shows error as a function of degrees of freedom. Here, it is clear that the
-pressure results for the conforming method are worse \emph{per degree of freedom}. The pressure
-errors look more dramatic than Figure~\ref{fig:perf1} because part of the discrepancy is expected
-based on the spectrum (Figure~\ref{fig:spectra}). That is to say, due to the slightly slower decay
+pressure results for the conventional method are slightly better \emph{per degree of freedom}. The
+difference in the pressure errors is more pronounced than in Figure~\ref{fig:perf1} because part
+of the discrepancy can be attributed to corresponding differences in the spectrum; cf. Figure~\ref{fig:spectra}.
+That is to say, due to the slightly slower decay
 of eigenvalues in the conforming pressure snapshots as compared to the Taylor-Hood modes, the
 expected error for reduced models with the same number of degrees of freedom will be higher for the
 latter method.
@@ -2169,27 +2202,28 @@ significantly faster if the block solver algorithm is employed.
 \section{Conclusions}
 \label{sec:conc}
 
-We have formulated the fundamentals for Reduced Basis Methods (RBMs) for stationary Navier-Stokes
+We have formulated the fundamentals for Reduced Basis Methods (RBMs) for stationary Navier--Stokes
 problems. Using a divergence-conforming isogeometric high-fidelity method, we were able to generate
 divergence-free reduced bases, yielding a velocity-only reduced formulation. To solve for pressure,
 we employed supremizers as test functions, a technique used to stabilize conventional reduced basis
-methods. This allowed us to achieve accurate reduced solutions for both velocity in pressure with
+methods. This allowed us to achieve accurate reduced solutions for both velocity and pressure with
 significant speed benefits over a coupled conventional formulation.
 
 Investigations were performed for the parametrized problem of flow around a NACA0015 airfoil with
 varying angle-of-attack and inflow velocity. The divergence-conforming method was compared with a
 supremizer stabilized reduced method based on the Taylor-Hood high-fidelity scheme with the same
-mesh and comparable polynomial degree. While the accuracy of the reduced methods were comparable,
-the divergence-conforming model was able to achieve a significantly faster online stage thanks to
-the block form of its linear systems.
+mesh and comparable polynomial degree. While the accuracy of the reduced methods were virtually
+identical, the divergence-conforming model was able to achieve a significantly faster online stage
+thanks to the block form of its linear systems.
 
-This faster online stage is offset by a more complicated offline stage. In particular, the affine
-representations \eqref{eqn:split-1}--\eqref{eqn:split-5} of the divergence-conforming method
+The faster online stage of the conforming RB method is offset by a more complicated offline stage.
+In particular, the affine
+representations \eqref{eqn:split-a}--\eqref{eqn:split-d1} of the divergence-conforming method
 required approximately three times as many terms ($\sim 12n$ versus $\sim 4n$). In spite of this,
-the conforming method yielded faster online stages. We aim to see in future work that automatic
-``black box'' methods such as Empirical Interpolation (EIM)
-\cite{Barrault2004eim,Grepl2007erb,Maday2007gmi} \cite[Chapter 10]{Quarteroni2016rbm} alleviates the
-additional work needed to produce such affine representations.
+the conforming method yielded significantly faster online stages. We aim to investigate in future work
+in which manner automatic ``black box'' methods such as Empirical Interpolation
+(EIM, see~\cite{Barrault2004eim,Grepl2007erb,Maday2007gmi} and~\cite[Chapter 10]{Quarteroni2016rbm})
+can alleviate the additional work needed to produce such affine representations.
 
 \bibliography{common/references}
 \bibliographystyle{plain}
