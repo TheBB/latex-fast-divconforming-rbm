@@ -183,9 +183,12 @@ truncated series expansions of these expressions that do admit an affine represe
 we assess the computational efficiency of such an approach.
 
 An important additional aspect of the present work is the use of divergence-conforming B-spline
-approximations for the high-fidelity simulations. These methods have recently been introduced
-by Evans and Hughes~\cite{Evans2012dsa,Evans2013idc1,Evans2013idc2,Evans2013idc3}. See also work in
-\cite{Buffa2011ias,vanOpstal2017idc}.
+approximations for the high-fidelity simulations.
+Such methods were first introduce by Buffa and co-workers~\cite{Buffa2010iae,Buffa2011ias}
+and then by Evans and Hughes~\cite{Evans2012dsa,Evans2013idc1,Evans2013idc2,Evans2013idc3}.
+Extension to locally refined B-splines~\cite{Dokken2013psl,Johannessen2014ial}
+were done in~\cite{Johannessen2015dcd} and to divergence-conforming multiscale turbulence
+models in~\cite{Opstal2017idc}.
 They rely on formulating a pressure space that
 is exactly equal to the divergence of the velocity space. This is enabled by the use of
 B-spline basis functions, recently popularized in the field of isogeometric
@@ -204,7 +207,7 @@ The paper is organized as follows:
 \item Section~\ref{sec:reduction} describes the reduced basis method as applied
   to the the Navier-Stokes problem in detail. One method for pressure
   stabilization is introduced in Section~\ref{sec:stab}.
-\item Section~\ref{sec:conforming} introduces the main novelty of the paper, the
+\item Section~\ref{sec:divconf} introduces the main novelty of the paper, the
   application of divergence-conforming high-fidelity methods to a reduced basis
   method.
 \item Section~\ref{sec:airfoil} develops the necessary mathematics for a
@@ -498,7 +501,6 @@ that
 One may note that~\eqref{eqn:war-2} is precisely \eqref{eqn:vvar-1}--\eqref{eqn:vvar-2} expressed
 with pullbacks through $\bm \pi_{\bm \mu}^*$ and parameter-dependent forms.
 
-
 \begin{remark}
   \label{rem:lift}
   It is to be noted that the lift $\hat{\bm \ell}$ in~\eqref{eqn:newform} is constructed on
@@ -587,7 +589,7 @@ on a mesh-resolution parameter. We insist that $\mathcal{T}^h$ satisfies the usu
 regularity conditions. The mesh $\mathcal{T}^h$ serves as a support structure for conforming
 finite-dimensional approximation spaces $\hat{U}_0^h\subset\hat{U}_0$ and $\hat{P}^h\subset\hat{P}$.
 We assume that the pairing of the velocity and pressure spaces is stable in the inf-sup sense; see,
-for instance, \cite{Taylor1973nsn,Nedelec1986nfm,Raviart1981mfe}
+for instance, \cite{Taylor1973nsn,Nedelec1986nfm,Raviart1981mfe,Johannessen2015dcd}
 and~\cite{Evans2013idc1,Evans2013idc3,Buffa2011ias} for stable velocity-pressure pairs in
 the finite-element and isogeometric setting,
 respectively. For each $\bm{\mu}\in\mathcal{P}$, the high-fidelity approximation
@@ -642,9 +644,10 @@ and generating an \emph{ensemble} of high-fidelity approximations
 %
 with conventional finite element or isogeometric methods. A covariance matrix is then
 constructed,
-\[
+\begin{equation}
+  \label{eqn:covmx}
   C_{ij} = z(\varphi_i, \varphi_j)
-\]
+\end{equation}
 where the bilinear symmetric positive definite covariance function
 $z(\cdot,\cdot)$ is left unspecified for the time being. Given eigenpairs
 $(\lambda_j, \bm v^j)$ ($\lambda_1\geq\lambda_2\geq\cdots\geq\lambda_N$)
@@ -714,6 +717,7 @@ implies the following bound for the projection error:
 
 
 \subsection{Field separation}
+\label{sec:fieldsep}
 In practice, the extraction of a reduced basis from~\eqref{eqn:ensemble} is performed separately
 on the velocity and pressure components. In other words, first one selects a velocity covariance
 function $z=z_\textsc{v}$. Typically,
@@ -760,6 +764,7 @@ z_\textsc{p}\big((\hat{\bm u}_0, \hat{p}), (\hat{\bm v}_0, \hat{q})\big) =
 providing a reduced pressure basis:
 %
 \begin{equation}
+  \label{eqn:pRj}
   \hat{p}^\textsc{r}_j = \frac{1}{\sqrt{\lambda_j}} \sum_{i=1}^N v^{j}_i \hat{p}^h(\bm{\mu}_i),
   \qquad 1 \leq j \leq M_\textsc{p}
 \end{equation}
@@ -970,7 +975,10 @@ Although these tensors are dense, we find that the modest sizes keep the storage
 typically in the regions of hundreds of megabytes for $\sim100$ basis
 functions.
 
-\section{Conforming methods}
+\section{Divergence-Conforming methods}
+\label{sec:divconf}
+
+\subsection{Separated velocity and pressure bases}
 \label{sec:conforming}
 
 In high-fidelity terms, a divergence-conforming method is any method which
@@ -1058,127 +1066,52 @@ followed by pressure recovery in various forms, see
 Other methods for pressure recovery from pure velocity solutions have been investigated. In
 \cite{Caiazzo2014niv}, three different methods based on modified equations and spaces are
 compared. The authors in \cite{Akhtar2009ser} compute the pressure by taking the divergence of the
-Navier-Stokes equation, projecting the result onto the pressure modes. In \cite{Baiges2013ero} the
-pressure is recovered explicitly by realizing all reduced basis functions as joint velocity-pressure
-basis functions.
+Navier-Stokes equation, projecting the result onto the pressure modes.
 
-% \section{Problems and their affine representations}
+\subsection{Combined velocity-pressure basis}
+\label{sec:combined}
 
-% \subsection{Backwards-facing step channel}
+One interesting method of pressure reconstruction is given in \cite{Baiges2013ero}, where all
+reduced basis functions are \emph{joint} velocity \emph{and} pressure functions. The pressure is
+then reconstructed from the coefficients of the solution vector in the reduced space, exactly as
+with the velocity field. In the following, we will refer to this technique as
+\emph{pressure reconstruction}, to distinguish it from \emph{pressure recovery} as discussed in
+Section~\ref{sec:conforming}.
 
-% \begin{figure}
-%   \begin{center}
-%     \begin{tikzpicture}
-%       \draw[thick, dashed, fill=black!10]
-%       (0,0) node[anchor=south west, xshift=-1mm, yshift=-1mm] {$(0,0)$} --
-%       (-1,0) --
-%       (-1,1) node[anchor=south east, xshift=1mm, yshift=-1mm] {$(-1,1)$} --
-%       (10,1) --
-%       (10,-1) node[anchor=north west, xshift=-1mm, yshift=1mm] {$(l,-h)$} --
-%       (0,-1) -- (0,0);
-%       \draw[thick] (10,-1) -- (0,-1) -- (0,0) -- (-1,0) -- (-1,1) -- (10,1);
-%       \draw[dotted] (0,0) -- (10,0);
-%       \draw[->] (-1,0.75) -- (-0.75,0.75);
-%       \draw[->] (-1,0.5) -- (-0.6,0.5);
-%       \draw[->] (-1,0.25) -- (-0.75,0.25);
-%     \end{tikzpicture}
-%     \begin{tikzpicture}
-%       \draw[thick, fill=black!10]
-%       (0,0) -- (-1,0) -- (-1,1) -- (10,1) -- (10,-1) -- (0,-1) -- (0,0);
-%       \draw[dotted] (0,1) -- (0,0) -- (10,0);
-%       \node at (-0.5,0.5) {$\Omega_1$};
-%       \node at (5,0.5) {$\Omega_2$};
-%       \node at (5,-0.5) {$\Omega_3$};
-%     \end{tikzpicture}
-%   \end{center}
-%   \caption{The backwards-facing channel.}
-%   \label{fig:back}
-% \end{figure}
+It is tempting to introduce this approach to divergence-conforming RBMs because the system
+\eqref{eqn:blocksolve-1} remains the same, that is, adding pressure data to divergence-free velocity
+basis functions does not change the reduced system.
 
-% We consider the backwards-facing channel problem, see Figure~\ref{fig:back}. The
-% dashed line represents $\Gamma_\text{N}$ and the solid line $\Gamma_\text{D}$.
-% The boundary conditions are $\bm h = \bm 0$ and
-% \[
-%   \bm g(\bm x) = \begin{cases}
-%     \left(\frac{v}{4} x_2 (1-x_2)\right), &\qquad x_2 > 0, \\
-%     \bm 0, &\qquad \text{otherwise}.
-%   \end{cases}
-% \]
-% The remaining unknowns $\nu$ (viscosity), $l$ (channel length), $h$ (step
-% height) and $v_\text{in}$ (maximal inlet velocity) are parametric dependencies.
-% Thus, let $\bm \mu = (\nicefrac{1}{\nu}, l, h, v_\text{in})$ and
-% \[
-%   \mathcal{P} = [20, 50] \times [9, 12] \times [0.3, 2] \times [0.5, 1.2].
-% \]
-% We shall use $\hat{\Omega} = \Omega(l=1, h=1)$ as a reference domain. Let us
-% also denote
-% \begin{align}
-%   \nonumber \pi_{\bm \mu}(x_1,x_2) &=
-%                                      \begin{cases}
-%                                        (x_1,x_2), & (x_1,x_2) \in \Omega_1 \\
-%                                        (\nicefrac{x_1}{l},x_2), & (x_1,x_2) \in \Omega_2 \\
-%                                        (\nicefrac{x_1}{l},\nicefrac{x_2}{h}), & (x_1,x_2) \in \Omega_3
-%                                      \end{cases} \\
-%   \bm \ell &= v_\text{in} \bm \ell_1 = v_\text{in} \cdot \begin{cases}
-%     \left(\frac{1}{4} x_2 (1-x_2)\right), &\qquad x_2 > 0, \\
-%     \bm 0, &\qquad \text{otherwise}.
-%   \end{cases} \label{eqn:affine-lift}
-% \end{align}
-% Then it follows that the affine representations of $d,b,c$ in reference
-% coordinates are
-% \begin{align*}
-%   d(
-%     \pi_{\bm \mu}^* \hat{\bm u},
-%     \pi_{\bm \mu}^* \hat{\bm w};
-%     \bm \mu
-%   ) &=
-%       \nu \int_{\hat{\Omega}_1} \nabla \hat{\bm u} : \nabla \hat{\bm w} \\
-%     & + \frac{\nu}{l} \int_{\hat{\Omega}_2} \partial_1 \hat{\bm u} \cdot \partial_1 \hat{\bm w}
-%       + l\nu \int_{\hat{\Omega}_2} \partial_2 \hat{\bm u} \cdot \partial_2 \hat{\bm w} \\
-%     & + \frac{h\nu}{l} \int_{\hat{\Omega}_3} \partial_1 \hat{\bm u} \cdot \partial_1 \hat{\bm w}
-%       + \frac{l\nu}{h} \int_{\hat{\Omega}_3} \partial_2 \hat{\bm u} \cdot \partial_2 \hat{\bm w}, \\
-%   b(
-%     \pi_{\bm \mu}^* \hat{p},
-%     \pi_{\bm \mu}^* \hat{\bm w};
-%     \bm \mu
-%   ) &=
-%       - \int_{\hat{\Omega}} \hat{p} \nabla \cdot \hat{\bm w}
-%       - (h-1) \int_{\hat{\Omega}_3} \hat{p} \partial_1 \hat{w}_1
-%       - (l-1) \int_{\hat{\Omega}_2 \cup \hat{\Omega}_3} \hat{p} \partial_2 \hat{w}_2, \\
-%   c(
-%     \pi_{\bm \mu}^* \hat{\bm u},
-%     \pi_{\bm \mu}^* \hat{\bm v},
-%     \pi_{\bm \mu}^* \hat{\bm w};
-%     \bm \mu
-%   ) &=
-%       \int_{\hat{\Omega}_1} (\hat{\bm u} \cdot \nabla) \hat{\bm v} \cdot \hat{\bm w}
-%       + l \int_{\hat{\Omega_2} \cup \hat{\Omega}_3} \hat{u}_2 \partial_2 \hat{\bm v} \cdot \hat{\bm w} \\
-%     & + \int_{\hat{\Omega}_2} \hat{u}_1 \partial_1 \hat{\bm v} \cdot \hat{\bm w}
-%       + h \int_{\hat{\Omega}_3} \hat{u}_1 \partial_1 \hat{\bm v} \cdot \hat{\bm w}
-% \end{align*}
-% From these identities, \eqref{eqn:affine-lift} and
-% \eqref{eqn:newform-1}--\eqref{eqn:newform-3} the complete form of
-% \eqref{eqn:split-1}--\eqref{eqn:split-5} is revealed.
+\begin{remark}
+  \label{rem:linearity}
+  This method implies a linear dependence of pressure on velocity, an assumption that contradicts
+  the Navier--Stokes equations. Its application should be restricted to linear models (e.g.~Stokes
+  flow) or problems where the parameter space is suitably small for the linearization to be valid.
+\end{remark}
 
-% \subsection{Two-dimensional pinched channel}
+There are at least two ways to construct a combined basis. One way is to omit the discussion in
+Section~\ref{sec:fieldsep}, and instead pick $z$ in \eqref{eqn:covmx} as joint velocity-pressure
+inner product, for example
+\begin{equation}
+  \label{eqn:z_c}
+  z_\textsc{v}\big((\hat{\bm u}_0, \hat{p}), (\hat{\bm v}_0, \hat{q})\big) =
+  \left( \hat{\bm u}_0, \hat{\bm v}_0 \right)_{H^1(\hat{\Omega})}
+  + \eta \left( \hat{p}, \hat{q} \right)_{L^2(\hat{\Omega})}
+\end{equation}
+where $\eta > 0$ can be chosen to appropriately scale the relative importance of velocity
+and pressure. The POD procedure will then produce joint velocity-pressure basis functions whose
+velocity parts are divergence-free, so long as the snapshots are also divergence-free.
 
-% Given a reference domain $\hat{\Omega} = [-L, L] \times [-1, 1]$, we consider a
-% smooth ``bump function'' $s : [-L,L] \to [0,1]$ so that
-% \[
-%   s(\pm L) = 0, \qquad s(0) = 1, \qquad s'(\hat{x}) \hat{x} \le 0.
-% \]
-% Then the transformation, for $0 \le w < 1$,
-% \[
-%   \pi_{w}^{-1} (\hat{x}, \hat{y}) = (x,y) = \left( \hat{x}, \hat{y} (1 - ws(\hat{x})) \right)
-% \]
-% yields a ``pinched channel'' geometry, i.e. $y(\hat{x}=0,\hat{y}=\pm 1) = \pm
-% (1-w)$. This transformation has the Jacobi matrix
-% \begin{align*}
-%   \bm J &= \begin{pmatrix} 1 & 0 \\ -w\hat{y}s'(\hat{x}) & 1 - ws(\hat{x}) \end{pmatrix}, \\
-%   \det \bm J &= 1 - ws(\hat{x}), \\
-%   \bm J^{-\intercal}
-%         &= \frac{1}{\det \bm J} \begin{pmatrix} 1 - ws(\hat{x}) & w\hat{y}s'(\hat{x}) \\ 0 & 1 \end{pmatrix}.
-% \end{align*}
+Another approach is to construct the velocity basis according to Section~\ref{sec:fieldsep}, and
+then to use the same coefficients $\smash[t]{v_i^j}$ as in \eqref{eqn:uRj} to generate the pressure functions
+in \eqref{eqn:pRj}. Note that this does not guarantee any kind of linear independence in the
+pressure component.
+
+With \eqref{eqn:z_c} one obtains combined velocity-pressure basis functions that are orthonormal in a
+joint inner product. The second method produces the same velocity basis as the velocity-only
+formulation discussed in Section~\ref{sec:conforming} with attached pressure data that may or may
+not be linearly independent (however, linear dependence is not required). In the following we have
+used the second approach.
 
 \section{Numerical experiments}
 \label{sec:airfoil}
@@ -1637,8 +1570,10 @@ Results have been generated for reduced models with $M=10,20,\ldots,50$ degrees
 of freedom each in the three spaces (velocity, supremizers and pressure), as
 well as the corresponding un-stabilized models (only velocity and pressure).
 Additionally, for the conforming stabilized method, a distinction is made
-between a naive solver and a block solver (see
-\eqref{eqn:blocksolve-1}--\eqref{eqn:blocksolve-2}) where appropriate.
+between a naive solver, a block solver
+(see \eqref{eqn:blocksolve-1}--\eqref{eqn:blocksolve-2})
+and a combined solver
+(using the pressure reconstruction technique in Section~\ref{sec:combined}).
 
 \subsection{Spectrum}
 
@@ -1867,11 +1802,11 @@ property is consistently satisfied throughout the parameter domain, with no sign
       ylabel={Divergence ($L^2$-norm)},
       ymode=log,
       width=0.9\textwidth,
-      height=0.5\textwidth,
+      height=0.4\textwidth,
       grid=both,
       axis lines=left,
       legend style={
-        at={(0.5, -0.2)},
+        at={(0.5, -0.25)},
         anchor=north,
         draw=none,
       },
@@ -2015,9 +1950,19 @@ of eigenvalues in the conforming pressure snapshots as compared to the Taylor-Ho
 expected error for reduced models with the same number of degrees of freedom will be higher for the
 latter method.
 
+In Figure~\ref{fig:perf2} we can also see that the combined pressure-velocity basis
+(Section~\ref{sec:combined}) has reconstructed pressure errors that are only slightly worse than the
+recovered pressures from Section~\ref{sec:conforming}. This may indicate that the problem setup is
+not rich enough to capture the nonlinear pressure-velocity behaviour.
+
 Figure~\ref{fig:perf3} shows the measured errors as a function of mean time usage, measured in
-seconds. This clearly shows the ability of the conforming method to achieve the same results
-significantly faster if the block solver algorithm is employed.
+seconds. The time usage reported is the total time taken for both velocity solution and pressure
+recovery, as appropriate.
+
+This clearly shows the ability of the conforming method to achieve the same results significantly
+faster if the block solver algorithm is employed. It also shows how the combined velocity-pressure
+basis is able to achieve the same velocity results slightly faster, on account of not requiring an
+additional linear system to solve for the pressure.
 
 \begin{figure}
   \begin{tikzpicture}
@@ -2133,11 +2078,17 @@ significantly faster if the block solver algorithm is employed.
       table[x index={0}, y index={4}]{data/airfoil-results-piola-sups-no-block.csv};
       \addplot[red, thick, densely dashed, mark=o, mark options={solid}]
       table[x index={0}, y index={8}]{data/airfoil-results-piola-sups-no-block.csv};
+      \addplot[cyan, thick, mark=*, mark options={solid}]
+      table[x index={0}, y index={4}]{data/airfoil-results-combined.csv};
+      \addplot[cyan, thick, densely dashed, mark=o, mark options={solid}]
+      table[x index={0}, y index={8}]{data/airfoil-results-combined.csv};
       \legend{
         Regular stabilized ($v$),
         Regular stabilized ($p$),
         Conforming stabilized ($v$),
         Conforming stabilized ($p$),
+        Conforming combined ($v$),
+        Conforming combined ($p$),
       }
     \end{axis}
   \end{tikzpicture}
@@ -2178,9 +2129,13 @@ significantly faster if the block solver algorithm is employed.
       \addplot[red, thick, densely dashed, mark=o, mark options={solid}]
       table[x index={15}, y index={8}]{data/airfoil-results-piola-sups-no-block.csv};
       \addplot[green, thick, mark=*, mark options={solid}]
-      table[x index={15}, y index={4}]{data/airfoil-results-piola-sups-block.csv};
+      table[x index={11}, y index={4}]{data/airfoil-results-piola-sups-block.csv};
       \addplot[green, thick, densely dashed, mark=o, mark options={solid}]
-      table[x index={15}, y index={8}]{data/airfoil-results-piola-sups-block.csv};
+      table[x index={11}, y index={8}]{data/airfoil-results-piola-sups-block.csv};
+      \addplot[cyan, thick, mark=*, mark options={solid}]
+      table[x index={11}, y index={4}]{data/airfoil-results-combined.csv};
+      \addplot[cyan, thick, densely dashed, mark=o, mark options={solid}]
+      table[x index={11}, y index={8}]{data/airfoil-results-combined.csv};
       \legend{
         Regular stabilized ($v$),
         Regular stabilized ($p$),
@@ -2188,13 +2143,18 @@ significantly faster if the block solver algorithm is employed.
         Conforming stabilized naive ($p$),
         Conforming stabilized block ($v$),
         Conforming stabilized block ($p$),
+        Conforming combined ($v$),
+        Conforming combined ($p$),
       }
     \end{axis}
   \end{tikzpicture}
   \caption{
     Measured mean relative error as a function of mean time usage (in seconds), for velocity
-    ($H^1$-seminorm) and pressure ($L^2$-norm). Both regular and conforming are shown, the latter
-    with two different solvers (the naive solver and the block solver). Bottom left is better.
+    ($H^1$-seminorm) and pressure ($L^2$-norm). The time reported includes both the velocity
+    solution and the pressure recovery or reconstruction, as appropriate. Both regular and
+    conforming are shown, the latter with two different solvers (the naive solver and the block
+    solver), as well as with the joint velocity-pressure reconstruction scheme. Bottom left is
+    better.
   }
   \label{fig:perf3}
 \end{figure}
@@ -2212,9 +2172,16 @@ significant speed benefits over a coupled conventional formulation.
 Investigations were performed for the parametrized problem of flow around a NACA0015 airfoil with
 varying angle-of-attack and inflow velocity. The divergence-conforming method was compared with a
 supremizer stabilized reduced method based on the Taylor-Hood high-fidelity scheme with the same
-mesh and comparable polynomial degree. While the accuracy of the reduced methods were virtually
-identical, the divergence-conforming model was able to achieve a significantly faster online stage
-thanks to the block form of its linear systems.
+mesh and comparable polynomial degree. For the divergence-conforming method, a velocity-only
+formulation was applied, with two choices for pressure recovery.
+
+While the accuracy of the reduced methods were virtually identical, the divergence-conforming models
+were able to achieve a significantly faster online stage thanks to the velocity-pressure decoupling.
+
+The two pressure recovery methods were also able to achieve similar performance for this
+problem. Since the pressure reconstruction method (Section~\ref{sec:combined}) relies on a linearity
+assumption (Remark~\ref{rem:linearity}) that is not valid in general, we must conclude that pressure
+recovery (Section~\ref{sec:conforming}) is to be preferred in most cases.
 
 The faster online stage of the conforming RB method is offset by a more complicated offline stage.
 In particular, the affine
@@ -2224,6 +2191,9 @@ the conforming method yielded significantly faster online stages. We aim to inve
 in which manner automatic ``black box'' methods such as Empirical Interpolation
 (EIM, see~\cite{Barrault2004eim,Grepl2007erb,Maday2007gmi} and~\cite[Chapter 10]{Quarteroni2016rbm})
 can alleviate the additional work needed to produce such affine representations.
+
+We will also investigate the performance of the present approach when using adaptive high-fidelity
+models based on \emph{a posteriori} error estimates developed in~\cite{Kumar2015sap,Kumar2017spr}.
 
 \bibliography{common/references}
 \bibliographystyle{plain}
