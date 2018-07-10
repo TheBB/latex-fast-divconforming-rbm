@@ -184,7 +184,7 @@ we assess the computational efficiency of such an approach.
 
 An important additional aspect of the present work is the use of divergence-conforming B-spline
 approximations for the high-fidelity simulations.
-Such methods were first introduce by Buffa and co-workers~\cite{Buffa2010iae,Buffa2011ias}
+Such methods were first introduced by Buffa and co-workers~\cite{Buffa2010iae,Buffa2011ias}
 and then by Evans and Hughes~\cite{Evans2012dsa,Evans2013idc1,Evans2013idc2,Evans2013idc3}.
 Extension to locally refined B-splines~\cite{Dokken2013psl,Johannessen2014ial}
 were done in~\cite{Johannessen2015dcd} and to divergence-conforming multiscale turbulence
@@ -972,7 +972,7 @@ approximation $\underline{\hat{\bm u}}{}_0\in{}U^{\textsc{r}}_0$, the Jacobian m
 basis of the pre-computed third-order tensors. For large models, the storage requirements for the third-order
 tensor are unmanageable. However, the storage of such a tensor for a reduced space {\em is\/} feasible.
 Although these tensors are dense, we find that the modest sizes keep the storage requirements realistic,
-typically in the regions of hundreds of megabytes for $\sim100$ basis
+typically in the regions of hundreds of megabytes for ${\sim}100$ basis
 functions.
 
 \section{Divergence-Conforming methods}
@@ -1059,14 +1059,12 @@ that since reduced systems are full rather than dense, the benefits of this
 reduction in size is amplified further compared to the usual situation of high-fidelity
 sparse systems.
 
-For other methods for pressure stabilization based on pure velocity solutions
-followed by pressure recovery in various forms, see
-\cite{Akhtar2009ser,Caiazzo2014niv,Baiges2013ero}.
-
-Other methods for pressure recovery from pure velocity solutions have been investigated. In
-\cite{Caiazzo2014niv}, three different methods based on modified equations and spaces are
-compared. The authors in \cite{Akhtar2009ser} compute the pressure by taking the divergence of the
-Navier-Stokes equation, projecting the result onto the pressure modes.
+For other methods for pressure stabilization based on pure velocity solutions followed by pressure
+recovery in various forms, see \cite{Akhtar2009ser,Caiazzo2014niv,Baiges2013ero}. Other methods for
+pressure recovery from pure velocity solutions have been investigated. In \cite{Caiazzo2014niv},
+three different methods based on modified equations and spaces are compared. The authors in
+\cite{Akhtar2009ser} compute the pressure by taking the divergence of the Navier-Stokes equation,
+projecting the result onto the pressure modes.
 
 \subsection{Combined velocity-pressure basis}
 \label{sec:combined}
@@ -1089,16 +1087,16 @@ basis functions does not change the reduced system.
   flow) or problems where the parameter space is suitably small for the linearization to be valid.
 \end{remark}
 
-There are at least two ways to construct a combined basis. One way is to omit the discussion in
-Section~\ref{sec:fieldsep}, and instead pick $z$ in \eqref{eqn:covmx} as joint velocity-pressure
-inner product, for example
+There are at least two ways to construct a combined basis. One way is to omit the separation
+discussed in Section~\ref{sec:fieldsep}, and instead pick $z$ in \eqref{eqn:covmx} as joint
+velocity-pressure inner product, for example
 \begin{equation}
   \label{eqn:z_c}
-  z_\textsc{v}\big((\hat{\bm u}_0, \hat{p}), (\hat{\bm v}_0, \hat{q})\big) =
+  z\big((\hat{\bm u}_0, \hat{p}), (\hat{\bm v}_0, \hat{q})\big) =
   \left( \hat{\bm u}_0, \hat{\bm v}_0 \right)_{H^1(\hat{\Omega})}
-  + \eta \left( \hat{p}, \hat{q} \right)_{L^2(\hat{\Omega})}
+  + \rho \left( \hat{p}, \hat{q} \right)_{L^2(\hat{\Omega})}
 \end{equation}
-where $\eta > 0$ can be chosen to appropriately scale the relative importance of velocity
+where $\rho > 0$ can be chosen to appropriately scale the relative importance of velocity
 and pressure. The POD procedure will then produce joint velocity-pressure basis functions whose
 velocity parts are divergence-free, so long as the snapshots are also divergence-free.
 
@@ -1110,8 +1108,10 @@ pressure component.
 With \eqref{eqn:z_c} one obtains combined velocity-pressure basis functions that are orthonormal in a
 joint inner product. The second method produces the same velocity basis as the velocity-only
 formulation discussed in Section~\ref{sec:conforming} with attached pressure data that may or may
-not be linearly independent (however, linear dependence is not required). In the following we have
-used the second approach.
+not be linearly independent. However, because pressure reconstruction is based on direct linear
+combination of the pressure modes, linear independence of these modes is not required.
+
+In the following we have used the second approach for pressure reconstruction.
 
 \section{Numerical experiments}
 \label{sec:airfoil}
@@ -1162,7 +1162,10 @@ representation of this problem, as understood by
       \end{scope}
     \end{tikzpicture}
   \end{center}
-  \caption{Sketch of the airfoil flow problem and its parameters.}
+  \caption{
+    Sketch of the airfoil flow problem and its parameters. Solid lines indicate Dirichlet
+    boundaries, and dotted lines indicate Neumann boundaries.
+  }
   \label{fig:airfoil-sketch}
 \end{figure}
 
@@ -1949,16 +1952,15 @@ That is to say, due to the slightly slower decay
 of eigenvalues in the conforming pressure snapshots as compared to the Taylor-Hood modes, the
 expected error for reduced models with the same number of degrees of freedom will be higher for the
 latter method.
-
 In Figure~\ref{fig:perf2} we can also see that the combined pressure-velocity basis
 (Section~\ref{sec:combined}) has reconstructed pressure errors that are only slightly worse than the
-recovered pressures from Section~\ref{sec:conforming}. This may indicate that the problem setup is
-not rich enough to capture the nonlinear pressure-velocity behaviour.
+recovered pressures from Section~\ref{sec:conforming}. It is to be noted, however, that it is not
+evident that these good approximation properties of the reconstructed pressure will be retained for
+more strongly nonlinear cases.
 
 Figure~\ref{fig:perf3} shows the measured errors as a function of mean time usage, measured in
 seconds. The time usage reported is the total time taken for both velocity solution and pressure
 recovery, as appropriate.
-
 This clearly shows the ability of the conforming method to achieve the same results significantly
 faster if the block solver algorithm is employed. It also shows how the combined velocity-pressure
 basis is able to achieve the same velocity results slightly faster, on account of not requiring an
@@ -2046,8 +2048,11 @@ additional linear system to solve for the pressure.
   \caption{
     Measured mean relative error as a function of expected mean relative error,
     for velocity ($H^1$-seminorm) and pressure ($L^2$-norm). Both regular and
-    conforming are shown. The conforming block solver is indistinguishable from
-    the naive conforming solver. Bottom right is better.
+    conforming are shown.
+    The conforming block solver is indistinguishable from the naive conforming solver,
+    and the velocity errors of the Taylor-Hood and the conforming methods are also virtually
+    indistinguishable from each other.
+    Bottom right is better.
   }
   \label{fig:perf1}
 \end{figure}
@@ -2095,8 +2100,8 @@ additional linear system to solve for the pressure.
   \caption{
     Measured mean relative error as a function of $M$, for velocity
     ($H^1$-seminorm) and pressure ($L^2$-norm). Both regular and conforming are
-    shown. The conforming block solver is indistinguishable from the naive
-    conforming solver. Bottom left is better.
+    shown. The velocity errors for the two conforming methods overlap.
+    Bottom left is better.
   }
   \label{fig:perf2}
 \end{figure}
@@ -2167,26 +2172,28 @@ problems. Using a divergence-conforming isogeometric high-fidelity method, we we
 divergence-free reduced bases, yielding a velocity-only reduced formulation. To solve for pressure,
 we employed supremizers as test functions, a technique used to stabilize conventional reduced basis
 methods. This allowed us to achieve accurate reduced solutions for both velocity and pressure with
-significant speed benefits over a coupled conventional formulation.
+significant speed benefits over a coupled conventional formulation. In addition, we considered the
+option of direct pressure reconstruction, using the coefficients of the RB velocity solution.
 
 Investigations were performed for the parametrized problem of flow around a NACA0015 airfoil with
 varying angle-of-attack and inflow velocity. The divergence-conforming method was compared with a
 supremizer stabilized reduced method based on the Taylor-Hood high-fidelity scheme with the same
 mesh and comparable polynomial degree. For the divergence-conforming method, a velocity-only
-formulation was applied, with two choices for pressure recovery.
+formulation was applied, with two choices for the pressure approximation, viz.~recovery and
+reconstruction.
 
 While the accuracy of the reduced methods were virtually identical, the divergence-conforming models
 were able to achieve a significantly faster online stage thanks to the velocity-pressure decoupling.
 
-The two pressure recovery methods were also able to achieve similar performance for this
-problem. Since the pressure reconstruction method (Section~\ref{sec:combined}) relies on a linearity
-assumption (Remark~\ref{rem:linearity}) that is not valid in general, we must conclude that pressure
-recovery (Section~\ref{sec:conforming}) is to be preferred in most cases.
+The pressure recovery and reconstruction methods were also able to achieve similar performance for the
+considered problem. Since the pressure reconstruction method relies on a linearity
+assumption that is not valid in general, we must conclude that pressure
+recovery is to be preferred in most cases.
 
 The faster online stage of the conforming RB method is offset by a more complicated offline stage.
 In particular, the affine
 representations \eqref{eqn:split-a}--\eqref{eqn:split-d1} of the divergence-conforming method
-required approximately three times as many terms ($\sim 12n$ versus $\sim 4n$). In spite of this,
+required approximately three times as many terms (${\sim}12n$ versus ${\sim}4n$). In spite of this,
 the conforming method yielded significantly faster online stages. We aim to investigate in future work
 in which manner automatic ``black box'' methods such as Empirical Interpolation
 (EIM, see~\cite{Barrault2004eim,Grepl2007erb,Maday2007gmi} and~\cite[Chapter 10]{Quarteroni2016rbm})
