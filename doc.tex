@@ -62,7 +62,7 @@
   stable velocity-pressure spaces do not generally inherit the stability
   of the underlying high-fidelity model and, instead, additional stabilization techniques
   must be introduced. One way of bypassing the loss of LBB stability in the RBM is to
-  inflate the velocity space with supremizer modes.%~\cite{Ballarin2015ssp,Stabile2017fvp}.
+  inflate the velocity space with supremizer modes.%~\cite{Ballarin2015ssp,Stabile2018fvp}.
   This however
   deteriorates the performance of the RBM in the performance-critical online stage, as
   additional DOFs must be introduced to retain stability, while these DOFs do not effectively
@@ -150,7 +150,7 @@ shape optimization \cite{Manzoni2012sov,Rozza2011rba},
 quantum models \cite{Pau2007rbm}
 and solid mechanics \cite{Noor1980rbt,Krysl2001dmr}. Development and
 application of RB methods to flow problems have been considered in for
-instance~\cite{Peterson1989rbm,Gunzburger2012fem,Iollo2000spp,Stabile2017fvp}.
+instance~\cite{Peterson1989rbm,Gunzburger2012fem,Iollo2000spp,Stabile2018fvp}.
 The principal novelty of the present paper is the development of a solenoidal (divergence-free)
 velocity-only RB method for incompressible-fluid flow problems with geometric parametrizations, based on
 divergence-conforming high-fidelity approximations. The advantage of the solenoidal-velocity RBM is that
@@ -159,7 +159,7 @@ is redundant and can be ignored in the online stage. The absence of the pressure
 variable in the RBM in fact carries a two-fold benefit. First, velocity-pressure RBs do not generally inherit
 the inf-sup stability of the underlying high-fidelity models. Instability of the RB
 velocity-pressure pair can be resolved by extending the velocity space with additional
-supremizer modes~\cite{Ballarin2015ssp,Stabile2017fvp}. This however introduces additional DOFs in the
+supremizer modes~\cite{Ballarin2015ssp,Stabile2018fvp}. This however introduces additional DOFs in the
 performance-critical online stage, while these DOFs do not effectively contribute to
 accuracy of the RB approximation. By incorporating the solenoidality constraint in the RB,
 the approximate formulation is released of its mixed-character, and inf-sup stability
